@@ -5,6 +5,12 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### Project Files ###
+src/main/resources/
+*.properties
+*.yml
+!/gradlew
+
 ### STS ###
 .apt_generated
 .classpath
