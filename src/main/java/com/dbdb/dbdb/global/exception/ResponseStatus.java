@@ -11,7 +11,7 @@ public enum ResponseStatus {
     // Success
     EMAIL_DUPLICATE(true, 2000, "이메일이 중복됩니다"),
     EMAIL_NOT_DUPLICATE(true, 2001, "이메일이 중복되지 않습니다"),
-
+    LOGIN_SUCCESS(true, 2002, "로그인을 성공하였습니다."),
 
 
 
@@ -20,6 +20,7 @@ public enum ResponseStatus {
     // Exception
     // 5000 - Request Error
     REQUEST_ERROR(false, 5000, "잘못된 요청입니다."),
+    LOGIN_ERROR(false, 5001, "로그인을 실패하였습니다. 이메일 혹은 비밀번호를 다시 확인해주세요."),
     INVALID_REQUEST(false, 5100, "입력값을 확인해주세요"),
     UPLOAD_ERROR(false, 5200, "파일 업로드에 실패했습니다"),
 

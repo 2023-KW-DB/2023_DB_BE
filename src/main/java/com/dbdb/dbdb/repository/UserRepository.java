@@ -34,4 +34,15 @@ public class UserRepository {
             return false;
         }
     }
+
+    public Boolean validateUser(UserDto userdto) {
+        String sql = "SELECT COUNT(*) FROM user WHERE email = ? AND password = ?";
+        try {
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userdto.getEmail(), userdto.getPassword());
+            return count != null && count > 0;
+        } catch (EmptyResultDataAccessException e) {
+            // 이메일과 비밀번호가 일치하는 레코드가 없으면 false 반환
+            return false;
+        }
+    }
 }

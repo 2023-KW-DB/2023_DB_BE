@@ -30,4 +30,13 @@ public class UserController {
         else
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.EMAIL_NOT_DUPLICATE, null));
     }
+
+    // 로그인
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn(@RequestBody UserDto userdto){
+        if (userService.signIn(userdto))
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.LOGIN_SUCCESS, null));
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.LOGIN_ERROR, null));
+    }
 }
