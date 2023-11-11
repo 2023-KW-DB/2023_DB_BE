@@ -11,18 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PreDestroy;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @RestControllerAdvice
 @RequestMapping("/users")
 public class UserController {
-
-    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     @Autowired
     private UserService userService;
@@ -51,10 +45,11 @@ public class UserController {
         if (userService.signIn(userdto))
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_LOGIN, null));
         else
-            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.LOGIN_ERROR, null));
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.ERROR_LOGIN, null));
     }
 
-    @PostMapping("/send-authcode") // 비밀번호 찾기 중 인증 번호 전송
+    // 비밀번호 찾기 중 인증 번호 전송
+    @PostMapping("/send-authcode")
     public ResponseEntity<?> sendAuthCode(@RequestBody UserDto userDto) throws MessagingException, UnsupportedEncodingException {
 
         EmailAuthCodeDto emailAuthCodeDto = new EmailAuthCodeDto();
@@ -64,35 +59,23 @@ public class UserController {
 
         emailAuthCodeDto.setAuthCode(changePasswordService.sendEmail(userDto.getEmail()));
 
-        //executorService.schedule(changePasswordService::deleteExpiredAuthNum, 5, TimeUnit.MINUTES);
-
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SEND_AUTHCODE));
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SEND_AUTHCODE, emailAuthCodeDto.getAuthCode()));
     }
 
-//    // 사용자가 입력한 인증 코드와 db의 인증 정보 비교
-//    @PostMapping("/check-authcode") // 전송한 인증 번호 확인
-//    public BaseResponse<EmailAuthCodeCheckDto> checkCode(@RequestBody EmailAuthCodeCheckDto emailAuthCodeCheckDto){
-//
-//        // 이메일을 입력하지 않은 경우
-//        if(emailAuthCodeCheckDto.getAuthCode() == null)
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_INVALID_INPUT);
-//
-//        // 이메일 회원이 아닌 경우
-//        if(!emailService.isUserTypeEmail(emailAuthCodeCheckDto.getEmail()))
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_NOT_EMAIL_USER);
-//
-//        String response = emailService.verifyCode(emailAuthCodeCheckDto.getEmail(), emailAuthCodeCheckDto.getAuthCode());
-//
-//        // 인증번호가 생성된지 5분이 되어 만료된 상황에서 인증 번호를 입력한 경우
-//        if(response.equals("failed: over 5 minute"))
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_OVERTIME_AUTHCODE);
-//
-//        // 인증 번호가 틀린 경우
-//        if(response.equals("failed: not correct auth code"))
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_NOT_CORRECT_AUTHCODE);
-//
-//        return new BaseResponse<>(emailAuthCodeCheckDto, BaseResponseStatus.SUCCESS_CHECK_AUTHCODE);
-//    }
+    // 입력한 인증 번호 검사
+    @PostMapping("/check-authcode")
+    public ResponseEntity<?> checkAuthCode(@RequestBody EmailAuthDto emailAuthDto){
+
+        String response = changePasswordService.verifyCode(emailAuthDto.getEmail(), String.valueOf(emailAuthDto.getAuth_num()));
+
+        // 인증번호가 생성된지 5분이 되어 만료된 상황에서 인증 번호를 입력한 경우
+        if(response.equals("Error: over 5 minute"))
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.ERROR_TIMEOVER_AUTHCODE));
+        else if(response.equals("Error: not correct auth code")) // 인증 번호가 틀린 경우
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_CORRECT_AUTHCODE));
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CORRECT_AUTHCODE));
+    }
 //
 //    @PutMapping("/change-password") // 인증 번호 확인 후 비밀 번호 변경
 //    public BaseResponse<PasswordChangeRequestDto> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequestDto){
@@ -116,10 +99,5 @@ public class UserController {
 //            return new BaseResponse<>(BaseResponseStatus.FAILED_CHANGE_PASSWORD);
 //
 //        return new BaseResponse<>(BaseResponseStatus.SUCCESS_CHANGE_PASSWORD);
-//    }
-//
-//    @PreDestroy // 스케줄러 소멸
-//    public void scheduledExecutorDestroy() {
-//        executorService.shutdown();
 //    }
 }
