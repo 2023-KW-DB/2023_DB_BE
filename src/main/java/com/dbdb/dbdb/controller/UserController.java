@@ -58,7 +58,9 @@ public class UserController {
     public ResponseEntity<?> sendAuthCode(@RequestBody UserDto userDto) throws MessagingException, UnsupportedEncodingException {
 
         EmailAuthCodeDto emailAuthCodeDto = new EmailAuthCodeDto();
-        //changePasswordService.deleteExistCode(userDto.getEmail());
+        
+        // 5분 이내에 다시 인증 번호 전송을 했다면 앞서 요청한 인증 번호 삭제
+        changePasswordService.deleteExistCode(userDto.getEmail());
 
         emailAuthCodeDto.setAuthCode(changePasswordService.sendEmail(userDto.getEmail()));
 

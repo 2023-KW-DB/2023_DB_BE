@@ -16,4 +16,13 @@ public class EmailAuthRepository {
 
         return true;
     }
+
+    public Boolean deleteByEmail(Integer user_id) {
+        if (user_id != null) {
+            String sql = "DELETE FROM emailauth WHERE user_id = ?";
+            jdbcTemplate.update(sql, user_id);
+        }
+
+        return true;
+    }
 }

@@ -139,7 +139,7 @@ public class ChangePasswordService {
 //            return false;
 //    }
 //
-//    public void deleteExistCode(String email){ // 한 유저가 2번 이상 연속으로 인증 코드를 보낼 경우에 대한 예외 처리를 위해 기존의 코드 삭제
-//        emailAuthRepository.deleteByEmail(email);
-//    }
+    public void deleteExistCode(String email){ // 한 유저가 2번 이상 연속으로 인증 코드를 보낼 경우에 대한 예외 처리를 위해 기존의 코드 삭제
+        emailAuthRepository.deleteByEmail(userRepository.findUserIdByEmail(email));
+    }
 }
