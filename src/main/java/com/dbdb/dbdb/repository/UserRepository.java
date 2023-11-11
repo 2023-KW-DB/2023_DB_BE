@@ -2,6 +2,7 @@ package com.dbdb.dbdb.repository;
 
 import com.dbdb.dbdb.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,16 @@ public class UserRepository {
                 userDto.getWeight(),
                 userDto.getAge());
         return true;
+    }
+
+    public Boolean checkEmailDuplicate(UserDto userDto) {
+        String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
+        try {
+            // queryForObject를 사용하여 결과가 1 이상이면 존재하는 것으로 판단
+            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userDto.getEmail());
+            return count != null && count > 0;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 }

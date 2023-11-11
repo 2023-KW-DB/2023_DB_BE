@@ -17,6 +17,7 @@ public class UserService {
     }
 
     // 이메일 중복확인
-    public void checkEmailDuplicate(UserDto userDto) {
+    public Boolean checkEmailDuplicate(UserDto userDto) {
+        return userRepository.checkEmailDuplicate(userDto);
     }
 }

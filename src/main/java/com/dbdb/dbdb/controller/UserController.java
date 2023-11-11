@@ -15,17 +15,19 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // È¸¿ø°¡ÀÔ
+    // íšŒì›ê°€ì…
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserDto userDto) {
         userService.signUp(userDto);
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS, null));
     }
 
-    // ÀÌ¸ŞÀÏ Áßº¹ È®ÀÎ
+    // ì´ë©”ì¼ ì¤‘ë³µ í™•ì¸
     @PostMapping("/email/check-duplicate")
     public ResponseEntity<?> checkEmailDuplicate(@RequestBody UserDto userDto) {
-        userService.checkEmailDuplicate(userDto);
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS, null));
+        if (userService.checkEmailDuplicate(userDto))
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.EMAIL_DUPLICATE, null));
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.EMAIL_NOT_DUPLICATE, null));
     }
 }
