@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -60,6 +62,13 @@ public class ChangePasswordService {
         message.setText(setContext(authNum), "utf-8", "html");
 
         return message;
+    }
+
+    // 타임리프를 이용한 context 설정
+    public String setContext(String code) {
+        Context context = new Context();
+        context.setVariable("code", code);
+        return templateEngine.process("mail", context); //mail.html
     }
 
     // 실제 메일 전송 - controller에서 호출
