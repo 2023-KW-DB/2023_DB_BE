@@ -9,7 +9,8 @@ import com.dbdb.dbdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
@@ -40,11 +41,67 @@ public class UserController {
 
     // 로그인
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody UserDto userdto){
-        if (userService.signIn(userdto))
+    public ResponseEntity<?> signIn(@RequestBody UserDto userdto, HttpServletResponse response){
+        if (userService.signIn(userdto)){
+            // 쿠키 생성
+            Cookie idCookie = new Cookie("id", String.valueOf(userdto.getId()));
+            Cookie emailCookie = new Cookie("email", userdto.getEmail());
+            // 비밀번호는 쿠키에 저장하지 말아야 하므로 여기서는 예시로 "dummyTokenOrSessionId"를 사용합니다.
+            Cookie passwordCookie = new Cookie("password", "dummyTokenOrSessionId");
+
+            // 쿠키 유효 시간 설정
+            idCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
+            emailCookie.setMaxAge(7 * 24 * 60 * 60);
+            passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+
+            // 쿠키에 HttpOnly 설정
+            idCookie.setHttpOnly(true);
+            emailCookie.setHttpOnly(true);
+            passwordCookie.setHttpOnly(true);
+
+            // 쿠키 경로 설정
+            idCookie.setPath("/");
+            emailCookie.setPath("/");
+            passwordCookie.setPath("/");
+
+            // 응답에 쿠키 추가
+            response.addCookie(idCookie);
+            response.addCookie(emailCookie);
+            response.addCookie(passwordCookie);
+
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_LOGIN, null));
+        }
         else
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.ERROR_LOGIN, null));
+    }
+
+    // 로그아웃
+    @PostMapping("/signout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+
+        // 인증 쿠키를 무효화하기 위해 만료 날짜를 과거로 설정
+        Cookie idCookie = new Cookie("id", null);
+        Cookie emailCookie = new Cookie("email", null);
+        Cookie passwordCookie = new Cookie("password", null);
+
+        idCookie.setMaxAge(0); // 즉시 만료
+        emailCookie.setMaxAge(0); // 즉시 만료
+        passwordCookie.setMaxAge(0); // 즉시 만료
+
+        idCookie.setPath("/");
+        emailCookie.setPath("/");
+        passwordCookie.setPath("/");
+
+        idCookie.setHttpOnly(true);
+        emailCookie.setHttpOnly(true);
+        passwordCookie.setHttpOnly(true);
+
+        // 응답에 만료된 쿠키를 추가하여 클라이언트의 쿠키를 삭제
+        response.addCookie(idCookie);
+        response.addCookie(emailCookie);
+        response.addCookie(passwordCookie);
+
+        return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));
     }
 
     // 비밀번호 찾기 중 인증 번호 전송
@@ -83,4 +140,6 @@ public class UserController {
 
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CHANGE_PASSWORD));
     }
+
+
 }
