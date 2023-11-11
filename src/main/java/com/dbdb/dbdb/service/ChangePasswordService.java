@@ -38,12 +38,12 @@ public class ChangePasswordService {
         Random random = new Random();
         authNum = String.valueOf(random.nextInt(8888)+1000); // 범위 : 1000 ~ 9999
 
-        EmailAuthDto emailAuthEntity = new EmailAuthDto();
-        emailAuthEntity.setEmail(email);
-        emailAuthEntity.setAuth_num(Integer.parseInt(authNum));
-        emailAuthEntity.setCreated_at(LocalDateTime.now());
+        EmailAuthDto emailAuthDto = new EmailAuthDto();
+        emailAuthDto.setEmail(email);
+        emailAuthDto.setAuth_num(Integer.parseInt(authNum));
+        emailAuthDto.setCreated_at(LocalDateTime.now());
 
-        emailAuthRepository.save(emailAuthEntity);
+        emailAuthRepository.createAuthCode(emailAuthDto);
 
     }
 
@@ -82,61 +82,61 @@ public class ChangePasswordService {
         return authNum; //인증 코드 반환
     }
 
-    public String verifyCode(String email, String code) {
-        EmailAuthEntity emailAuthEntity = emailSignupRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email: " + email));
-
-        if (code.equals(emailAuthEntity.getAuthNum())) {
-            LocalDateTime now = LocalDateTime.now();
-            Duration duration = Duration.between(emailAuthEntity.getAuthNumTimestamp(), now);
-            //log.info("duration = {}", duration);
-            //log.info("duration.toMinutes = {}", duration.toMinutes());
-            if (duration.toMinutes() < 5) { // 5분 이하로 인증 코드를 맞춘 경우
-                emailAuthRepository.delete(emailAuthEntity);
-                return "success: correct auth code";
-            }
-            else{
-                emailAuthRepository.delete(emailAuthEntity);
-                return "failed: over 5 minute";
-            }
-        }
-        // 인증 코드가 틀린 경우
-        return "failed: not correct auth code";
-    }
-
-    public void deleteExpiredAuthNum(){
-        List<EmailAuthEntity> emailAuthEntityList = emailSignupRepository.findAll();
-
-        LocalDateTime now = LocalDateTime.now();
-
-        for(EmailAuthEntity emailAuthEntity : emailAuthEntityList){
-            Duration duration = Duration.between(emailAuthEntity.getAuthNumTimestamp(), now);
-
-            if(duration.toMinutes() >= 5){
-                emailAuthRepository.delete(emailAuthEntity);
-            }
-        }
-    }
-
-    public String changePassword(String email, String password){
-        UserEntity userEntity = userRepository.findByEmail(email).get();
-
-        userRepository.save(userEntity);
-
-        return "success: change password";
-    }
-
-    public Boolean isUserTypeEmail(String email) {
-
-        UserEntity userEntity = userRepository.findByEmail(email).get();
-
-        if(userEntity.getUserType().equals(UserTypeEnum.EMAIL))
-            return true;
-        else
-            return false;
-    }
-
-    public void deleteExistCode(String email){ // 한 유저가 2번 이상 연속으로 인증 코드를 보낼 경우에 대한 예외 처리를 위해 기존의 코드 삭제
-        emailAuthRepository.deleteByEmail(email);
-    }
+//    public String verifyCode(String email, String code) {
+//        EmailAuthEntity emailAuthEntity = emailSignupRepository.findByEmail(email)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid email: " + email));
+//
+//        if (code.equals(emailAuthEntity.getAuthNum())) {
+//            LocalDateTime now = LocalDateTime.now();
+//            Duration duration = Duration.between(emailAuthEntity.getAuthNumTimestamp(), now);
+//            //log.info("duration = {}", duration);
+//            //log.info("duration.toMinutes = {}", duration.toMinutes());
+//            if (duration.toMinutes() < 5) { // 5분 이하로 인증 코드를 맞춘 경우
+//                emailAuthRepository.delete(emailAuthEntity);
+//                return "success: correct auth code";
+//            }
+//            else{
+//                emailAuthRepository.delete(emailAuthEntity);
+//                return "failed: over 5 minute";
+//            }
+//        }
+//        // 인증 코드가 틀린 경우
+//        return "failed: not correct auth code";
+//    }
+//
+//    public void deleteExpiredAuthNum(){
+//        List<EmailAuthEntity> emailAuthEntityList = emailSignupRepository.findAll();
+//
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        for(EmailAuthEntity emailAuthEntity : emailAuthEntityList){
+//            Duration duration = Duration.between(emailAuthEntity.getAuthNumTimestamp(), now);
+//
+//            if(duration.toMinutes() >= 5){
+//                emailAuthRepository.delete(emailAuthEntity);
+//            }
+//        }
+//    }
+//
+//    public String changePassword(String email, String password){
+//        UserEntity userEntity = userRepository.findByEmail(email).get();
+//
+//        userRepository.save(userEntity);
+//
+//        return "success: change password";
+//    }
+//
+//    public Boolean isUserTypeEmail(String email) {
+//
+//        UserEntity userEntity = userRepository.findByEmail(email).get();
+//
+//        if(userEntity.getUserType().equals(UserTypeEnum.EMAIL))
+//            return true;
+//        else
+//            return false;
+//    }
+//
+//    public void deleteExistCode(String email){ // 한 유저가 2번 이상 연속으로 인증 코드를 보낼 경우에 대한 예외 처리를 위해 기존의 코드 삭제
+//        emailAuthRepository.deleteByEmail(email);
+//    }
 }
