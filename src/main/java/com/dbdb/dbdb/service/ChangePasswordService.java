@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChangePasswordService {
@@ -39,6 +40,8 @@ public class ChangePasswordService {
         authNum = String.valueOf(random.nextInt(8888)+1000); // 범위 : 1000 ~ 9999
 
         EmailAuthDto emailAuthDto = new EmailAuthDto();
+        emailAuthDto.setUser_id(userRepository.findUserIdByEmail(email));
+        log.info("email = {}", email);
         emailAuthDto.setEmail(email);
         emailAuthDto.setAuth_num(Integer.parseInt(authNum));
         emailAuthDto.setCreated_at(LocalDateTime.now());
@@ -105,12 +108,12 @@ public class ChangePasswordService {
 //    }
 //
 //    public void deleteExpiredAuthNum(){
-//        List<EmailAuthEntity> emailAuthEntityList = emailSignupRepository.findAll();
+//        List<EmailAuthDto> emailAuthEntityList = emailAuthRepository.findAll();
 //
 //        LocalDateTime now = LocalDateTime.now();
 //
-//        for(EmailAuthEntity emailAuthEntity : emailAuthEntityList){
-//            Duration duration = Duration.between(emailAuthEntity.getAuthNumTimestamp(), now);
+//        for(EmailAuthDto emailAuthEntity : emailAuthEntityList){
+//            Duration duration = Duration.between(emailAuthEntity.getCreated_at(), now);
 //
 //            if(duration.toMinutes() >= 5){
 //                emailAuthRepository.delete(emailAuthEntity);

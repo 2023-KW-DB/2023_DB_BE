@@ -12,14 +12,8 @@ public class EmailAuthRepository {
 
     public Boolean createAuthCode(EmailAuthDto emailAuthDto) {
         String sql = "INSERT INTO emailauth (user_id, auth_num, created_at) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, ); {
-            @Override
-            public void setValues(PreparedStatement ps) throws SQLException {
-                ps.setInt(1, emailAuthDto.getUser_id());
-                ps.setInt(2, emailAuthDto.getAuth_num());
-                // LocalDateTime을 java.sql.Timestamp로 변환
-                ps.setTimestamp(3, Timestamp.valueOf(emailAuthDto.getCreated_at()));
-            }
-        });
+        jdbcTemplate.update(sql, emailAuthDto.getUser_id(), emailAuthDto.getAuth_num(), emailAuthDto.getCreated_at());
+
+        return true;
     }
 }

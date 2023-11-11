@@ -58,14 +58,13 @@ public class UserController {
     public ResponseEntity<?> sendAuthCode(@RequestBody UserDto userDto) throws MessagingException, UnsupportedEncodingException {
 
         EmailAuthCodeDto emailAuthCodeDto = new EmailAuthCodeDto();
-        changePasswordService.deleteExistCode(userDto.getEmail());
+        //changePasswordService.deleteExistCode(userDto.getEmail());
 
         emailAuthCodeDto.setAuthCode(changePasswordService.sendEmail(userDto.getEmail()));
 
-        executorService.schedule(changePasswordService::deleteExpiredAuthNum, 5, TimeUnit.MINUTES);
+        //executorService.schedule(changePasswordService::deleteExpiredAuthNum, 5, TimeUnit.MINUTES);
 
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SEND_AUTHCODE);
-
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SEND_AUTHCODE));
     }
 
 //    // 사용자가 입력한 인증 코드와 db의 인증 정보 비교

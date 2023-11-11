@@ -45,4 +45,14 @@ public class UserRepository {
             return false;
         }
     }
+
+    public Integer findUserIdByEmail(String email) {
+        String sql = "SELECT id FROM user WHERE email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            // 이메일에 해당하는 user_id가 없으면 null 반환
+            return null;
+        }
+    }
 }
