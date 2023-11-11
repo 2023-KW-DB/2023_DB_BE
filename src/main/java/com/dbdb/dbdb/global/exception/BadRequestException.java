@@ -6,5 +6,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BadRequestException extends RuntimeException{
-    private ErrorStatus status;
+    private ResponseStatus status;
 }
