@@ -68,12 +68,11 @@ public class UserController {
 
         String response = changePasswordService.verifyCode(emailAuthDto.getEmail(), String.valueOf(emailAuthDto.getAuth_num()));
 
-        // 인증번호가 생성된지 5분이 되어 만료된 상황에서 인증 번호를 입력한 경우
-        if(response.equals("Error: over 5 minute"))
+        if(response.equals("Error: over 5 minute")) // 인증번호가 생성된지 5분이 되어 만료된 상황에서 인증 번호를 입력한 경우
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.ERROR_TIMEOVER_AUTHCODE));
         else if(response.equals("Error: not correct auth code")) // 인증 번호가 틀린 경우
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_CORRECT_AUTHCODE));
-        else
+        else // 인증 번호 일치
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CORRECT_AUTHCODE));
     }
 //
