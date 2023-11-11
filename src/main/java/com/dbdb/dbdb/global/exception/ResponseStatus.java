@@ -21,6 +21,7 @@ public enum ResponseStatus {
 
     RESULT_NOT_EXIST(true, 2500, "해당하는 데이터가 존재하지 않습니다"),
     BOARD_NOT_EXIST(true, 2501, "해당하는 게시글이 존재하지 않습니다"),
+    COMMENT_NOT_EXIST(true, 2502, "해당하는 댓글이 존재하지 않습니다"),
 
     // Exception
     // 5000 - Request Error

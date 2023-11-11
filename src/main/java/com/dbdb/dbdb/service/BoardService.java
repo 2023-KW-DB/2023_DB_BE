@@ -168,9 +168,12 @@ public class BoardService {
                 String sqlState = sqlEx.getSQLState();
 
                 if ("23000".equals(sqlState)) {
-                    return;
-                } else {
-                    throw new GlobalException(ResponseStatus.BOARD_NOT_EXIST);
+                    String message = sqlEx.getMessage();
+                    if (message.contains("Duplicate entry")) {
+                        return;
+                    } else if (message.contains("a foreign key constraint fails")) {
+                        throw new GlobalException(ResponseStatus.BOARD_NOT_EXIST);
+                    }
                 }
             } else {
                 throw new GlobalException(ResponseStatus.DATABASE_ERROR);
