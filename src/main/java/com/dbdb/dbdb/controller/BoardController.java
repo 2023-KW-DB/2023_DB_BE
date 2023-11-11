@@ -7,6 +7,7 @@ import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.service.BoardService;
 import com.dbdb.dbdb.service.CommentService;
+import com.dbdb.dbdb.table.BoardLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +62,17 @@ public class BoardController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDto));
     }
 
+    @PostMapping("/like")
+    public ResponseEntity<JsonResponse> likeBoard(@RequestBody BoardDto.BoardLikeDto boardLikeDto) {
+        boardService.likeBoard(boardLikeDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
+
+    @DeleteMapping("/like-cancel")
+    public ResponseEntity<JsonResponse> cancelLikeBoard(@RequestBody BoardDto.BoardLikeDto boardLikeDto) {
+        boardService.likeCancelBoard(boardLikeDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
 
     @PostMapping("/comment-write")
     public ResponseEntity<JsonResponse> createComment(@RequestBody CommentDto.CreateCommentDto createCommentDto) {

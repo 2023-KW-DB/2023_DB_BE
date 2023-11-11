@@ -7,13 +7,17 @@ import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.repository.BoardRepository;
 import com.dbdb.dbdb.repository.UserRepository;
 import com.dbdb.dbdb.table.Board;
+import com.dbdb.dbdb.table.BoardLike;
+import com.dbdb.dbdb.table.Comment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -145,4 +149,53 @@ public class BoardService {
         }
     }
 
+    public void likeBoard(BoardDto.BoardLikeDto boardLikeDto) {
+        try {
+            BoardLike boardLike = new BoardLike(
+                    boardLikeDto.getUser_id(),
+                    boardLikeDto.getCategory_id(),
+                    boardLikeDto.getLiked_id()
+            );
+
+            boardRepository.insertBoardLike(boardLike);
+
+        } catch (NullPointerException e) {
+            throw new GlobalException(ResponseStatus.INVALID_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            Throwable rootCause = e.getRootCause();
+            if (rootCause instanceof SQLException) {
+                SQLException sqlEx = (SQLException) rootCause;
+                String sqlState = sqlEx.getSQLState();
+
+                if ("23000".equals(sqlState)) {
+                    return;
+                } else {
+                    throw new GlobalException(ResponseStatus.BOARD_NOT_EXIST);
+                }
+            } else {
+                throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+            }
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public void likeCancelBoard(BoardDto.BoardLikeDto boardLikeDto) {
+        try {
+            BoardLike boardLike = new BoardLike(
+                    boardLikeDto.getUser_id(),
+                    boardLikeDto.getCategory_id(),
+                    boardLikeDto.getLiked_id()
+            );
+
+            boardRepository.deleteBoardLike(boardLike);
+
+        } catch (NullPointerException e) {
+            throw new GlobalException(ResponseStatus.INVALID_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            throw new GlobalException(ResponseStatus.BOARD_NOT_EXIST);
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }

@@ -51,4 +51,13 @@ public class BoardDto {
         private LocalDateTime created_at;
         private LocalDateTime updated_at;
     }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class BoardLikeDto{
+        private int user_id;
+        private int category_id;
+        private int liked_id;
+    }
 }

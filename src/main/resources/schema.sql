@@ -132,6 +132,7 @@ CREATE TABLE if not exists `board_like` (
   `user_id` int NOT NULL,
 	`category_id` int NOT NULL,
   `liked_id` int NOT NULL,
+  UNIQUE (`user_id`, `liked_id`),
   CONSTRAINT `board_like_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `board_like_ibfk_2` FOREIGN KEY (`liked_id`, `category_id`) REFERENCES
     `board` (`id`, `category_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -141,6 +142,7 @@ CREATE TABLE if not exists `board_like` (
 CREATE TABLE if not exists `comment_like` (
   `user_id` int NOT NULL,
   `liked_id` int NOT NULL,
+  UNIQUE (`user_id`, `liked_id`),
   CONSTRAINT `comment_like_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `comment_like_ibfk_2` FOREIGN KEY (`liked_id`) REFERENCES
 	`comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
