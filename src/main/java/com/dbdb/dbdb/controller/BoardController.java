@@ -79,4 +79,16 @@ public class BoardController {
         commentService.createComment(createCommentDto);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
     }
+
+    @PostMapping("/comment/like")
+    public ResponseEntity<JsonResponse> likeComment(@RequestBody CommentDto.CommentLikeDto commentLikeDto) {
+        commentService.likeComment(commentLikeDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
+
+    @DeleteMapping("/comment/like-cancel")
+    public ResponseEntity<JsonResponse> cancelLikeComment(@RequestBody CommentDto.CommentLikeDto commentLikeDto ) {
+        commentService.likeCancelComment(commentLikeDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
 }
