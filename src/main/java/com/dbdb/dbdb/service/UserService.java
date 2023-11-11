@@ -48,4 +48,8 @@ public class UserService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public int findUserIdByEmail(String email) {
+        return userRepository.findUserIdByEmail(email);
+    }
 }

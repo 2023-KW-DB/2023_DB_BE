@@ -44,10 +44,9 @@ public class UserController {
     public ResponseEntity<?> signIn(@RequestBody UserDto userdto, HttpServletResponse response){
         if (userService.signIn(userdto)){
             // 쿠키 생성
-            Cookie idCookie = new Cookie("id", String.valueOf(userdto.getId()));
+            Cookie idCookie = new Cookie("id", String.valueOf(userService.findUserIdByEmail(userdto.getEmail())));
             Cookie emailCookie = new Cookie("email", userdto.getEmail());
-            // 비밀번호는 쿠키에 저장하지 말아야 하므로 여기서는 예시로 "dummyTokenOrSessionId"를 사용합니다.
-            Cookie passwordCookie = new Cookie("password", "dummyTokenOrSessionId");
+            Cookie passwordCookie = new Cookie("password", userdto.getPassword());
 
             // 쿠키 유효 시간 설정
             idCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
