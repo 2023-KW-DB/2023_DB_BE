@@ -19,6 +19,8 @@ public enum ResponseStatus {
 
 
 
+    RESULT_NOT_EXIST(true, 2500, "해당하는 데이터가 존재하지 않습니다"),
+    BOARD_NOT_EXIST(true, 2501, "해당하는 게시글이 존재하지 않습니다"),
 
     // Exception
     // 5000 - Request Error
@@ -36,7 +38,7 @@ public enum ResponseStatus {
 
     // 7000 - Server Connection Error
     SERVER_ERROR(false, 7000, "서버 연결에 실패했습니다."),
-    DATABASE_ERROR(false, 7100, "데이터베이스 연결에 실패했습니다."),
+    DATABASE_ERROR(false, 7100, "데이터베이스 오류가 발생했습니다."),
     ;
 
     private final boolean isSuccess;
