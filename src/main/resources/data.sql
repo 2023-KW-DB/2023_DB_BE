@@ -1,4 +1,4 @@
-LOAD DATA INFILE '.\\src\\main\\resources\\lendplacse.csv'
+LOAD DATA LOCAL INFILE '.\\src\\main\\resources\\lendplace.csv'
 INTO TABLE bikestationinformation
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
