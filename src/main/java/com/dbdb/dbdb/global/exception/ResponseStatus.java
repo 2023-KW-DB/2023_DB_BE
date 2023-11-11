@@ -11,7 +11,8 @@ public enum ResponseStatus {
     // Success
     EMAIL_DUPLICATE(true, 2000, "이메일이 중복됩니다"),
     EMAIL_NOT_DUPLICATE(true, 2001, "이메일이 중복되지 않습니다"),
-    LOGIN_SUCCESS(true, 2002, "로그인을 성공하였습니다."),
+    SUCCESS_LOGIN(true, 2002, "로그인을 성공하였습니다."),
+    SUCCESS_SEND_AUTHCODE(true, 2003, "이메일 인증번호 전송을 성공하였습니다"),
 
 
 
