@@ -74,6 +74,14 @@ public class BoardController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
     }
 
+    @GetMapping("/get-comments")
+    public ResponseEntity<JsonResponse> getComments(@RequestParam int write_id) {
+        List<CommentDto.GetCommentDto> commentDtoList = commentService.getCommentEachBoard(write_id);
+        if(commentDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, commentDtoList));
+
+    }
+
     @PostMapping("/comment-write")
     public ResponseEntity<JsonResponse> createComment(@RequestBody CommentDto.CreateCommentDto createCommentDto) {
         commentService.createComment(createCommentDto);
