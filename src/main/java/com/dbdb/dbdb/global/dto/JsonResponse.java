@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 public class JsonResponse {
     private final String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     private boolean isSuccess;
-    private int status;
+    private int code;
     private String message;
     private Object result;
 }
