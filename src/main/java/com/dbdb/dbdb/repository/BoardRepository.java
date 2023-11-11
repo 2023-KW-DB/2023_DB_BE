@@ -63,4 +63,8 @@ public class BoardRepository {
 
         return board;
     }
+
+    public void increaseViewCount(int id) {
+        jdbcTemplate.update("UPDATE `board` SET views = views + 1 WHERE id = ?", id);
+    }
 }

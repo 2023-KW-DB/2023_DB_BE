@@ -9,6 +9,7 @@ import com.dbdb.dbdb.repository.UserRepository;
 import com.dbdb.dbdb.table.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -118,7 +119,10 @@ public class BoardService {
         return boardTitleDtoList;
     }
 
+    @Transactional
     public BoardDto.GetBoardDto getBoard(int id) {
+        boardRepository.increaseViewCount(id);
+
         Board board = boardRepository.findBoardById(id);
         String username = "";
         UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
