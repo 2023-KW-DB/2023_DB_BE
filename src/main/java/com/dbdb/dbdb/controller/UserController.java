@@ -103,6 +103,14 @@ public class UserController {
         return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));
     }
 
+    // 회원탈퇴
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> withdrawal(@RequestBody UserDto userDto){
+        userService.withdrawal(userDto.getId());
+
+        return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_WITHDRAWAL));
+    }
+
     // 비밀번호 찾기 중 인증 번호 전송
     @PostMapping("/send-authcode")
     public ResponseEntity<?> sendAuthCode(@RequestBody UserDto userDto) throws MessagingException, UnsupportedEncodingException {

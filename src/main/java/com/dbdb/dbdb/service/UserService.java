@@ -52,4 +52,8 @@ public class UserService {
     public int findUserIdByEmail(String email) {
         return userRepository.findUserIdByEmail(email);
     }
+
+    public void withdrawal(int id) {
+        userRepository.deleteUserById(id);
+    }
 }
