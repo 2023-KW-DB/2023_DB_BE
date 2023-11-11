@@ -1,6 +1,5 @@
 package com.dbdb.dbdb.controller;
 
-import com.dbdb.dbdb.dto.EmailAuthCodeDto;
 import com.dbdb.dbdb.dto.EmailAuthDto;
 import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
@@ -10,7 +9,8 @@ import com.dbdb.dbdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
@@ -41,25 +41,88 @@ public class UserController {
 
     // 로그인
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody UserDto userdto){
-        if (userService.signIn(userdto))
+    public ResponseEntity<?> signIn(@RequestBody UserDto userdto, HttpServletResponse response){
+        if (userService.signIn(userdto)){
+            // 쿠키 생성
+            Cookie idCookie = new Cookie("id", String.valueOf(userService.findUserIdByEmail(userdto.getEmail())));
+            Cookie emailCookie = new Cookie("email", userdto.getEmail());
+            Cookie passwordCookie = new Cookie("password", userdto.getPassword());
+
+            // 쿠키 유효 시간 설정
+            idCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
+            emailCookie.setMaxAge(7 * 24 * 60 * 60);
+            passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+
+            // 쿠키에 HttpOnly 설정
+            idCookie.setHttpOnly(true);
+            emailCookie.setHttpOnly(true);
+            passwordCookie.setHttpOnly(true);
+
+            // 쿠키 경로 설정
+            idCookie.setPath("/");
+            emailCookie.setPath("/");
+            passwordCookie.setPath("/");
+
+            // 응답에 쿠키 추가
+            response.addCookie(idCookie);
+            response.addCookie(emailCookie);
+            response.addCookie(passwordCookie);
+
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_LOGIN, null));
+        }
         else
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.ERROR_LOGIN, null));
+    }
+
+    // 로그아웃
+    @PostMapping("/signout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+
+        // 인증 쿠키를 무효화하기 위해 만료 날짜를 과거로 설정
+        Cookie idCookie = new Cookie("id", null);
+        Cookie emailCookie = new Cookie("email", null);
+        Cookie passwordCookie = new Cookie("password", null);
+
+        idCookie.setMaxAge(0); // 즉시 만료
+        emailCookie.setMaxAge(0); // 즉시 만료
+        passwordCookie.setMaxAge(0); // 즉시 만료
+
+        idCookie.setPath("/");
+        emailCookie.setPath("/");
+        passwordCookie.setPath("/");
+
+        idCookie.setHttpOnly(true);
+        emailCookie.setHttpOnly(true);
+        passwordCookie.setHttpOnly(true);
+
+        // 응답에 만료된 쿠키를 추가하여 클라이언트의 쿠키를 삭제
+        response.addCookie(idCookie);
+        response.addCookie(emailCookie);
+        response.addCookie(passwordCookie);
+
+        return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));
+    }
+
+    // 회원탈퇴
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> withdrawal(@RequestBody UserDto userDto){
+        userService.withdrawal(userDto.getId());
+
+        return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_WITHDRAWAL));
     }
 
     // 비밀번호 찾기 중 인증 번호 전송
     @PostMapping("/send-authcode")
     public ResponseEntity<?> sendAuthCode(@RequestBody UserDto userDto) throws MessagingException, UnsupportedEncodingException {
 
-        EmailAuthCodeDto emailAuthCodeDto = new EmailAuthCodeDto();
+        EmailAuthDto emailAuthCodeDto = new EmailAuthDto();
         
         // 5분 이내에 다시 인증 번호 전송을 했다면 앞서 요청한 인증 번호 삭제
         changePasswordService.deleteExistCode(userDto.getEmail());
 
-        emailAuthCodeDto.setAuthCode(changePasswordService.sendEmail(userDto.getEmail()));
+        emailAuthCodeDto.setAuth_num(Integer.parseInt(changePasswordService.sendEmail(userDto.getEmail())));
 
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SEND_AUTHCODE, emailAuthCodeDto.getAuthCode()));
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SEND_AUTHCODE, emailAuthCodeDto.getAuth_num()));
     }
 
     // 입력한 인증 번호 검사
@@ -75,28 +138,15 @@ public class UserController {
         else // 인증 번호 일치
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CORRECT_AUTHCODE));
     }
-//
-//    @PutMapping("/change-password") // 인증 번호 확인 후 비밀 번호 변경
-//    public BaseResponse<PasswordChangeRequestDto> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequestDto){
-//
-//        // 회원으로 등록되지 않은 이메일인 경우
-//        if(userService.findByEmail(passwordChangeRequestDto.getEmail()) == null)
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_NOT_FOUND_USER);
-//
-//        // 이메일 유저가 아닌 경우
-//        if(!emailService.isUserTypeEmail(passwordChangeRequestDto.getEmail()))
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_NOT_EMAIL_USER);
-//
-//        // 새로운 비밀번호를 입력하지 않은 경우
-//        if(passwordChangeRequestDto.getPassword() == null || passwordChangeRequestDto.getPassword().equals(""))
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_INVALID_INPUT);
-//
-//        String response = emailService.changePassword(passwordChangeRequestDto.getEmail(), passwordChangeRequestDto.getPassword());
-//
-//        // server나 db 상의 이유로 비밀번호 변경을 실패한 경우
-//        if(!response.equals("success: change password"))
-//            return new BaseResponse<>(BaseResponseStatus.FAILED_CHANGE_PASSWORD);
-//
-//        return new BaseResponse<>(BaseResponseStatus.SUCCESS_CHANGE_PASSWORD);
-//    }
+
+    // 인증 번호 확인 후 비밀 번호 변경
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody UserDto userDto){
+
+        changePasswordService.changePassword(userDto.getEmail(), userDto.getPassword());
+
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CHANGE_PASSWORD));
+    }
+
+
 }

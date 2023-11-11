@@ -124,24 +124,7 @@ public class ChangePasswordService {
         return "Error: not correct auth code";
     }
 
-//
-//    public String changePassword(String email, String password){
-//        UserEntity userEntity = userRepository.findByEmail(email).get();
-//
-//        userRepository.save(userEntity);
-//
-//        return "success: change password";
-//    }
-//
-//    public Boolean isUserTypeEmail(String email) {
-//
-//        UserEntity userEntity = userRepository.findByEmail(email).get();
-//
-//        if(userEntity.getUserType().equals(UserTypeEnum.EMAIL))
-//            return true;
-//        else
-//            return false;
-//    }
-//
-
+    public void changePassword(String email, String password) {
+        userRepository.updatePassword(email, password);
+    }
 }

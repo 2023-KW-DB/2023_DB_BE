@@ -66,4 +66,14 @@ public class UserRepository {
 
         return userNameTypeDto;
     }
+
+    public void updatePassword(String email, String newPassword) {
+        String sql = "UPDATE user SET password = ? WHERE email = ?";
+        jdbcTemplate.update(sql, newPassword, email);
+    }
+
+    public void deleteUserById(int id) {
+        String sql = "DELETE FROM user WHERE id = ?";
+            jdbcTemplate.update(sql, id);
+    }
 }

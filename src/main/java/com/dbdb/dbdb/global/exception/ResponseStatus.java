@@ -12,9 +12,13 @@ public enum ResponseStatus {
     EMAIL_DUPLICATE(true, 2000, "이메일이 중복됩니다"),
     EMAIL_NOT_DUPLICATE(true, 2001, "이메일이 중복되지 않습니다"),
     SUCCESS_LOGIN(true, 2002, "로그인을 성공하였습니다."),
-    SUCCESS_SEND_AUTHCODE(true, 2003, "이메일 인증번호 전송을 성공하였습니다"),
-    SUCCESS_CORRECT_AUTHCODE(true, 2004, "인증번호가 일치합니다."),
-    SUCCESS_NOT_CORRECT_AUTHCODE(true, 2005, "인증번호가 일치하지 않습니다."),
+    SUCCESS_LOGOUT(true, 2003, "로그아웃을 성공하였습니다."),
+    SUCCESS_SEND_AUTHCODE(true, 2004, "이메일 인증번호 전송을 성공하였습니다"),
+    SUCCESS_CORRECT_AUTHCODE(true, 2005, "인증번호가 일치합니다."),
+    SUCCESS_NOT_CORRECT_AUTHCODE(true, 2006, "인증번호가 일치하지 않습니다."),
+    SUCCESS_CHANGE_PASSWORD(true, 2007, "비밀번호 변경을 성공하였습니다."),
+    SUCCESS_WITHDRAWAL(true, 2008, "회원탈퇴를 성공하였습니다"),
+
 
 
 
