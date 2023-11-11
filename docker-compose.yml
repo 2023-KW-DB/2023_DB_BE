@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  db:
+    container_name: mariadb-server
+    image: mariadb:latest
+    restart: unless-stopped # 사용자가 직접 끄기 전까지 계속 재시작
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1qaz2wsx@
+      MYSQL_DATABASE: dbdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1qaz2wsx@
+      TZ: Asia/Seoul
+    volumes:
+      - data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  data:
