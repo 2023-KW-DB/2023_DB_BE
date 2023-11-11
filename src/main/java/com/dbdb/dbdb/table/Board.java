@@ -17,7 +17,7 @@ public class Board {
     private int views;
     private String title;
     private String content;
-    private boolean is_notice;
+    private boolean notice;
     private String file_name;
     private String url;
     private LocalDateTime created_at;

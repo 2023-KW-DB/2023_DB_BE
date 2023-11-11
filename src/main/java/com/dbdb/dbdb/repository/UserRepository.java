@@ -2,6 +2,7 @@ package com.dbdb.dbdb.repository;
 
 import com.dbdb.dbdb.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,15 @@ public class UserRepository {
                 userDto.getWeight(),
                 userDto.getAge());
         return true;
+    }
+
+    public UserDto.UserNameTypeDto findNameTypeNameById(int user_id) {
+        var userMapper = BeanPropertyRowMapper.newInstance(UserDto.UserNameTypeDto.class);
+        UserDto.UserNameTypeDto userNameTypeDto = jdbcTemplate.queryForObject(
+                "SELECT username, user_type FROM `user` WHERE id=?",
+                userMapper, user_id
+        );
+
+        return userNameTypeDto;
     }
 }
