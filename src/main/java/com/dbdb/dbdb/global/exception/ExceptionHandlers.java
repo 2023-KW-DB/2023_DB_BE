@@ -1,6 +1,5 @@
 package com.dbdb.dbdb.global.exception;
 
-import ch.qos.logback.core.status.ErrorStatus;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
