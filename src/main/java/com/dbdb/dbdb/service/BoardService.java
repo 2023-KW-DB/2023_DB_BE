@@ -121,17 +121,23 @@ public class BoardService {
 
     @Transactional
     public BoardDto.GetBoardDto getBoard(int id) {
-        boardRepository.increaseViewCount(id);
+        try {
+            boardRepository.increaseViewCount(id);
 
-        Board board = boardRepository.findBoardById(id);
-        String username = "";
-        UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
-        if(userNameTypeDto.getUser_type() == 0) {
-            username = "관리자";
-        } else {
-            username = userNameTypeDto.getUsername();
+            Board board = boardRepository.findBoardById(id);
+            String username = "";
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
+            if (userNameTypeDto.getUser_type() == 0) {
+                username = "관리자";
+            } else {
+                username = userNameTypeDto.getUsername();
+            }
+            BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getCreated_at(), board.getUpdated_at());
+
+            return boardDto;
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
-        BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getCreated_at(), board.getUpdated_at());
-        return boardDto;
     }
+
 }

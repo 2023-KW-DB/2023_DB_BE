@@ -1,10 +1,12 @@
 package com.dbdb.dbdb.controller;
 
 import com.dbdb.dbdb.dto.BoardDto;
+import com.dbdb.dbdb.dto.CommentDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.service.BoardService;
+import com.dbdb.dbdb.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.util.Map;
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
+    private final CommentService commentService;
 
     @PostMapping("/create-post")
     public ResponseEntity<JsonResponse> createBoard(@RequestBody BoardDto.CreateBoardDto createBoardDto) {
@@ -55,4 +58,10 @@ public class BoardController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDtoList));
     }
 
+
+    @PostMapping("/comment-write")
+    public ResponseEntity<JsonResponse> createComment(@RequestBody CommentDto.CreateCommentDto createCommentDto) {
+        commentService.createComment(createCommentDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
 }
