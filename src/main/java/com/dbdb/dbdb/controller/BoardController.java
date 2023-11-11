@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,5 +36,23 @@ public class BoardController {
     }
 
 
+    @GetMapping("/get-all-titles")
+    public ResponseEntity<JsonResponse> allBoardTitle() {
+        List<BoardDto.GetBoardTitleDto> boardTitleDtoList = boardService.getAllBoardTitle();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
+    }
+
+    @GetMapping("/get-category-titles")
+    public ResponseEntity<JsonResponse> eachCategoryBoardTitle(@RequestParam int category_id) {
+        List<BoardDto.GetBoardTitleDto> boardTitleDtoList = boardService.getEachCategoryBoardTitle(category_id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
+    }
+
+
+    @GetMapping("/get-board")
+    public ResponseEntity<JsonResponse> getBoard(@RequestParam int id) {
+        BoardDto.GetBoardDto boardDtoList = boardService.getBoard(id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDtoList));
+    }
 
 }

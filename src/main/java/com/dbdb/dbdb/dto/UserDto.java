@@ -1,6 +1,7 @@
 package com.dbdb.dbdb.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -16,4 +17,11 @@ public class UserDto {
     private int age;
     private LocalDateTime last_accessed_at; // 최근 접속 시간인 것 같은데 로그인 성공한 순간으로?
     private int total_money;
+
+    @NoArgsConstructor
+    @Data
+    public static class UserNameTypeDto {
+        String username;
+        int user_type;
+    }
 }

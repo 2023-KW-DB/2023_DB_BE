@@ -3,6 +3,7 @@ package com.dbdb.dbdb.repository;
 import com.dbdb.dbdb.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ public class UserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Boolean insertUser(UserDto userDto){
+    public Boolean insertUser(UserDto userDto) {
         String sql = "INSERT INTO user (password, username, user_type, email, phone_number, weight, age) VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 userDto.getPassword(),
@@ -54,5 +55,15 @@ public class UserRepository {
             // 이메일에 해당하는 user_id가 없으면 null 반환
             return null;
         }
+    }
+
+    public UserDto.UserNameTypeDto findNameTypeNameById ( int user_id){
+        var userMapper = BeanPropertyRowMapper.newInstance(UserDto.UserNameTypeDto.class);
+        UserDto.UserNameTypeDto userNameTypeDto = jdbcTemplate.queryForObject(
+                "SELECT username, user_type FROM `user` WHERE id=?",
+                userMapper, user_id
+        );
+
+        return userNameTypeDto;
     }
 }
