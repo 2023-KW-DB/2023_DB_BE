@@ -1,4 +1,3 @@
-
 CREATE TABLE if not exists `user`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `password` varchar(255) NOT NULL,
@@ -9,7 +8,7 @@ CREATE TABLE if not exists `user`  (
   `weight` double NULL DEFAULT NULL,
   `age` int NULL DEFAULT NULL,
   `last_accessed_at` datetime NULL DEFAULT NULL,
-  `total_money` int NOT NULL DEFAULT 0,
+  `total_money` int NOT NULL DEFAULT 50000,
   PRIMARY KEY (`id`)
 );
 
@@ -30,10 +29,12 @@ CREATE TABLE if not exists `board` (
    `id` int NOT NULL AUTO_INCREMENT,
   `category_id` int NOT NULL,
   `user_id` int NOT NULL,
-  `views` int NOT NULL,
+  `views` int NOT NULL DEFAULT 0,
   `title` varchar(255) NOT NULL,
   `content` varchar(255) NOT NULL,
   `is_notice` boolean NOT NULL DEFAULT FALSE,
+  `file_name` varchar(255) NULL DEFAULT NULL,
+  `url` varchar(255) NULL DEFAULT NULL,
   `created_at` datetime NULL DEFAULT NULL,
   `updated_at` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`, `category_id`),
