@@ -1,5 +1,6 @@
 package com.dbdb.dbdb.repository;
 
+import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.table.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -20,17 +21,17 @@ public class BoardRepository {
         int init_views = 0;
         String title = board.getTitle();
         String content = board.getContent();
-        boolean is_notice = board.is_notice();
+        boolean notice = board.isNotice();
         String file_name = board.getFile_name();
         String url = board.getUrl();
         LocalDateTime create_at = board.getCreated_at();
         LocalDateTime update_at = board.getUpdated_at();
 
-        jdbcTemplate.update("INSERT INTO `board` (`category_id`, `user_id`, `views`, `title`, `content`, `is_notice`, `file_name`, `url`, `created_at`, `updated_at`) VALUES (?,?,?,?,?,?,?,?,?,?)"
-                , category_id, user_id, init_views, title, content, is_notice, file_name, url, create_at, update_at);
+        jdbcTemplate.update("INSERT INTO `board` (`category_id`, `user_id`, `views`, `title`, `content`, `notice`, `file_name`, `url`, `created_at`, `updated_at`) VALUES (?,?,?,?,?,?,?,?,?,?)"
+                , category_id, user_id, init_views, title, content, notice, file_name, url, create_at, update_at);
     }
 
-    public List<Board> findAll() {
+    public List<Board> findTitleAll() {
         var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
 
         List<Board> boards = jdbcTemplate.query(
@@ -41,7 +42,7 @@ public class BoardRepository {
         return boards;
     }
 
-    public List<Board> findByCategoryId(int category_id) {
+    public List<Board> findTitleByCategoryId(int category_id) {
         var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
 
         List<Board> boards = jdbcTemplate.query(
@@ -50,5 +51,16 @@ public class BoardRepository {
         );
 
         return boards;
+    }
+
+    public Board findBoardById(int id) {
+        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+
+        Board board = jdbcTemplate.queryForObject(
+                "SELECT * FROM `board` WHERE id=?",
+                boardMapper, id
+        );
+
+        return board;
     }
 }

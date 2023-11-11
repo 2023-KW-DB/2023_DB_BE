@@ -17,7 +17,7 @@ public class BoardDto {
         private int user_id;
         private String title;
         private String content;
-        private boolean is_notice;
+        private boolean notice;
         private String file_name;
         private String url;
     }
@@ -31,7 +31,24 @@ public class BoardDto {
         private String user_name;
         private int views;
         private String title;
-        private boolean is_notice;
+        private boolean notice;
         private LocalDateTime created_at;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class GetBoardDto{
+        private int id;
+        private int category_id;
+        private String user_name;
+        private int views;
+        private String title;
+        private String content;
+        private boolean notice;
+        private String file_name;
+        private String url;
+        private LocalDateTime created_at;
+        private LocalDateTime updated_at;
     }
 }

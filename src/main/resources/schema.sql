@@ -32,7 +32,7 @@ CREATE TABLE if not exists `board` (
   `views` int NOT NULL DEFAULT 0,
   `title` varchar(255) NOT NULL,
   `content` varchar(255) NOT NULL,
-  `is_notice` boolean NOT NULL DEFAULT FALSE,
+  `notice` boolean NOT NULL DEFAULT FALSE,
   `file_name` varchar(255) NULL DEFAULT NULL,
   `url` varchar(255) NULL DEFAULT NULL,
   `created_at` datetime NULL DEFAULT NULL,

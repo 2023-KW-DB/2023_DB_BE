@@ -47,4 +47,12 @@ public class BoardController {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = boardService.getEachCategoryBoardTitle(category_id);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
     }
+
+
+    @GetMapping("/get-board")
+    public ResponseEntity<JsonResponse> getBoard(@RequestParam int id) {
+        BoardDto.GetBoardDto boardDtoList = boardService.getBoard(id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDtoList));
+    }
+
 }

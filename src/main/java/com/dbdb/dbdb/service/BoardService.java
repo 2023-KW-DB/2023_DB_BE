@@ -30,7 +30,7 @@ public class BoardService {
                     0,  //views
                     createBoardDto.getTitle(),
                     createBoardDto.getContent(),
-                    createBoardDto.is_notice(),
+                    createBoardDto.isNotice(),
                     createBoardDto.getFile_name(),
                     createBoardDto.getUrl(),
                     LocalDateTime.now(), //create at
@@ -74,18 +74,18 @@ public class BoardService {
     public List<BoardDto.GetBoardTitleDto> getAllBoardTitle() {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = new ArrayList<>();
         try {
-            List<Board> boardList = boardRepository.findAll();
+            List<Board> boardList = boardRepository.findTitleAll();
 
             for(Board board : boardList) {
                 String username = "";
-                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameById(board.getUser_id());
+                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
                 if(userNameTypeDto.getUser_type() == 0) {
                     username = "관리자";
                 } else {
                     username = userNameTypeDto.getUsername();
                 }
 
-                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.is_notice(), board.getCreated_at()));
+                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.isNotice(), board.getCreated_at()));
             }
 
         } catch (Exception e) {
@@ -98,17 +98,17 @@ public class BoardService {
     public List<BoardDto.GetBoardTitleDto> getEachCategoryBoardTitle(int categoryId) {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = new ArrayList<>();
         try {
-            List<Board> boardList = boardRepository.findByCategoryId(categoryId);
+            List<Board> boardList = boardRepository.findTitleByCategoryId(categoryId);
             for(Board board : boardList) {
                 String username = "";
-                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameById(board.getUser_id());
+                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
                 if(userNameTypeDto.getUser_type() == 0) {
                     username = "관리자";
                 } else {
                     username = userNameTypeDto.getUsername();
                 }
 
-                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.is_notice(), board.getCreated_at()));
+                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.isNotice(), board.getCreated_at()));
             }
 
         } catch (Exception e) {
@@ -116,5 +116,18 @@ public class BoardService {
         }
 
         return boardTitleDtoList;
+    }
+
+    public BoardDto.GetBoardDto getBoard(int id) {
+        Board board = boardRepository.findBoardById(id);
+        String username = "";
+        UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
+        if(userNameTypeDto.getUser_type() == 0) {
+            username = "관리자";
+        } else {
+            username = userNameTypeDto.getUsername();
+        }
+        BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getCreated_at(), board.getUpdated_at());
+        return boardDto;
     }
 }

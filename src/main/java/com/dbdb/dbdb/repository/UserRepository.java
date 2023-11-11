@@ -24,7 +24,7 @@ public class UserRepository {
         return true;
     }
 
-    public UserDto.UserNameTypeDto findNameById(int user_id) {
+    public UserDto.UserNameTypeDto findNameTypeNameById(int user_id) {
         var userMapper = BeanPropertyRowMapper.newInstance(UserDto.UserNameTypeDto.class);
         UserDto.UserNameTypeDto userNameTypeDto = jdbcTemplate.queryForObject(
                 "SELECT username, user_type FROM `user` WHERE id=?",
