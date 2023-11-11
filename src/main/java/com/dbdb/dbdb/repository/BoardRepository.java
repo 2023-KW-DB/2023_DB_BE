@@ -2,6 +2,7 @@ package com.dbdb.dbdb.repository;
 
 import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.table.Board;
+import com.dbdb.dbdb.table.BoardLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -62,5 +63,27 @@ public class BoardRepository {
         );
 
         return board;
+    }
+
+    public void increaseViewCount(int id) {
+        jdbcTemplate.update("UPDATE `board` SET views = views + 1 WHERE id = ?", id);
+    }
+
+    public void insertBoardLike(BoardLike boardLike) {
+        int user_id = boardLike.getUser_id();
+        int category_id = boardLike.getCategory_id();
+        int liked_id = boardLike.getLiked_id();
+
+        jdbcTemplate.update("INSERT INTO `board_like` (`user_id`, `category_id`, `liked_id`) VALUES (?,?,?)",
+                user_id, category_id, liked_id);
+    }
+
+    public void deleteBoardLike(BoardLike boardLike) {
+        int user_id = boardLike.getUser_id();
+        int category_id = boardLike.getCategory_id();
+        int liked_id = boardLike.getLiked_id();
+
+        jdbcTemplate.update("DELETE FROM `board_like` WHERE user_id=? AND category_id=? AND liked_id=?",
+                user_id, category_id, liked_id);
     }
 }
