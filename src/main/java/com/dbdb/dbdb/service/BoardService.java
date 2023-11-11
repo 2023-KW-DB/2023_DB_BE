@@ -1,9 +1,11 @@
 package com.dbdb.dbdb.service;
 
 import com.dbdb.dbdb.dto.BoardDto;
+import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.repository.BoardRepository;
+import com.dbdb.dbdb.repository.UserRepository;
 import com.dbdb.dbdb.table.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,14 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     public void createBoard(BoardDto.CreateBoardDto createBoardDto) {
         try {
@@ -68,5 +69,52 @@ public class BoardService {
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.UPLOAD_ERROR);
         }
+    }
+
+    public List<BoardDto.GetBoardTitleDto> getAllBoardTitle() {
+        List<BoardDto.GetBoardTitleDto> boardTitleDtoList = new ArrayList<>();
+        try {
+            List<Board> boardList = boardRepository.findAll();
+
+            for(Board board : boardList) {
+                String username = "";
+                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameById(board.getUser_id());
+                if(userNameTypeDto.getUser_type() == 0) {
+                    username = "관리자";
+                } else {
+                    username = userNameTypeDto.getUsername();
+                }
+
+                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.is_notice(), board.getCreated_at()));
+            }
+
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+
+        return boardTitleDtoList;
+    }
+
+    public List<BoardDto.GetBoardTitleDto> getEachCategoryBoardTitle(int categoryId) {
+        List<BoardDto.GetBoardTitleDto> boardTitleDtoList = new ArrayList<>();
+        try {
+            List<Board> boardList = boardRepository.findByCategoryId(categoryId);
+            for(Board board : boardList) {
+                String username = "";
+                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameById(board.getUser_id());
+                if(userNameTypeDto.getUser_type() == 0) {
+                    username = "관리자";
+                } else {
+                    username = userNameTypeDto.getUsername();
+                }
+
+                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.is_notice(), board.getCreated_at()));
+            }
+
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+
+        return boardTitleDtoList;
     }
 }

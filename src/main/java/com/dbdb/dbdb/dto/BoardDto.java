@@ -1,5 +1,8 @@
 package com.dbdb.dbdb.dto;
 
+import com.dbdb.dbdb.table.Board;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,5 +20,18 @@ public class BoardDto {
         private boolean is_notice;
         private String file_name;
         private String url;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class GetBoardTitleDto{
+        private int id;
+        private int category_id;
+        private String user_name;
+        private int views;
+        private String title;
+        private boolean is_notice;
+        private LocalDateTime created_at;
     }
 }

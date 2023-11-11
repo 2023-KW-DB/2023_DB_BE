@@ -2,10 +2,12 @@ package com.dbdb.dbdb.repository;
 
 import com.dbdb.dbdb.table.Board;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,5 +30,25 @@ public class BoardRepository {
                 , category_id, user_id, init_views, title, content, is_notice, file_name, url, create_at, update_at);
     }
 
+    public List<Board> findAll() {
+        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
 
+        List<Board> boards = jdbcTemplate.query(
+            "SELECT * FROM `board`"
+                , boardMapper
+        );
+
+        return boards;
+    }
+
+    public List<Board> findByCategoryId(int category_id) {
+        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+
+        List<Board> boards = jdbcTemplate.query(
+                "SELECT * FROM `board` WHERE category_id=?"
+                , boardMapper, category_id
+        );
+
+        return boards;
+    }
 }
