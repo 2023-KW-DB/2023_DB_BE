@@ -6,6 +6,7 @@ import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.repository.CommentRepository;
 import com.dbdb.dbdb.table.Comment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,8 @@ public class CommentService {
 
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            throw new GlobalException(ResponseStatus.BOARD_NOT_EXIST);
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }

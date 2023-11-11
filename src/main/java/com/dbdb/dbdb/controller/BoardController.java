@@ -42,20 +42,23 @@ public class BoardController {
     @GetMapping("/get-all-titles")
     public ResponseEntity<JsonResponse> allBoardTitle() {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = boardService.getAllBoardTitle();
+        if(boardTitleDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
     }
 
     @GetMapping("/get-category-titles")
     public ResponseEntity<JsonResponse> eachCategoryBoardTitle(@RequestParam int category_id) {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = boardService.getEachCategoryBoardTitle(category_id);
+        if(boardTitleDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
     }
 
 
     @GetMapping("/get-board")
     public ResponseEntity<JsonResponse> getBoard(@RequestParam int id) {
-        BoardDto.GetBoardDto boardDtoList = boardService.getBoard(id);
-        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDtoList));
+        BoardDto.GetBoardDto boardDto = boardService.getBoard(id);
+        if(boardDto == null) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDto));
     }
 
 

@@ -8,6 +8,7 @@ import com.dbdb.dbdb.repository.BoardRepository;
 import com.dbdb.dbdb.repository.UserRepository;
 import com.dbdb.dbdb.table.Board;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -122,9 +123,11 @@ public class BoardService {
     @Transactional
     public BoardDto.GetBoardDto getBoard(int id) {
         try {
-            boardRepository.increaseViewCount(id);
-
             Board board = boardRepository.findBoardById(id);
+            if(board == null)
+                return null;
+
+            boardRepository.increaseViewCount(id);
             String username = "";
             UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
             if (userNameTypeDto.getUser_type() == 0) {
@@ -135,6 +138,8 @@ public class BoardService {
             BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getCreated_at(), board.getUpdated_at());
 
             return boardDto;
+        } catch (EmptyResultDataAccessException em) {
+            throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
