@@ -153,3 +153,10 @@ CREATE TABLE if not exists `bikestationrating`  (
   CONSTRAINT `bikestationrating_ibfk_1` FOREIGN KEY (`lendplace_id`) REFERENCES `bikestationinformation` (`lendplace_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `bikestationrating_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE if not exists `emailauth`  {
+  `user_id` int NOT NULL,
+  `auth_num` int NOT NULL,
+  `created_at` datetime NULL DEFAULT NULL,
+  CONSTRAINT `emailauth_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+};
