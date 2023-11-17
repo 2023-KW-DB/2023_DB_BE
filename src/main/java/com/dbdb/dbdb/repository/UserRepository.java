@@ -115,6 +115,7 @@ public class UserRepository {
             UserDto user = new UserDto();
             user.setId(rs.getInt("id"));
             user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
             user.setUser_type(rs.getInt("user_type"));
             user.setEmail(rs.getString("email"));
             user.setPhone_number(rs.getString("phone_number"));

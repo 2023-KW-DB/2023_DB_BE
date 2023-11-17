@@ -146,8 +146,4 @@ public class UserController {
         changePasswordService.changePassword(userDto.getEmail(), userDto.getPassword());
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CHANGE_PASSWORD));
     }
-
-    // 카카오 로그인
-    // https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=1534887d85f1d525b986e2521f7309b7&redirect_uri=http://localhost:8080/users/kakao-signup
-
 }

@@ -1,5 +1,6 @@
 package com.dbdb.dbdb.controller;
 
+import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.service.KakaoLoginService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -7,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -26,21 +29,39 @@ public class KakaoLoginController {
 //    }
 
     @GetMapping("/code/kakao")
-    public String kakaoCallback(@RequestParam String code, HttpServletRequest request) throws JsonProcessingException {
+    public String kakaoCallback(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code를 통해 얻은 response(access token과 여러 key들 존재)
         String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
         JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
 
-        HttpSession session = request.getSession();
+        UserDto userDto = kakaoLoginService.parshingUserInfo(userInfoResponse);
 
-        UserEntity userEntity = kakaoLoginService.parshingUserInfo(userInfoResponse);
-        session.setAttribute("accessToken", accessToken);
-        session.setAttribute("id", userEntity.getUserId());
-        session.setAttribute("email", userEntity.getEmail());
+        // 쿠키 생성
+        Cookie idCookie = new Cookie("id", String.valueOf(userDto.getId()));
+        Cookie emailCookie = new Cookie("email", userDto.getEmail());
+        Cookie passwordCookie = new Cookie("password", userDto.getPassword());
 
-        if (userEntity!=null){
-            kakaoLoginService.save(userEntity);
-        }
+        // 쿠키 유효 시간 설정
+        idCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
+        emailCookie.setMaxAge(7 * 24 * 60 * 60);
+        passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+
+        // 쿠키에 HttpOnly 설정
+        idCookie.setHttpOnly(true);
+        emailCookie.setHttpOnly(true);
+        passwordCookie.setHttpOnly(true);
+
+        // 쿠키 경로 설정
+        idCookie.setPath("/");
+        emailCookie.setPath("/");
+        passwordCookie.setPath("/");
+
+        // 응답에 쿠키 추가
+        response.addCookie(idCookie);
+        response.addCookie(emailCookie);
+        response.addCookie(passwordCookie);
+
+
 
         return "kakao login success";
     }

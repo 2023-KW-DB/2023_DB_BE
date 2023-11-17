@@ -91,6 +91,7 @@ public class KakaoLoginService {
         return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // 유저 정보를 json으로 가져옴.
     }
 
+    // 얻은 유저에 대한 정보에서 필요한 것들만 파싱
     public UserDto parshingUserInfo(JsonNode userResourceNode) throws JsonProcessingException {
         log.info("userResorceNode = {}", userResourceNode);
 
