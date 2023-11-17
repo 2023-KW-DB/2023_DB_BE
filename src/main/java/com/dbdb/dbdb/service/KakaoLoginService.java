@@ -22,6 +22,7 @@ public class KakaoLoginService {
     @Autowired
     private Environment env;
 
+    // 액세스 토큰 요청
     public JsonNode getAccessTokenResponse(String code) {
 
         RestTemplate restTemplate = new RestTemplate();
@@ -57,5 +58,10 @@ public class KakaoLoginService {
         ).getBody();
 
         return response;
+    }
+
+    // 액세스 토큰을 얻었으므로 파싱하여 반환
+    public String parshingAccessToken(JsonNode responseBody){
+        return responseBody.get("access_token").asText();
     }
 }
