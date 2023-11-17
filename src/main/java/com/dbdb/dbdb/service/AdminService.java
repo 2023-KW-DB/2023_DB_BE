@@ -16,6 +16,7 @@ public class AdminService {
     private UserRepository userRepository;
 
     public List<UserDto> getAllUsers() {
+        List<UserDto> users = userRepository.returnAllUsers();
         return userRepository.returnAllUsers();
     }
 }

@@ -23,6 +23,9 @@ public class AdminController {
     public ResponseEntity<?> getAllUsers(){
         List<UserDto> users = adminService.getAllUsers();
 
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS, users));
+        if (users.isEmpty())
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_USERS_INFO_ISEMPTY, null));
+
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_USERS_INFO, users));
     }
 }
