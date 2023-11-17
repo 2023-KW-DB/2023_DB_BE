@@ -35,7 +35,7 @@ public class KakaoLoginController {
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code를 통해 얻은 response(access token과 여러 key들 존재)
-        // String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
+        String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
         JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
 
         UserDto userDto = kakaoLoginService.parshingUserInfo(userInfoResponse);
@@ -70,30 +70,8 @@ public class KakaoLoginController {
 
     // 로그아웃
     @PostMapping("/users/kakao-signout")
-    public ResponseEntity<?> kakaoLogout(HttpServletResponse response) {
-
-        // 인증 쿠키를 무효화하기 위해 만료 날짜를 과거로 설정
-        Cookie idCookie = new Cookie("id", null);
-        Cookie emailCookie = new Cookie("email", null);
-        Cookie passwordCookie = new Cookie("password", null);
-
-//        idCookie.setMaxAge(0); // 즉시 만료
-//        emailCookie.setMaxAge(0); // 즉시 만료
-//        passwordCookie.setMaxAge(0); // 즉시 만료
-
-        idCookie.setPath("/");
-        emailCookie.setPath("/");
-        passwordCookie.setPath("/");
-
-        idCookie.setHttpOnly(true);
-        emailCookie.setHttpOnly(true);
-        passwordCookie.setHttpOnly(true);
-
-        // 응답에 만료된 쿠키를 추가하여 클라이언트의 쿠키를 삭제
-        response.addCookie(idCookie);
-        response.addCookie(emailCookie);
-        response.addCookie(passwordCookie);
-
+    public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
+        kakaoLoginService.kakaoLogout()
         return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));
     }
 }
