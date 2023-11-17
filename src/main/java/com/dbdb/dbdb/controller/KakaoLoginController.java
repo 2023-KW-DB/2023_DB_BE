@@ -64,6 +64,6 @@ public class KakaoLoginController {
         response.addCookie(emailCookie);
         response.addCookie(passwordCookie);
 
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_LOGIN, null));
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_KAKAO_LOGIN, null));
     }
 }

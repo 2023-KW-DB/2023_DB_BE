@@ -13,10 +13,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -25,6 +28,8 @@ public class KakaoLoginService {
     private UserRepository userRepository;
     @Autowired
     private Environment env;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 액세스 토큰 요청
     public JsonNode getAccessTokenResponse(String code) {
@@ -107,11 +112,13 @@ public class KakaoLoginService {
             if(userDto != null)
                 return userDto;
             else{
-                UserDto newUserDto = new UserDto();
-                newUserDto.setEmail(email);
-                newUserDto.setUsername(nickName);
-                userRepository.insertUser(newUserDto);
-                return newUserDto;
+                UserDto newKakaoUserDto = new UserDto();
+                newKakaoUserDto.setEmail(email);
+                newKakaoUserDto.setUsername(nickName);
+                newKakaoUserDto.setUser_type(2);
+                newKakaoUserDto.setPassword(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()));
+                userRepository.insertUser(newKakaoUserDto);
+                return newKakaoUserDto;
             }
         }
 
