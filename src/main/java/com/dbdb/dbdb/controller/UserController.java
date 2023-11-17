@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
@@ -76,31 +77,23 @@ public class UserController {
 
     // 로그아웃
     @PostMapping("/signout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
 
-        // 인증 쿠키를 무효화하기 위해 만료 날짜를 과거로 설정
-        Cookie idCookie = new Cookie("id", null);
-        Cookie emailCookie = new Cookie("email", null);
-        Cookie passwordCookie = new Cookie("password", null);
+        Cookie[] cookies = request.getCookies();
 
-        idCookie.setMaxAge(0); // 즉시 만료
-        emailCookie.setMaxAge(0); // 즉시 만료
-        passwordCookie.setMaxAge(0); // 즉시 만료
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // Check for the specific cookies and set Max-Age to 0 to delete them
+                if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName())) {
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/"); // Ensure the path is the same as when the cookie was set
+                    response.addCookie(cookie); // Add the cookie to the response to update it in the client
+                }
+            }
+            return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));
+        }
 
-        idCookie.setPath("/");
-        emailCookie.setPath("/");
-        passwordCookie.setPath("/");
-
-        idCookie.setHttpOnly(true);
-        emailCookie.setHttpOnly(true);
-        passwordCookie.setHttpOnly(true);
-
-        // 응답에 만료된 쿠키를 추가하여 클라이언트의 쿠키를 삭제
-        response.addCookie(idCookie);
-        response.addCookie(emailCookie);
-        response.addCookie(passwordCookie);
-
-        return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));
+        return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.COOKIE_ERROR));
     }
 
     // 회원탈퇴

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -18,7 +20,6 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/login/oauth2", produces = "application/json")
 public class KakaoLoginController {
 
     @Autowired
@@ -31,8 +32,8 @@ public class KakaoLoginController {
 //        return code;
 //    }
 
-    @GetMapping("/code/kakao")
-    public ResponseEntity<?> kakaoCallback(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    @GetMapping("/login/oauth2/code/kakao")
+    public ResponseEntity<?> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code를 통해 얻은 response(access token과 여러 key들 존재)
         // String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
         JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
@@ -65,5 +66,34 @@ public class KakaoLoginController {
         response.addCookie(passwordCookie);
 
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_KAKAO_LOGIN, null));
+    }
+
+    // 로그아웃
+    @PostMapping("/users/kakao-signout")
+    public ResponseEntity<?> kakaoLogout(HttpServletResponse response) {
+
+        // 인증 쿠키를 무효화하기 위해 만료 날짜를 과거로 설정
+        Cookie idCookie = new Cookie("id", null);
+        Cookie emailCookie = new Cookie("email", null);
+        Cookie passwordCookie = new Cookie("password", null);
+
+//        idCookie.setMaxAge(0); // 즉시 만료
+//        emailCookie.setMaxAge(0); // 즉시 만료
+//        passwordCookie.setMaxAge(0); // 즉시 만료
+
+        idCookie.setPath("/");
+        emailCookie.setPath("/");
+        passwordCookie.setPath("/");
+
+        idCookie.setHttpOnly(true);
+        emailCookie.setHttpOnly(true);
+        passwordCookie.setHttpOnly(true);
+
+        // 응답에 만료된 쿠키를 추가하여 클라이언트의 쿠키를 삭제
+        response.addCookie(idCookie);
+        response.addCookie(emailCookie);
+        response.addCookie(passwordCookie);
+
+        return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));
     }
 }
