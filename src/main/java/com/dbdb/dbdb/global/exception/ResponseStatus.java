@@ -40,6 +40,8 @@ public enum ResponseStatus {
     INVALID_REQUEST(false, 5100, "입력값을 확인해주세요"),
     UPLOAD_ERROR(false, 5200, "파일 업로드에 실패했습니다"),
     COOKIE_ERROR(false, 5300, "존재하지 않는 쿠키입니다."),
+    SESSION_ERROR(false, 5400, "존재하지 않는 세션입니다."),
+    ACCESS_TOKEN_NULL(false, 5500, "존재하지 않는 액세스 토큰입니다"),
 
 
 

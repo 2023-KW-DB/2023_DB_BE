@@ -83,11 +83,10 @@ public class UserController {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                // Check for the specific cookies and set Max-Age to 0 to delete them
                 if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName())) {
                     cookie.setMaxAge(0);
-                    cookie.setPath("/"); // Ensure the path is the same as when the cookie was set
-                    response.addCookie(cookie); // Add the cookie to the response to update it in the client
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
                 }
             }
             return ResponseEntity.ok().body(new JsonResponse<>(ResponseStatus.SUCCESS_LOGOUT));

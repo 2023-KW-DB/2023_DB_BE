@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
@@ -123,5 +124,27 @@ public class KakaoLoginService {
         }
 
         return null;
+    }
+
+    public String kakaoLogout(String accessToken){
+        RestTemplate restTemplate = new RestTemplate();
+        log.info("accessToken in kakaoLogout = {}", accessToken);
+        // HttpHeader object 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer "+accessToken);
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> logoutRequest = new HttpEntity<>(headers);
+
+        String logoutResourceUri = env.getProperty("oauth.kakao.logout-resource-uri");
+
+        ResponseEntity<String> responseId = restTemplate.exchange( // 로그아웃의 정상적인 return 값은 Id
+                logoutResourceUri,
+                HttpMethod.POST,
+                logoutRequest,
+                String.class
+        );
+
+        return responseId.getBody();
     }
 }
