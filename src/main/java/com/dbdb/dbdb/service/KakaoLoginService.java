@@ -1,5 +1,6 @@
 package com.dbdb.dbdb.service;
 
+import com.dbdb.dbdb.dto.OAuthToken;
 import com.dbdb.dbdb.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -70,6 +71,22 @@ public class KakaoLoginService {
     // 액세스 토큰을 사용하여 로그인한 유저에 대한 정보 요청
     public JsonNode getUserInfoByAccessTokenResponse(JsonNode accessToken) throws JsonProcessingException {
 
+        // json object를 자바에서 처리하기 위한 변환 과정
+        ObjectMapper objectMapper = new ObjectMapper();
+        OAuthToken oAuthToken = objectMapper.readValue(accessToken.toString(), OAuthToken.class);
+        log.info("accesstoken = {}", oAuthToken.getAccess_token());
 
+        RestTemplate restTemplate = new RestTemplate();
+
+        // HttpHeader object 생성
+        HttpHeaders headers = new HttpHeaders();;
+        headers.add("Authorization", "Bearer "+oAuthToken.getAccess_token());
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> userInfoRequest = new HttpEntity<>(headers);
+
+        String userResourceUri = env.getProperty("oauth2.kakao.user-resource-uri");
+
+        return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // 유저 정보를 json으로 가져옴.
     }
 }
