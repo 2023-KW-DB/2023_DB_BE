@@ -98,8 +98,8 @@ public class BoardController {
     }
 
     @GetMapping("/get-comments")
-    public ResponseEntity<JsonResponse> getComments(@RequestParam int write_id) {
-        List<CommentDto.GetCommentDto> commentDtoList = commentService.getCommentEachBoard(write_id);
+    public ResponseEntity<JsonResponse> getComments(@RequestParam int write_id, @RequestParam int user_id) {
+        List<CommentDto.GetCommentDto> commentDtoList = commentService.getCommentEachBoard(write_id, user_id);
         if(commentDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, commentDtoList));
 

@@ -98,12 +98,12 @@ public class CommentService {
         }
     }
 
-    public List<CommentDto.GetCommentDto> getCommentEachBoard(int writeId) {
+    public List<CommentDto.GetCommentDto> getCommentEachBoard(int writeId, int userId) {
         List<CommentDto.GetCommentDto> commentDtoList = new ArrayList<>();
         try {
-            List<Comment> commentList = commentRepository.findCommentByWriteId(writeId);
+            List<CommentDto.DBReturnCommentDto> commentList = commentRepository.findCommentByWriteId(writeId, userId);
 
-            for(Comment comment : commentList) {
+            for(CommentDto.DBReturnCommentDto comment : commentList) {
                 String username = "";
                 UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(comment.getUser_id());
                 if(userNameTypeDto.getUser_type() == 0) {
@@ -112,7 +112,7 @@ public class CommentService {
                     username = userNameTypeDto.getUsername();
                 }
 
-                commentDtoList.add(new CommentDto.GetCommentDto(comment.getId(), username, comment.getWrite_id(), comment.getCategory_id(), comment.getContent(), comment.getCreated_at(), comment.getUpdated_at()));
+                commentDtoList.add(new CommentDto.GetCommentDto(comment.getId(), username, comment.getWrite_id(), comment.getCategory_id(), comment.getContent(), comment.getLikeCount(), comment.isUserLiked(), comment.getCreated_at(), comment.getUpdated_at()));
             }
 
         } catch (Exception e) {

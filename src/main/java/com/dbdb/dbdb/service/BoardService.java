@@ -151,7 +151,7 @@ public class BoardService {
                 username = userNameTypeDto.getUsername();
             }
 
-            List<CommentDto.GetCommentDto> commentDtoList = commentService.getCommentEachBoard(id);
+            List<CommentDto.GetCommentDto> commentDtoList = commentService.getCommentEachBoard(id, user_id);
             BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getLikesCount(), board.isUserLiked(), board.getCreated_at(), board.getUpdated_at(), commentDtoList);
 
             return boardDto;
