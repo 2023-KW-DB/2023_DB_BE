@@ -111,15 +111,15 @@ public class BoardController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
     }
 
-//    @PatchMapping("/comment-modify")
-//    public ResponseEntity<JsonResponse> modifyComment(@RequestBody CommentDto.CreateCommentDto createCommentDto) {
-//        commentService.modifyComment(createCommentDto);
-//        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
-//    }
+    @PatchMapping("/comment-modify")
+    public ResponseEntity<JsonResponse> modifyComment(@RequestBody CommentDto.CommentModifyDto commentModifyDto) {
+        commentService.modifyComment(commentModifyDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
 
     @DeleteMapping("/comment-delete")
     public ResponseEntity<JsonResponse> deleteComment(@RequestBody CommentDto.CommentDeleteDto commentDeleteDto) {
-        int id = commentService.modifyComment(commentDeleteDto);
+        int id = commentService.deleteComment(commentDeleteDto);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, id));
     }
 

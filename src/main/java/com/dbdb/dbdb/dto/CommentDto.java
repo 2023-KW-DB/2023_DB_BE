@@ -62,5 +62,12 @@ public class CommentDto {
         private int id;
     }
 
-
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class CommentModifyDto{
+        private int id;
+        private int user_id; //current user (not writer)
+        private String content;
+    }
 }

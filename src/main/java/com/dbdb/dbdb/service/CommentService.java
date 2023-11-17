@@ -6,6 +6,7 @@ import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.repository.CommentRepository;
 import com.dbdb.dbdb.repository.UserRepository;
+import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.BoardLike;
 import com.dbdb.dbdb.table.Comment;
 import com.dbdb.dbdb.table.CommentLike;
@@ -122,7 +123,7 @@ public class CommentService {
         return commentDtoList;
     }
 
-    public int modifyComment(CommentDto.CommentDeleteDto commentDeleteDto) {
+    public int deleteComment(CommentDto.CommentDeleteDto commentDeleteDto) {
         try {
             UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(commentDeleteDto.getUser_id());
             if (userNameTypeDto.getUser_type() != 0) {
@@ -134,6 +135,36 @@ public class CommentService {
 
             commentRepository.deleteComment(commentDeleteDto.getId());
             return commentDeleteDto.getId();
+
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public void modifyComment(CommentDto.CommentModifyDto commentModifyDto) {
+        try {
+
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(commentModifyDto.getUser_id());
+            if (userNameTypeDto.getUser_type() != 0) {
+                int user_id = commentRepository.getCommentWriterId(commentModifyDto.getId());
+                if(user_id != commentModifyDto.getUser_id()) {
+                    throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_MODIFY_COMMENT);
+                }
+            }
+
+            Comment comment = new Comment(
+                    commentModifyDto.getId(),
+                    0,
+                    0,
+                    0,
+                    commentModifyDto.getContent(),
+                    null,
+                    LocalDateTime.now()
+            );
+
+            commentRepository.modifyComment(comment);
 
         } catch (GlobalException e) {
             throw e;

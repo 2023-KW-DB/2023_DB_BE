@@ -73,4 +73,17 @@ public class CommentRepository {
         jdbcTemplate.update("DELETE FROM `comment` WHERE id=?",
                 id);
     }
+
+    public void modifyComment(Comment comment) {
+        int id = comment.getId();
+        String content = comment.getContent();
+        LocalDateTime update_at = comment.getUpdated_at();
+
+        jdbcTemplate.update("UPDATE `comment` SET " +
+                        "content=?, " +
+                        "updated_at=? " +
+                        "WHERE id=?"
+                , content, update_at, id);
+    }
+
 }
