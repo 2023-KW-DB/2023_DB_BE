@@ -63,7 +63,6 @@ public class BoardController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
     }
 
-
     @GetMapping("/get-board")
     public ResponseEntity<JsonResponse> getBoard(@RequestParam int id, @RequestParam int user_id) {
         BoardDto.GetBoardDto boardDto = boardService.getBoard(id, user_id);

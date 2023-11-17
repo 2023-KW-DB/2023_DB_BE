@@ -144,9 +144,6 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody UserDto userDto){
 
         changePasswordService.changePassword(userDto.getEmail(), userDto.getPassword());
-
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CHANGE_PASSWORD));
     }
-
-
 }

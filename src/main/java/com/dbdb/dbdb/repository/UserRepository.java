@@ -5,7 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class UserRepository {
@@ -17,7 +22,7 @@ public class UserRepository {
         jdbcTemplate.update(sql,
                 userDto.getPassword(),
                 userDto.getUsername(),
-                1,
+                userDto.getUser_type(),
                 userDto.getEmail(),
                 userDto.getPhone_number(),
                 userDto.getWeight(),
@@ -75,5 +80,53 @@ public class UserRepository {
     public void deleteUserById(int id) {
         String sql = "DELETE FROM user WHERE id = ?";
             jdbcTemplate.update(sql, id);
+    }
+
+    public List<UserDto> returnAllUsers() {
+        String sql = "SELECT * FROM user";
+        return jdbcTemplate.query(
+                sql,
+                BeanPropertyRowMapper.newInstance(UserDto.class)
+        );
+    }
+
+    public void modifyUser(UserDto userDto) {
+        String sql = "UPDATE user SET email = ?, username = ?, password = ?, phone_number = ?, weight = ?, age = ?, total_money = ? WHERE id = ?";
+        jdbcTemplate.update(sql,
+                userDto.getEmail(),
+                userDto.getUsername(),
+                userDto.getPassword(),
+                userDto.getPhone_number(),
+                userDto.getWeight(),
+                userDto.getAge(),
+                userDto.getTotal_money(),
+                userDto.getId());
+    }
+
+    public UserDto findUserByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;  // 결과가 없으면 null 반환
+        }
+    }
+
+    // RowMapper 구현
+    private static class UserRowMapper implements RowMapper<UserDto> {
+        @Override
+        public UserDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+            UserDto user = new UserDto();
+            user.setId(rs.getInt("id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            user.setUser_type(rs.getInt("user_type"));
+            user.setEmail(rs.getString("email"));
+            user.setPhone_number(rs.getString("phone_number"));
+            user.setWeight(rs.getInt("weight"));
+            user.setAge(rs.getInt("age"));
+            user.setTotal_money(rs.getInt("total_money"));
+            return user;
+        }
     }
 }

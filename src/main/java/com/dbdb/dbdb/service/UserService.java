@@ -4,11 +4,8 @@ import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.repository.UserRepository;
-import com.dbdb.dbdb.table.Board;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class UserService {
@@ -17,9 +14,10 @@ public class UserService {
     private UserRepository userRepository;
 
     // 회원 가입
-    public Boolean signUp(UserDto userDto) {
+    public void signUp(UserDto userDto) {
         try {
-            return userRepository.insertUser(userDto);
+            userDto.setUser_type(1);
+            userRepository.insertUser(userDto);
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);
         } catch (Exception e) {
