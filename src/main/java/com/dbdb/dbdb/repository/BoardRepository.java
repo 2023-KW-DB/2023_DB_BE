@@ -59,15 +59,18 @@ public class BoardRepository {
         );
     }
 
-    public Board findBoardById(int id) {
-        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+    public BoardDto.BoardWithLike findBoardById(int id, int userId) {
+        var boardWithLikesMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithLike.class);
 
-        Board board = jdbcTemplate.queryForObject(
-                "SELECT * FROM `board` WHERE id=?",
-                boardMapper, id
+        BoardDto.BoardWithLike boardWithLikes = jdbcTemplate.queryForObject(
+                "SELECT B.*, " +
+                        "(SELECT COUNT(*) FROM board_like WHERE liked_id = B.id) AS likes_count, " +
+                        "EXISTS(SELECT 1 FROM board_like WHERE liked_id = B.id AND user_id = ?) AS user_liked " +
+                        "FROM board B WHERE B.id = ?",
+                boardWithLikesMapper, userId, id
         );
 
-        return board;
+        return boardWithLikes;
     }
 
     public void increaseViewCount(int id) {

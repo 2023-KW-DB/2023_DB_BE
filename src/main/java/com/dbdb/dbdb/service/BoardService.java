@@ -135,9 +135,9 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardDto.GetBoardDto getBoard(int id) {
+    public BoardDto.GetBoardDto getBoard(int id, int user_id) {
         try {
-            Board board = boardRepository.findBoardById(id);
+            BoardDto.BoardWithLike board = boardRepository.findBoardById(id, user_id);
             if(board == null)
                 return null;
 
@@ -149,7 +149,7 @@ public class BoardService {
             } else {
                 username = userNameTypeDto.getUsername();
             }
-            BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getCreated_at(), board.getUpdated_at());
+            BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getLikesCount(), board.isUserLiked(), board.getCreated_at(), board.getUpdated_at());
 
             return boardDto;
         } catch (EmptyResultDataAccessException em) {

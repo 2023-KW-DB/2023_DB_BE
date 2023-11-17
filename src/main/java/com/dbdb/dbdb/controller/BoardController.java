@@ -64,8 +64,8 @@ public class BoardController {
 
 
     @GetMapping("/get-board")
-    public ResponseEntity<JsonResponse> getBoard(@RequestParam int id) {
-        BoardDto.GetBoardDto boardDto = boardService.getBoard(id);
+    public ResponseEntity<JsonResponse> getBoard(@RequestParam int id, @RequestParam int user_id) {
+        BoardDto.GetBoardDto boardDto = boardService.getBoard(id, user_id);
         if(boardDto == null) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDto));
     }
