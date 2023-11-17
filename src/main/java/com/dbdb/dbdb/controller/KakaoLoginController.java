@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/login/oauth2", produces = "application/json")
 public class KakaoLoginController {
 
-    @GetMapping("/code/kakao/kakao")
+    @GetMapping("/code/kakao")
     public @ResponseBody String kakaoCallback(@RequestParam String code){
         return code;
     }
