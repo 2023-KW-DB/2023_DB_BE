@@ -110,4 +110,12 @@ public class BoardDto {
         private int likesCount;
         private boolean userLiked;
     }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class BoardDeleteDto{
+        private int id;
+        private int user_id;
+    }
 }

@@ -78,6 +78,13 @@ public class BoardController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
     }
 
+    @DeleteMapping("/delete-board")
+    private ResponseEntity<JsonResponse> deleteBoard(@RequestBody BoardDto.BoardDeleteDto boardDeleteDto) {
+
+        int board_id = boardService.deleteBoard(boardDeleteDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, board_id));
+    }
+
     @PostMapping("/like")
     public ResponseEntity<JsonResponse> likeBoard(@RequestBody BoardDto.BoardLikeDto boardLikeDto) {
         boardService.likeBoard(boardLikeDto);

@@ -124,4 +124,9 @@ public class BoardRepository {
                 boardId
         );
     }
+
+    public void deleteBoard(int id) {
+        jdbcTemplate.update("DELETE FROM `board` WHERE id=?",
+                id);
+    }
 }

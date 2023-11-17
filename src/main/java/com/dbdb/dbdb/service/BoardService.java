@@ -270,4 +270,24 @@ public class BoardService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public int deleteBoard(BoardDto.BoardDeleteDto boardDeleteDto) {
+        try {
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(boardDeleteDto.getUser_id());
+            if (userNameTypeDto.getUser_type() != 0) {
+                int real_user = boardRepository.getBoardWriterId(boardDeleteDto.getId());
+                if(real_user != boardDeleteDto.getUser_id()) {
+                    throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_DELETE);
+                }
+            }
+
+            boardRepository.deleteBoard(boardDeleteDto.getId());
+            return boardDeleteDto.getUser_id();
+
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }

@@ -37,6 +37,7 @@ public enum ResponseStatus {
     FILE_READ_ERROR(false, 5201, "파일을 조회할 때 오류가 발생했습니다."),
     INVALID_AUTHORITY_NOTICE(false, 5202, "관리자만 공지를 작성할 수 있습니다"),
     INVALID_AUTHORITY_MODIFY(false, 5203, "게시글은 작성자만 수정할 수 있습니다"),
+    INVALID_AUTHORITY_DELETE(false, 5204, "게시글은 작성자만 삭제할 수 있습니다"),
 
 
 
