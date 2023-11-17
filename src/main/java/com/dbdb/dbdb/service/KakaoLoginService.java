@@ -69,10 +69,10 @@ public class KakaoLoginService {
         return response;
     }
 
-//    // 액세스 토큰을 얻었으므로 파싱하여 반환
-//    public String parshingAccessToken(JsonNode responseBody){
-//        return responseBody.get("access_token").asText();
-//    }
+    // 액세스 토큰을 얻었으므로 파싱하여 반환
+    public String parshingAccessToken(JsonNode responseBody){
+        return responseBody.get("access_token").asText();
+    }
 
     // 액세스 토큰을 사용하여 로그인한 유저에 대한 정보 요청
     public JsonNode getUserInfoByAccessTokenResponse(JsonNode accessToken) throws JsonProcessingException {
