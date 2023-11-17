@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserRepository {
     @Autowired
@@ -75,5 +77,13 @@ public class UserRepository {
     public void deleteUserById(int id) {
         String sql = "DELETE FROM user WHERE id = ?";
             jdbcTemplate.update(sql, id);
+    }
+
+    public List<UserDto> returnAllUsers() {
+        String sql = "SELECT * FROM user";
+        return jdbcTemplate.query(
+                sql,
+                BeanPropertyRowMapper.newInstance(UserDto.class)
+        );
     }
 }
