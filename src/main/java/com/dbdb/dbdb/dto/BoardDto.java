@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class BoardDto {
 
@@ -53,6 +54,7 @@ public class BoardDto {
         private boolean userLiked;
         private LocalDateTime created_at;
         private LocalDateTime updated_at;
+        private List<CommentDto.GetCommentDto> commentDtoList;
     }
 
     @NoArgsConstructor

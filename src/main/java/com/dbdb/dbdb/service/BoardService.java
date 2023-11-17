@@ -1,6 +1,7 @@
 package com.dbdb.dbdb.service;
 
 import com.dbdb.dbdb.dto.BoardDto;
+import com.dbdb.dbdb.dto.CommentDto;
 import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.global.exception.GlobalException;
@@ -28,6 +29,7 @@ import java.util.*;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final CommentService commentService;
 
     public void createBoard(BoardDto.CreateBoardDto createBoardDto) {
         try {
@@ -148,7 +150,9 @@ public class BoardService {
             } else {
                 username = userNameTypeDto.getUsername();
             }
-            BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getLikesCount(), board.isUserLiked(), board.getCreated_at(), board.getUpdated_at());
+
+            List<CommentDto.GetCommentDto> commentDtoList = commentService.getCommentEachBoard(id);
+            BoardDto.GetBoardDto boardDto = new BoardDto.GetBoardDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.getContent(), board.isNotice(), board.getFile_name(), board.getUrl(), board.getLikesCount(), board.isUserLiked(), board.getCreated_at(), board.getUpdated_at(), commentDtoList);
 
             return boardDto;
         } catch (EmptyResultDataAccessException em) {
