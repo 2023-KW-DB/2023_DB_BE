@@ -32,6 +32,11 @@ public class BoardService {
 
     public void createBoard(BoardDto.CreateBoardDto createBoardDto) {
         try {
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(createBoardDto.getUser_id());
+            if(userNameTypeDto.getUser_type() != 0 && createBoardDto.isNotice()) {
+                throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_BOARD);
+            }
+
             Board board = new Board(
                     0,  //auto increment id
                     createBoardDto.getCategory_id(),
@@ -48,6 +53,8 @@ public class BoardService {
 
             boardRepository.insertBoard(board);
 
+        } catch (GlobalException e) {
+            throw e;
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);
         } catch (Exception e) {
