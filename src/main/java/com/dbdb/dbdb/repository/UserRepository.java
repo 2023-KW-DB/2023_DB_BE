@@ -22,7 +22,7 @@ public class UserRepository {
         jdbcTemplate.update(sql,
                 userDto.getPassword(),
                 userDto.getUsername(),
-                1,
+                userDto.getUser_type(),
                 userDto.getEmail(),
                 userDto.getPhone_number(),
                 userDto.getWeight(),
@@ -105,7 +105,11 @@ public class UserRepository {
 
     public UserDto findUserByEmail(String email) {
         String sql = "SELECT * FROM user WHERE email = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;  // 결과가 없으면 null 반환
+        }
     }
 
     // RowMapper 구현

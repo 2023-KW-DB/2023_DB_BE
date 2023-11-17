@@ -1,11 +1,14 @@
 package com.dbdb.dbdb.controller;
 
 import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.global.dto.JsonResponse;
+import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.service.KakaoLoginService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -29,9 +32,9 @@ public class KakaoLoginController {
 //    }
 
     @GetMapping("/code/kakao")
-    public String kakaoCallback(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public ResponseEntity<?> kakaoCallback(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code를 통해 얻은 response(access token과 여러 key들 존재)
-        String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
+        // String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
         JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
 
         UserDto userDto = kakaoLoginService.parshingUserInfo(userInfoResponse);
@@ -61,8 +64,6 @@ public class KakaoLoginController {
         response.addCookie(emailCookie);
         response.addCookie(passwordCookie);
 
-
-
-        return "kakao login success";
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_LOGIN, null));
     }
 }

@@ -22,6 +22,7 @@ public enum ResponseStatus {
     SUCCESS_GET_ALL_USERS_INFO_ISEMPTY(true, 2010, "[관리자] 저장된 유저의 정보가 하나도 없습니다."),
     SUCCESS_MODIFY_USER_INFO(true, 2011, "[관리자] 유저 정보 수정을 성공하였습니다."),
     SUCCESS_DELETE_USER(true, 2012, "[관리자] 해당 유저의 정보를 삭제(탈퇴)를 성공하였습니다"),
+    SUCCESS_KAKAO_LOGIN(true, 2013, "카카오 로그인을 성공하였습니다."),
 
 
 

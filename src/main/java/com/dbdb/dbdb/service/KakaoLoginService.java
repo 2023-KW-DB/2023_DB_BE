@@ -36,9 +36,9 @@ public class KakaoLoginService {
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HttpBody object 생성
-        String clientId = env.getProperty("oauth2.kakao.client-id");
-        String redirectUri = env.getProperty("oauth2.kakao.redirect-uri");
-        String resourceUri = env.getProperty("oauth2.kakao.resource-uri");
+        String clientId = env.getProperty("oauth.kakao.client-id");
+        String redirectUri = env.getProperty("oauth.kakao.redirect-uri");
+        String resourceUri = env.getProperty("oauth.kakao.resource-uri");
 
         // 확인을 위한 log
         log.info("clientId = {}", clientId);
@@ -64,10 +64,10 @@ public class KakaoLoginService {
         return response;
     }
 
-    // 액세스 토큰을 얻었으므로 파싱하여 반환
-    public String parshingAccessToken(JsonNode responseBody){
-        return responseBody.get("access_token").asText();
-    }
+//    // 액세스 토큰을 얻었으므로 파싱하여 반환
+//    public String parshingAccessToken(JsonNode responseBody){
+//        return responseBody.get("access_token").asText();
+//    }
 
     // 액세스 토큰을 사용하여 로그인한 유저에 대한 정보 요청
     public JsonNode getUserInfoByAccessTokenResponse(JsonNode accessToken) throws JsonProcessingException {
@@ -86,7 +86,7 @@ public class KakaoLoginService {
 
         HttpEntity<MultiValueMap<String, String>> userInfoRequest = new HttpEntity<>(headers);
 
-        String userResourceUri = env.getProperty("oauth2.kakao.user-resource-uri");
+        String userResourceUri = env.getProperty("oauth.kakao.user-resource-uri");
 
         return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // 유저 정보를 json으로 가져옴.
     }
@@ -104,7 +104,15 @@ public class KakaoLoginService {
         // 카카오 서버 상에서 검증된 이메일인 경우
         if(is_email_verified.equals("true")){
             UserDto userDto = userRepository.findUserByEmail(email);
-            return userDto;
+            if(userDto != null)
+                return userDto;
+            else{
+                UserDto newUserDto = new UserDto();
+                newUserDto.setEmail(email);
+                newUserDto.setUsername(nickName);
+                userRepository.insertUser(newUserDto);
+                return newUserDto;
+            }
         }
 
         return null;
