@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,13 @@ public class BoardController {
         BoardDto.GetBoardDto boardDto = boardService.getBoard(id, user_id);
         if(boardDto == null) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardDto));
+    }
+
+    @PatchMapping("/modify-board")
+    private ResponseEntity<JsonResponse> modifyBoard(@RequestBody BoardDto.ModifyBoardDto modifyBoardDto) {
+
+        boardService.modifyBoard(modifyBoardDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
     }
 
     @PostMapping("/like")

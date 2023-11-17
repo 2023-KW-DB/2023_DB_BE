@@ -8,7 +8,6 @@ import com.dbdb.dbdb.repository.BoardRepository;
 import com.dbdb.dbdb.repository.UserRepository;
 import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.BoardLike;
-import com.dbdb.dbdb.table.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -34,7 +33,7 @@ public class BoardService {
         try {
             UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(createBoardDto.getUser_id());
             if(userNameTypeDto.getUser_type() != 0 && createBoardDto.isNotice()) {
-                throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_BOARD);
+                throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_NOTICE);
             }
 
             Board board = new Board(
@@ -232,5 +231,43 @@ public class BoardService {
         }
 
         return contentType;
+    }
+
+    public void modifyBoard(BoardDto.ModifyBoardDto modifyBoardDto) {
+        try {
+
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(modifyBoardDto.getUser_id());
+            if (userNameTypeDto.getUser_type() != 0) {
+                if(modifyBoardDto.isNotice()) {
+                    throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_NOTICE);
+                }
+
+                int user_id = boardRepository.getBoardWriterId(modifyBoardDto.getId());
+                if(user_id != modifyBoardDto.getUser_id()) {
+                    throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_MODIFY);
+                }
+            }
+
+            Board board = new Board(
+                    modifyBoardDto.getId(),
+                    modifyBoardDto.getCategory_id(),
+                    0,
+                    0,
+                    modifyBoardDto.getTitle(),
+                    modifyBoardDto.getContent(),
+                    modifyBoardDto.isNotice(),
+                    modifyBoardDto.getFile_name(),
+                    modifyBoardDto.getUrl(),
+                    null,
+                    LocalDateTime.now()
+            );
+
+            boardRepository.modifyBoard(board);
+
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
     }
 }

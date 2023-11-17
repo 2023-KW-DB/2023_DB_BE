@@ -58,6 +58,20 @@ public class BoardDto {
     @NoArgsConstructor
     @Data
     @AllArgsConstructor
+    public static class ModifyBoardDto{
+        private int id;
+        private int category_id;
+        private int user_id;
+        private String title;
+        private String content;
+        private boolean notice;
+        private String file_name;
+        private String url;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
     public static class BoardLikeDto{
         private int user_id;
         private int category_id;

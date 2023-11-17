@@ -5,6 +5,7 @@ import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.BoardLike;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -32,6 +33,27 @@ public class BoardRepository {
 
         jdbcTemplate.update("INSERT INTO `board` (`category_id`, `user_id`, `views`, `title`, `content`, `notice`, `file_name`, `url`, `created_at`, `updated_at`) VALUES (?,?,?,?,?,?,?,?,?,?)"
                 , category_id, user_id, init_views, title, content, notice, file_name, url, create_at, update_at);
+    }
+
+    public void modifyBoard(Board board) {
+        int id = board.getId();
+        int category_id = board.getCategory_id();
+        String title = board.getTitle();
+        String content = board.getContent();
+        boolean notice = board.isNotice();
+        String file_name = board.getFile_name();
+        String url = board.getUrl();
+        LocalDateTime update_at = board.getUpdated_at();
+
+        jdbcTemplate.update("UPDATE `board` SET " +
+                        "title=?, " +
+                        "content= ?, " +
+                        "notice=?, " +
+                        "file_name=?, " +
+                        "url=?, " +
+                        "updated_at=? " +
+                        "WHERE id=? AND category_id=?"
+                , title, content, notice, file_name, url, update_at, id, category_id);
     }
 
     public List<BoardDto.BoardWithCommentsCount> findTitleAll() {
@@ -93,5 +115,13 @@ public class BoardRepository {
 
         jdbcTemplate.update("DELETE FROM `board_like` WHERE user_id=? AND category_id=? AND liked_id=?",
                 user_id, category_id, liked_id);
+    }
+
+    public Integer getBoardWriterId(int boardId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT user_id FROM board WHERE id=?",
+                Integer.class,
+                boardId
+        );
     }
 }
