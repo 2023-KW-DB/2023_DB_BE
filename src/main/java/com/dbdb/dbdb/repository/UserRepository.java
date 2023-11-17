@@ -86,4 +86,17 @@ public class UserRepository {
                 BeanPropertyRowMapper.newInstance(UserDto.class)
         );
     }
+
+    public void modifyUser(UserDto userDto) {
+        String sql = "UPDATE user SET email = ?, username = ?, password = ?, phone_number = ?, weight = ?, age = ?, total_money = ? WHERE id = ?";
+        jdbcTemplate.update(sql,
+                userDto.getEmail(),
+                userDto.getUsername(),
+                userDto.getPassword(),
+                userDto.getPhone_number(),
+                userDto.getWeight(),
+                userDto.getAge(),
+                userDto.getTotal_money(),
+                userDto.getId());
+    }
 }

@@ -15,8 +15,13 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
+    // 모든 유저 정보 확인
     public List<UserDto> getAllUsers() {
         List<UserDto> users = userRepository.returnAllUsers();
         return userRepository.returnAllUsers();
+    }
+
+    public void modifyUser(UserDto userDto) {
+        userRepository.modifyUser(userDto);
     }
 }

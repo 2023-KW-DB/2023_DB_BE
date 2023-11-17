@@ -20,6 +20,7 @@ public enum ResponseStatus {
     SUCCESS_WITHDRAWAL(true, 2008, "회원탈퇴를 성공하였습니다"),
     SUCCESS_GET_ALL_USERS_INFO(true, 2009, "[관리자] 모든 유저의 정보가 반환되었습니다."),
     SUCCESS_GET_ALL_USERS_INFO_ISEMPTY(true, 2010, "[관리자] 저장된 유저의 정보가 하나도 없습니다."),
+    SUCCESS_MODIFY_USER_INFO(true, 2011, "[관리자] 유저 정보 수정을 성공하였습니다."),
 
 
 
