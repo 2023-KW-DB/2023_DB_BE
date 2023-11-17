@@ -1,5 +1,7 @@
 package com.dbdb.dbdb.repository;
 
+import com.dbdb.dbdb.dto.BoardDto;
+import com.dbdb.dbdb.dto.CommentDto;
 import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.Comment;
 import com.dbdb.dbdb.table.CommentLike;
@@ -45,14 +47,43 @@ public class CommentRepository {
                 user_id, liked_id);
     }
 
-    public List<Comment> findCommentByWriteId(int writeId) {
-        var commentMapper = BeanPropertyRowMapper.newInstance(Comment.class);
+    public List<CommentDto.DBReturnCommentDto> findCommentByWriteId(int writeId, int userId) {
+        var commentMapper = BeanPropertyRowMapper.newInstance(CommentDto.DBReturnCommentDto.class);
 
-        List<Comment> comments = jdbcTemplate.query(
-                "SELECT * FROM `comment` WHERE write_id=?"
-                , commentMapper, writeId
+        List<CommentDto.DBReturnCommentDto> comments = jdbcTemplate.query(
+                "SELECT C.*, " +
+                        "(SELECT COUNT(*) FROM `comment_like` WHERE `liked_id` = C.id) AS `like_count`, " +
+                        "EXISTS(SELECT 1 FROM `comment_like` WHERE `liked_id` = C.id AND `user_id` = ?) AS `user_liked` " +
+                        "FROM `comment` C WHERE C.`write_id` = ?",
+                commentMapper, userId, writeId
         );
 
         return comments;
     }
+
+    public Integer getCommentWriterId(int commentId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT user_id FROM comment WHERE id=?",
+                Integer.class,
+                commentId
+        );
+    }
+
+    public void deleteComment(int id) {
+        jdbcTemplate.update("DELETE FROM `comment` WHERE id=?",
+                id);
+    }
+
+    public void modifyComment(Comment comment) {
+        int id = comment.getId();
+        String content = comment.getContent();
+        LocalDateTime update_at = comment.getUpdated_at();
+
+        jdbcTemplate.update("UPDATE `comment` SET " +
+                        "content=?, " +
+                        "updated_at=? " +
+                        "WHERE id=?"
+                , content, update_at, id);
+    }
+
 }

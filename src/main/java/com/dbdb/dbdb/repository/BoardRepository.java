@@ -1,14 +1,17 @@
 package com.dbdb.dbdb.repository;
 
+import com.dbdb.dbdb.dto.BoardDto;
 import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.BoardLike;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -32,37 +35,64 @@ public class BoardRepository {
                 , category_id, user_id, init_views, title, content, notice, file_name, url, create_at, update_at);
     }
 
-    public List<Board> findTitleAll() {
-        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+    public void modifyBoard(Board board) {
+        int id = board.getId();
+        int category_id = board.getCategory_id();
+        String title = board.getTitle();
+        String content = board.getContent();
+        boolean notice = board.isNotice();
+        String file_name = board.getFile_name();
+        String url = board.getUrl();
+        LocalDateTime update_at = board.getUpdated_at();
 
-        List<Board> boards = jdbcTemplate.query(
-            "SELECT * FROM `board`"
-                , boardMapper
-        );
-
-        return boards;
+        jdbcTemplate.update("UPDATE `board` SET " +
+                        "title=?, " +
+                        "content= ?, " +
+                        "notice=?, " +
+                        "file_name=?, " +
+                        "url=?, " +
+                        "updated_at=? " +
+                        "WHERE id=? AND category_id=?"
+                , title, content, notice, file_name, url, update_at, id, category_id);
     }
 
-    public List<Board> findTitleByCategoryId(int category_id) {
-        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+    public List<BoardDto.BoardWithCommentsCount> findTitleAll() {
+        var boardCommentMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithCommentsCount.class);
 
-        List<Board> boards = jdbcTemplate.query(
-                "SELECT * FROM `board` WHERE category_id=?"
-                , boardMapper, category_id
+        return jdbcTemplate.query(
+                "SELECT B.id, B.category_id, B.user_id, B.views, B.title, B.notice, B.created_at, COUNT(C.id) as comment_count " +
+                        "FROM board B LEFT OUTER JOIN comment C " +
+                        "ON B.id = C.write_id AND B.category_id = C.category_id " +
+                        "GROUP BY B.category_id, B.id"
+                , boardCommentMapper
         );
-
-        return boards;
     }
 
-    public Board findBoardById(int id) {
-        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+    public List<BoardDto.BoardWithCommentsCount> findTitleByCategoryId(int category_id) {
+        var boardCommentMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithCommentsCount.class);
 
-        Board board = jdbcTemplate.queryForObject(
-                "SELECT * FROM `board` WHERE id=?",
-                boardMapper, id
+        return jdbcTemplate.query(
+                "SELECT B.id, B.category_id, B.user_id, B.views, B.title, B.notice, B.created_at, COUNT(C.id) as comment_count " +
+                        "FROM comment C RIGHT OUTER JOIN board B " +
+                        "ON C.write_id = B.id AND C.category_id = B.category_id " +
+                        "WHERE B.category_id=? " +
+                        "GROUP BY B.id"
+                , boardCommentMapper, category_id
+        );
+    }
+
+    public BoardDto.BoardWithLike findBoardById(int id, int userId) {
+        var boardWithLikesMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithLike.class);
+
+        BoardDto.BoardWithLike boardWithLikes = jdbcTemplate.queryForObject(
+                "SELECT B.*, " +
+                        "(SELECT COUNT(*) FROM board_like WHERE liked_id = B.id) AS likes_count, " +
+                        "EXISTS(SELECT 1 FROM board_like WHERE liked_id = B.id AND user_id = ?) AS user_liked " +
+                        "FROM board B WHERE B.id = ?",
+                boardWithLikesMapper, userId, id
         );
 
-        return board;
+        return boardWithLikes;
     }
 
     public void increaseViewCount(int id) {
@@ -85,5 +115,18 @@ public class BoardRepository {
 
         jdbcTemplate.update("DELETE FROM `board_like` WHERE user_id=? AND category_id=? AND liked_id=?",
                 user_id, category_id, liked_id);
+    }
+
+    public Integer getBoardWriterId(int boardId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT user_id FROM board WHERE id=?",
+                Integer.class,
+                boardId
+        );
+    }
+
+    public void deleteBoard(int id) {
+        jdbcTemplate.update("DELETE FROM `board` WHERE id=?",
+                id);
     }
 }

@@ -25,8 +25,25 @@ public class CommentDto {
         private int write_id;
         private int category_id;
         private String content;
+        private int likeCount;
+        private boolean userLiked;
         private LocalDateTime created_at;
         private LocalDateTime updated_at;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class DBReturnCommentDto{
+        private int id;
+        private int user_id;
+        private int write_id;
+        private int category_id;
+        private String content;
+        private LocalDateTime created_at;
+        private LocalDateTime updated_at;
+        private int likeCount;
+        private boolean userLiked;
     }
 
     @NoArgsConstructor
@@ -35,5 +52,22 @@ public class CommentDto {
     public static class CommentLikeDto{
         private int user_id;
         private int liked_id;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class CommentDeleteDto{
+        private int user_id;
+        private int id;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class CommentModifyDto{
+        private int id;
+        private int user_id; //current user (not writer)
+        private String content;
     }
 }

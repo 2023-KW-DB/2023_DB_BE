@@ -6,6 +6,7 @@ import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.repository.CommentRepository;
 import com.dbdb.dbdb.repository.UserRepository;
+import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.BoardLike;
 import com.dbdb.dbdb.table.Comment;
 import com.dbdb.dbdb.table.CommentLike;
@@ -98,12 +99,12 @@ public class CommentService {
         }
     }
 
-    public List<CommentDto.GetCommentDto> getCommentEachBoard(int writeId) {
+    public List<CommentDto.GetCommentDto> getCommentEachBoard(int writeId, int userId) {
         List<CommentDto.GetCommentDto> commentDtoList = new ArrayList<>();
         try {
-            List<Comment> commentList = commentRepository.findCommentByWriteId(writeId);
+            List<CommentDto.DBReturnCommentDto> commentList = commentRepository.findCommentByWriteId(writeId, userId);
 
-            for(Comment comment : commentList) {
+            for(CommentDto.DBReturnCommentDto comment : commentList) {
                 String username = "";
                 UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(comment.getUser_id());
                 if(userNameTypeDto.getUser_type() == 0) {
@@ -112,7 +113,7 @@ public class CommentService {
                     username = userNameTypeDto.getUsername();
                 }
 
-                commentDtoList.add(new CommentDto.GetCommentDto(comment.getId(), username, comment.getWrite_id(), comment.getCategory_id(), comment.getContent(), comment.getCreated_at(), comment.getUpdated_at()));
+                commentDtoList.add(new CommentDto.GetCommentDto(comment.getId(), username, comment.getWrite_id(), comment.getCategory_id(), comment.getContent(), comment.getLikeCount(), comment.isUserLiked(), comment.getCreated_at(), comment.getUpdated_at()));
             }
 
         } catch (Exception e) {
@@ -120,5 +121,55 @@ public class CommentService {
         }
 
         return commentDtoList;
+    }
+
+    public int deleteComment(CommentDto.CommentDeleteDto commentDeleteDto) {
+        try {
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(commentDeleteDto.getUser_id());
+            if (userNameTypeDto.getUser_type() != 0) {
+                int real_user = commentRepository.getCommentWriterId(commentDeleteDto.getId());
+                if(real_user != commentDeleteDto.getUser_id()) {
+                    throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_DELETE_COMMENT);
+                }
+            }
+
+            commentRepository.deleteComment(commentDeleteDto.getId());
+            return commentDeleteDto.getId();
+
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public void modifyComment(CommentDto.CommentModifyDto commentModifyDto) {
+        try {
+
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(commentModifyDto.getUser_id());
+            if (userNameTypeDto.getUser_type() != 0) {
+                int user_id = commentRepository.getCommentWriterId(commentModifyDto.getId());
+                if(user_id != commentModifyDto.getUser_id()) {
+                    throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_MODIFY_COMMENT);
+                }
+            }
+
+            Comment comment = new Comment(
+                    commentModifyDto.getId(),
+                    0,
+                    0,
+                    0,
+                    commentModifyDto.getContent(),
+                    null,
+                    LocalDateTime.now()
+            );
+
+            commentRepository.modifyComment(comment);
+
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
     }
 }
