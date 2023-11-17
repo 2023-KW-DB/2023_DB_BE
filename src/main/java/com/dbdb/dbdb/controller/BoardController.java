@@ -3,16 +3,24 @@ package com.dbdb.dbdb.controller;
 import com.dbdb.dbdb.dto.BoardDto;
 import com.dbdb.dbdb.dto.CommentDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
+import com.dbdb.dbdb.global.exception.ExceptionHandlers;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.service.BoardService;
 import com.dbdb.dbdb.service.CommentService;
 import com.dbdb.dbdb.table.BoardLike;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,5 +106,22 @@ public class BoardController {
     public ResponseEntity<JsonResponse> cancelLikeComment(@RequestBody CommentDto.CommentLikeDto commentLikeDto ) {
         commentService.likeCancelComment(commentLikeDto);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
+
+
+    @GetMapping(path = "/{fileName}") //이미지 파일을 반환하는 handler
+    public ResponseEntity<Resource> returnImage(@PathVariable String fileName) {
+
+        Resource resource = boardService.loadImageAsResource(fileName);
+        String contentType = boardService.getContentType(fileName);
+
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new GlobalException(ResponseStatus.RESPONSE_ERROR);
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }

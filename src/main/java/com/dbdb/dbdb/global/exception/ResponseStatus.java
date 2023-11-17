@@ -33,7 +33,8 @@ public enum ResponseStatus {
     ERROR_LOGIN(false, 5001, "로그인을 실패하였습니다. 이메일 혹은 비밀번호를 다시 확인해주세요."),
     ERROR_TIMEOVER_AUTHCODE(false, 5002, "5분이 지나 해당 인증 번호는 만료되었습니다."),
     INVALID_REQUEST(false, 5100, "입력값을 확인해주세요"),
-    UPLOAD_ERROR(false, 5200, "파일 업로드에 실패했습니다"),
+    UPLOAD_ERROR(false, 5200, "파일 업로드에 실패했습니다."),
+    FILE_READ_ERROR(false, 5201, "파일을 조회할 때 오류가 발생했습니다."),
 
 
 

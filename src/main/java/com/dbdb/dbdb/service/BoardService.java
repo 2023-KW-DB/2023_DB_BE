@@ -10,6 +10,8 @@ import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.BoardLike;
 import com.dbdb.dbdb.table.Comment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -200,5 +203,27 @@ public class BoardService {
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
+    }
+
+    public Resource loadImageAsResource(String fileName) {
+
+        try {
+            //이미지 파일의 경로 구성
+            String filePath = System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + fileName;
+
+            return new UrlResource("file:" + filePath); //이미지 파일 리소스 반환
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.FILE_READ_ERROR);
+        }
+    }
+
+    public String getContentType(String fileName) {
+        // 파일의 MIME 타입을 결정
+        String contentType = URLConnection.guessContentTypeFromName(fileName);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return contentType;
     }
 }
