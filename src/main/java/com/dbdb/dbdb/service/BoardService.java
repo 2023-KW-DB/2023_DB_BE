@@ -83,18 +83,18 @@ public class BoardService {
     public List<BoardDto.GetBoardTitleDto> getAllBoardTitle() {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = new ArrayList<>();
         try {
-            List<Board> boardList = boardRepository.findTitleAll();
+            List<BoardDto.BoardWithCommentsCount> boardList = boardRepository.findTitleAll();
 
-            for(Board board : boardList) {
+            for(BoardDto.BoardWithCommentsCount boardWithCommentCount : boardList) {
                 String username = "";
-                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
+                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(boardWithCommentCount.getUser_id());
                 if(userNameTypeDto.getUser_type() == 0) {
                     username = "관리자";
                 } else {
                     username = userNameTypeDto.getUsername();
                 }
 
-                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.isNotice(), board.getCreated_at()));
+                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(boardWithCommentCount.getId(), boardWithCommentCount.getCategory_id(), username, boardWithCommentCount.getViews(), boardWithCommentCount.getTitle(), boardWithCommentCount.isNotice(), boardWithCommentCount.getCreated_at(), boardWithCommentCount.getComment_count()));
             }
 
         } catch (Exception e) {
@@ -107,17 +107,17 @@ public class BoardService {
     public List<BoardDto.GetBoardTitleDto> getEachCategoryBoardTitle(int categoryId) {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = new ArrayList<>();
         try {
-            List<Board> boardList = boardRepository.findTitleByCategoryId(categoryId);
-            for(Board board : boardList) {
+            List<BoardDto.BoardWithCommentsCount> boardList = boardRepository.findTitleByCategoryId(categoryId);
+            for(BoardDto.BoardWithCommentsCount boardWithCommentsCount : boardList) {
                 String username = "";
-                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(board.getUser_id());
+                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(boardWithCommentsCount.getUser_id());
                 if(userNameTypeDto.getUser_type() == 0) {
                     username = "관리자";
                 } else {
                     username = userNameTypeDto.getUsername();
                 }
 
-                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(board.getId(), board.getCategory_id(), username, board.getViews(), board.getTitle(), board.isNotice(), board.getCreated_at()));
+                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(boardWithCommentsCount.getId(), boardWithCommentsCount.getCategory_id(), username, boardWithCommentsCount.getViews(), boardWithCommentsCount.getTitle(), boardWithCommentsCount.isNotice(), boardWithCommentsCount.getCreated_at(), boardWithCommentsCount.getComment_count()));
             }
 
         } catch (Exception e) {

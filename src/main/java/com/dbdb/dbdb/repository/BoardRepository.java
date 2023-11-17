@@ -1,5 +1,6 @@
 package com.dbdb.dbdb.repository;
 
+import com.dbdb.dbdb.dto.BoardDto;
 import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.table.Board;
 import com.dbdb.dbdb.table.BoardLike;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -32,26 +34,29 @@ public class BoardRepository {
                 , category_id, user_id, init_views, title, content, notice, file_name, url, create_at, update_at);
     }
 
-    public List<Board> findTitleAll() {
-        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+    public List<BoardDto.BoardWithCommentsCount> findTitleAll() {
+        var boardCommentMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithCommentsCount.class);
 
-        List<Board> boards = jdbcTemplate.query(
-            "SELECT * FROM `board`"
-                , boardMapper
+        return jdbcTemplate.query(
+                "SELECT B.id, B.category_id, B.user_id, B.views, B.title, B.notice, B.created_at, COUNT(C.id) as comment_count " +
+                        "FROM board B LEFT OUTER JOIN comment C " +
+                        "ON B.id = C.write_id AND B.category_id = C.category_id " +
+                        "GROUP BY B.category_id, B.id"
+                , boardCommentMapper
         );
-
-        return boards;
     }
 
-    public List<Board> findTitleByCategoryId(int category_id) {
-        var boardMapper = BeanPropertyRowMapper.newInstance(Board.class);
+    public List<BoardDto.BoardWithCommentsCount> findTitleByCategoryId(int category_id) {
+        var boardCommentMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithCommentsCount.class);
 
-        List<Board> boards = jdbcTemplate.query(
-                "SELECT * FROM `board` WHERE category_id=?"
-                , boardMapper, category_id
+        return jdbcTemplate.query(
+                "SELECT B.id, B.category_id, B.user_id, B.views, B.title, B.notice, B.created_at, COUNT(C.id) as comment_count " +
+                        "FROM comment C RIGHT OUTER JOIN board B " +
+                        "ON C.write_id = B.id AND C.category_id = B.category_id " +
+                        "WHERE B.category_id=? " +
+                        "GROUP BY B.id"
+                , boardCommentMapper, category_id
         );
-
-        return boards;
     }
 
     public Board findBoardById(int id) {

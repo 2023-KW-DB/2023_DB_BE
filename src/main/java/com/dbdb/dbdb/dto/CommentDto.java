@@ -25,6 +25,9 @@ public class CommentDto {
         private int write_id;
         private int category_id;
         private String content;
+
+//        private int likeCount;
+//        private boolean userLiked;
         private LocalDateTime created_at;
         private LocalDateTime updated_at;
     }

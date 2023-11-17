@@ -33,6 +33,7 @@ public class BoardDto {
         private String title;
         private boolean notice;
         private LocalDateTime created_at;
+        private int commentCount;
     }
 
     @NoArgsConstructor
@@ -48,6 +49,8 @@ public class BoardDto {
         private boolean notice;
         private String file_name;
         private String url;
+//        private int likeCount;
+//        private boolean userLiked;
         private LocalDateTime created_at;
         private LocalDateTime updated_at;
     }
@@ -59,5 +62,19 @@ public class BoardDto {
         private int user_id;
         private int category_id;
         private int liked_id;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class BoardWithCommentsCount {
+        private int id;
+        private int category_id;
+        private int user_id;
+        private int views;
+        private String title;
+        private boolean notice;
+        private LocalDateTime created_at;
+        private int comment_count;
     }
 }
