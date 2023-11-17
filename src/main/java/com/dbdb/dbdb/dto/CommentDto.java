@@ -54,5 +54,13 @@ public class CommentDto {
         private int liked_id;
     }
 
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class CommentDeleteDto{
+        private int user_id;
+        private int id;
+    }
+
 
 }

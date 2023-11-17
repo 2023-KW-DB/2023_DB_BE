@@ -121,4 +121,24 @@ public class CommentService {
 
         return commentDtoList;
     }
+
+    public int modifyComment(CommentDto.CommentDeleteDto commentDeleteDto) {
+        try {
+            UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(commentDeleteDto.getUser_id());
+            if (userNameTypeDto.getUser_type() != 0) {
+                int real_user = commentRepository.getCommentWriterId(commentDeleteDto.getId());
+                if(real_user != commentDeleteDto.getUser_id()) {
+                    throw new GlobalException(ResponseStatus.INVALID_AUTHORITY_DELETE_COMMENT);
+                }
+            }
+
+            commentRepository.deleteComment(commentDeleteDto.getId());
+            return commentDeleteDto.getId();
+
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }

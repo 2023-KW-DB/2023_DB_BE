@@ -60,4 +60,17 @@ public class CommentRepository {
 
         return comments;
     }
+
+    public Integer getCommentWriterId(int commentId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT user_id FROM comment WHERE id=?",
+                Integer.class,
+                commentId
+        );
+    }
+
+    public void deleteComment(int id) {
+        jdbcTemplate.update("DELETE FROM `comment` WHERE id=?",
+                id);
+    }
 }

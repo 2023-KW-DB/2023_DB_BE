@@ -286,7 +286,7 @@ public class BoardService {
             }
 
             boardRepository.deleteBoard(boardDeleteDto.getId());
-            return boardDeleteDto.getUser_id();
+            return boardDeleteDto.getId();
 
         } catch (GlobalException e) {
             throw e;
