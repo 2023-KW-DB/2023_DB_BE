@@ -83,7 +83,7 @@ public class KakaoLoginController {
     }
 
     // ·Î±×¾Æ¿ô
-    @GetMapping("/users/kakao-signout")
+    @PostMapping("/users/kakao-signout")
     public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
 
         Cookie[] cookies = request.getCookies();
