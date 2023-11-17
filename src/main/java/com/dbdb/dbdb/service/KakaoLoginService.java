@@ -100,22 +100,11 @@ public class KakaoLoginService {
         String is_email_verified = userResourceNode.get("kakao_account").get("is_email_verified").asText();
         String profile_image = userResourceNode.get("properties").get("profile_image").asText();
 
-
+        // 카카오 서버 상에서 검증된 이메일인 경우
         if(is_email_verified.equals("true")){
-            if(userRepository.findByEmail(email).isEmpty()){
-                UserEntity userEntity = new UserEntity();
-                UserTypeEnum userTypeEnum = UserTypeEnum.KAKAO;
-                userEntity.setUserType(userTypeEnum);
-                userEntity.setProfile(profile_image);
-                userEntity.setEmail(email);
-                userEntity.setNickname(nickName);
-
-                return userEntity;
-            }
-            // 이미 있는 구글 이메일 계정
-            return userRepository.findByEmail(email).get();
+            UserDto userDto = userRepository.findUserByEmail(email);
+            return userDto;
         }
-        // 검증된 이메일이 아니므로 예외처리
 
         return null;
     }
