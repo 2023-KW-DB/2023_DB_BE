@@ -1,6 +1,7 @@
 package com.dbdb.dbdb.service;
 
 import com.dbdb.dbdb.dto.OAuthToken;
+import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -88,5 +89,34 @@ public class KakaoLoginService {
         String userResourceUri = env.getProperty("oauth2.kakao.user-resource-uri");
 
         return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // 유저 정보를 json으로 가져옴.
+    }
+
+    public UserDto parshingUserInfo(JsonNode userResourceNode) throws JsonProcessingException {
+        log.info("userResorceNode = {}", userResourceNode);
+
+        String id = userResourceNode.get("id").asText();
+        String email = userResourceNode.get("kakao_account").get("email").asText();
+        String nickName = userResourceNode.get("properties").get("nickname").asText();
+        String is_email_verified = userResourceNode.get("kakao_account").get("is_email_verified").asText();
+        String profile_image = userResourceNode.get("properties").get("profile_image").asText();
+
+
+        if(is_email_verified.equals("true")){
+            if(userRepository.findByEmail(email).isEmpty()){
+                UserEntity userEntity = new UserEntity();
+                UserTypeEnum userTypeEnum = UserTypeEnum.KAKAO;
+                userEntity.setUserType(userTypeEnum);
+                userEntity.setProfile(profile_image);
+                userEntity.setEmail(email);
+                userEntity.setNickname(nickName);
+
+                return userEntity;
+            }
+            // 이미 있는 구글 이메일 계정
+            return userRepository.findByEmail(email).get();
+        }
+        // 검증된 이메일이 아니므로 예외처리
+
+        return null;
     }
 }

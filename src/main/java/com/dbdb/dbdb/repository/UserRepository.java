@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -98,5 +101,27 @@ public class UserRepository {
                 userDto.getAge(),
                 userDto.getTotal_money(),
                 userDto.getId());
+    }
+
+    public UserDto findUserByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
+    }
+
+    // RowMapper ±¸Çö
+    private static class UserRowMapper implements RowMapper<UserDto> {
+        @Override
+        public UserDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+            UserDto user = new UserDto();
+            user.setId(rs.getInt("id"));
+            user.setUsername(rs.getString("username"));
+            user.setUser_type(rs.getInt("user_type"));
+            user.setEmail(rs.getString("email"));
+            user.setPhone_number(rs.getString("phone_number"));
+            user.setWeight(rs.getInt("weight"));
+            user.setAge(rs.getInt("age"));
+            user.setTotal_money(rs.getInt("total_money"));
+            return user;
+        }
     }
 }
