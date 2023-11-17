@@ -36,4 +36,13 @@ public class AdminController {
         adminService.modifyUser(userDto);
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_USER_INFO, null));
     }
+
+    // 유저 정보 삭제
+    @DeleteMapping("/delete-user")
+    public ResponseEntity<?> deleteUser(@RequestBody UserDto userDto){
+
+        adminService.deleteUser(userDto.getId());
+
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_DELETE_USER, null));
+    }
 }

@@ -24,4 +24,8 @@ public class AdminService {
     public void modifyUser(UserDto userDto) {
         userRepository.modifyUser(userDto);
     }
+
+    public void deleteUser(int id) {
+        userRepository.deleteUserById(id);
+    }
 }
