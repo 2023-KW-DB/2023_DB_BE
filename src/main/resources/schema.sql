@@ -20,7 +20,7 @@ CREATE TABLE if not exists `bikestationinformation`  (
   `startn_lat` double NULL DEFAULT NULL,
   `startn_lnt` double NULL DEFAULT NULL,
   `max_stands` double NOT NULL DEFAULT 20,
-  `station_status` boolean NULL DEFAULT NULL,
+  `station_status` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`lendplace_id`)
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE if not exists `bike`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `lendplace_id` varchar(255) NULL DEFAULT NULL,
   `use_status` int NULL DEFAULT NULL,
-  `bike_state` int NULL DEFAULT NULL,
+  `bike_status` int NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   CONSTRAINT `bike_ibfk_1` FOREIGN KEY (`lendplace_id`) REFERENCES `bikestationinformation` (`lendplace_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
