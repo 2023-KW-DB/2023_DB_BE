@@ -1,8 +1,12 @@
 package com.dbdb.dbdb.domain.coupon.service;
 
+import com.dbdb.dbdb.domain.coupon.dto.TicketDto;
 import com.dbdb.dbdb.domain.coupon.reposiroty.TicketRepository;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TicketService {
@@ -20,5 +24,9 @@ public class TicketService {
 
     public void deleteTicket(int id) {
         ticketRepository.deleteTicket(id);
+    }
+
+    public List<TicketDto> getAllTicket() {
+        return ticketRepository.returnAllTickets();
     }
 }

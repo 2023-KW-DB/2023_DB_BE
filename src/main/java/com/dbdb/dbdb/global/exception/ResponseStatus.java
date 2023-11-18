@@ -30,6 +30,8 @@ public enum ResponseStatus {
     SUCCESS_CREATE_TICKET(true, 2018, "[관리자] 새로운 가격의 이용권을 추가에 성공하였습니다."),
     SUCCESS_MODIFY_TICKET(true, 2019, "[관리자] 해당 이용권의 가격을 수정에 성공하였습니다."),
     SUCCESS_DELETE_TICKET(true, 2020, "[관리자] 해당 이용권의 종류를 삭제에 성공하였습니다."),
+    SUCCESS_GET_ALL_TICKETS_INFO(true, 2021, "모든 티켓의 정보 반환에 성공하였습니다."),
+    SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY(true, 2022, "저장된 티켓의 정보가 하나도 없습니다."),
 
 
 

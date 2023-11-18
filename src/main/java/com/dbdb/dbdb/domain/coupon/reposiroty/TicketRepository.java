@@ -1,8 +1,13 @@
 package com.dbdb.dbdb.domain.coupon.reposiroty;
 
+import com.dbdb.dbdb.domain.coupon.dto.TicketDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class TicketRepository {
@@ -23,5 +28,13 @@ public class TicketRepository {
     public void deleteTicket(int id) {
         String sql = "DELETE FROM ticket WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public List<TicketDto> returnAllTickets() {
+        String sql = "SELECT * FROM ticket";
+        return jdbcTemplate.query(
+                sql,
+                BeanPropertyRowMapper.newInstance(TicketDto.class)
+        );
     }
 }

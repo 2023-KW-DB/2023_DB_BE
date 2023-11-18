@@ -9,15 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/admin")
 public class TicketController {
 
     @Autowired
     private TicketService ticketService;
 
-    // ¿ÃøÎ±« ¡æ∑˘ √ﬂ∞°
-    @PostMapping("/create-ticket")
+    // Ïù¥Ïö©Í∂å Ï¢ÖÎ•ò Ï∂îÍ∞Ä
+    @PostMapping("/admin/create-ticket")
     public ResponseEntity<?> createTicket(@RequestBody TicketDto ticketDto) {
 
         ticketService.createTicket(ticketDto.getTicket_price());
@@ -25,8 +26,8 @@ public class TicketController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CREATE_TICKET, null));
     }
 
-    // ¿ÃøÎ±« ¡æ∑˘ √ﬂ∞°
-    @PatchMapping("/modify-ticket")
+    // Ïù¥Ïö©Í∂å Ï¢ÖÎ•ò Ï†ïÎ≥¥ ÏàòÏ†ï
+    @PatchMapping("/admin/modify-ticket")
     public ResponseEntity<?> modifyTicket(@RequestBody TicketDto ticketDto) {
 
         ticketService.modifyTicket(ticketDto.getId(), ticketDto.getTicket_price());
@@ -34,12 +35,23 @@ public class TicketController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_TICKET, null));
     }
 
-    // ¿ÃøÎ±« ¡æ∑˘ √ﬂ∞°
-    @DeleteMapping("/delete-ticket")
+    // Ïù¥Ïö©Í∂å Ï¢ÖÎ•ò Ï†ïÎ≥¥ ÏÇ≠Ï†ú
+    @DeleteMapping("/admin/delete-ticket")
     public ResponseEntity<?> deleteTicket(@RequestBody TicketDto ticketDto) {
 
         ticketService.deleteTicket(ticketDto.getId());
 
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_DELETE_TICKET, null));
+    }
+
+    @GetMapping("/get-all-ticket")
+    public ResponseEntity<?> getAllTicket() {
+
+        List<TicketDto> tickets = ticketService.getAllTicket();
+
+        if(tickets.isEmpty())
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY, null));
+
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_TICKETS_INFO, tickets));
     }
 }
