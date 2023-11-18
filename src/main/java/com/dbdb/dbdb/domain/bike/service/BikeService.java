@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -46,4 +47,14 @@ public class BikeService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public List<Bike> getAllBike() {
+        try {
+            return bikeRepository.findAll();
+
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
 }

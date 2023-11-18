@@ -3,10 +3,12 @@ package com.dbdb.dbdb.domain.bike.repository;
 import com.dbdb.dbdb.domain.bike.table.Bike;
 import com.dbdb.dbdb.domain.board.table.Board;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,5 +18,13 @@ public class BikeRepository {
     public void insertBike(Bike bike) {
         jdbcTemplate.update("INSERT INTO `bike` (`lendplace_id`, `use_status`, `bike_status`) VALUES (?,?,?)"
                 , bike.getLendplace_id(), bike.getUse_status(), bike.getBike_status());
+    }
+
+    public List<Bike> findAll() {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(Bike.class);
+
+        return jdbcTemplate.query(
+                "SELECT * FROM bike", bikeMapper
+        );
     }
 }

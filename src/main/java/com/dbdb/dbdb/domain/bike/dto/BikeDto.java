@@ -14,4 +14,14 @@ public class BikeDto {
         int use_status;
         int bike_status;
     }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
+    public static class BikeModifyDto{
+        int id;
+        String lendplace_id;
+        int use_status;
+        int bike_status;
+    }
 }
