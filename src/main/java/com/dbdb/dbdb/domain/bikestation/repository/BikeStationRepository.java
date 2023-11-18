@@ -69,4 +69,14 @@ public class BikeStationRepository {
                 "WHERE BS.lendplace_id = ?", bikeMapper, lendplaceId
         );
     }
+
+    public List<BikeStationDto.BikeStationDetailDto> findDetailByName(String name) {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationDetailDto.class);
+        String likePattern = "%" + name + "%";
+        return jdbcTemplate.query(
+                "SELECT * FROM bikestationinformation " +
+                        "WHERE statn_addr1 LIKE ? OR statn_addr2 LIKE ?",
+                bikeMapper, likePattern, likePattern
+        );
+    }
 }

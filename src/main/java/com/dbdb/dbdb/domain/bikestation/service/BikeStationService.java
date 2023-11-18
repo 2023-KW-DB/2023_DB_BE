@@ -60,7 +60,15 @@ public class BikeStationService {
         } catch (EmptyResultDataAccessException e) {
             throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         } catch (Exception e) {
-            throw e; //new GlobalException(ResponseStatus.DATABASE_ERROR);
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public List<BikeStationDto.BikeStationDetailDto> searchStation(String name) {
+        try {
+            return bikeStationRepository.findDetailByName(name);
+        } catch (Exception e) {
+            throw e;// new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 }

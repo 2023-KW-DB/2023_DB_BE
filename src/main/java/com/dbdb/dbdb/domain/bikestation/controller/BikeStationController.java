@@ -41,4 +41,10 @@ public class BikeStationController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationDeleteDto.getLendplace_id()));
     }
 
+
+    @GetMapping("/search-lendplace")
+    public ResponseEntity<JsonResponse> searchStation(@RequestParam String name) {
+        List<BikeStationDto.BikeStationDetailDto> bikeStationDetailDtoList = bikeStationService.searchStation(name);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationDetailDtoList));
+    }
 }
