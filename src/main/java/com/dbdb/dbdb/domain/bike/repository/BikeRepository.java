@@ -1,5 +1,6 @@
 package com.dbdb.dbdb.domain.bike.repository;
 
+import com.dbdb.dbdb.domain.bike.dto.BikeDto;
 import com.dbdb.dbdb.domain.bike.table.Bike;
 import com.dbdb.dbdb.domain.board.table.Board;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +27,18 @@ public class BikeRepository {
         return jdbcTemplate.query(
                 "SELECT * FROM bike", bikeMapper
         );
+    }
+
+    public void update(BikeDto.BikeModifyDto bikeModifyDto) {
+        jdbcTemplate.update("UPDATE `bike` SET " +
+                        "lendplace_id=?, " +
+                        "use_status= ?, " +
+                        "bike_status=? " +
+                        "WHERE id=?"
+                , bikeModifyDto.getLendplace_id(), bikeModifyDto.getUse_status(), bikeModifyDto.getBike_status(), bikeModifyDto.getId());
+    }
+
+    public void delete(int id) {
+        jdbcTemplate.update("DELETE FROM `bike` WHERE id=?", id);
     }
 }

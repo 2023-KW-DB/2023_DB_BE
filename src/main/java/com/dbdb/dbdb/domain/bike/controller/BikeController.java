@@ -31,4 +31,16 @@ public class BikeController {
         if(bikeAllDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeAllDtoList));
     }
+
+    @PatchMapping("/modify")
+    public ResponseEntity<JsonResponse> modifyBike(@RequestBody BikeDto.BikeModifyDto bikeModifyDto) {
+        bikeService.modifyBike(bikeModifyDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<JsonResponse> deleteBike(@RequestBody BikeDto.BikeDeleteDto bikeDeleteDto) {
+        bikeService.deleteBike(bikeDeleteDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeDeleteDto.getId()));
+    }
 }

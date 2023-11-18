@@ -57,4 +57,21 @@ public class BikeService {
         }
     }
 
+    public void modifyBike(BikeDto.BikeModifyDto bikeModifyDto) {
+        try {
+            bikeRepository.update(bikeModifyDto);
+
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public void deleteBike(BikeDto.BikeDeleteDto bikeDeleteDto) {
+        try {
+            bikeRepository.delete(bikeDeleteDto.getId());
+
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }
