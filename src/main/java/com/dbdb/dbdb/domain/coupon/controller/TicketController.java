@@ -33,11 +33,13 @@ public class TicketController {
 
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_TICKET, null));
     }
-//
-//    // 이용권 종류 추가
-//    @DeleteMapping("/delete-ticket")
-//    public ResponseEntity<?> deleteTicket(@RequestBody TicketDto ticketDto) {
-//
-//
-//    }
+
+    // 이용권 종류 추가
+    @DeleteMapping("/delete-ticket")
+    public ResponseEntity<?> deleteTicket(@RequestBody TicketDto ticketDto) {
+
+        ticketService.deleteTicket(ticketDto.getId());
+
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_DELETE_TICKET, null));
+    }
 }

@@ -16,7 +16,12 @@ public class TicketRepository {
     }
 
     public void modifyTicket(int id, int newTicketPrice) {
-        String sql = "UPDATE Ticket SET ticket_price = ? WHERE id = ?";
+        String sql = "UPDATE ticket SET ticket_price = ? WHERE id = ?";
         jdbcTemplate.update(sql, newTicketPrice, id);
+    }
+
+    public void deleteTicket(int id) {
+        String sql = "DELETE FROM ticket WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

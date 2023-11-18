@@ -27,8 +27,9 @@ public enum ResponseStatus {
     SUCCESS_NOT_FIND_USER_BY_ID(true, 2015, "id에 해당하는 유저 정보가 없습니다."),
     SUCCESS_SIGNUP(true, 2016, "회원 가입에 성공했습니다"),
     SUCCESS_NOT_SIGNUP(true, 2017, "해당 이메일로 가입이 되어 있는 회원입니다."),
-    SUCCESS_CREATE_TICKET(true, 2018, "[관리자] 새로운 가격의 이용권을 추가하였습니다."),
-    SUCCESS_MODIFY_TICKET(true, 2019, "[관리자] 해당 이용권의 가격을 수정하였습니다."),
+    SUCCESS_CREATE_TICKET(true, 2018, "[관리자] 새로운 가격의 이용권을 추가에 성공하였습니다."),
+    SUCCESS_MODIFY_TICKET(true, 2019, "[관리자] 해당 이용권의 가격을 수정에 성공하였습니다."),
+    SUCCESS_DELETE_TICKET(true, 2020, "[관리자] 해당 이용권의 종류를 삭제에 성공하였습니다."),
 
 
 

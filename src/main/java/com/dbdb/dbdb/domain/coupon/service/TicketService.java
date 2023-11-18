@@ -17,4 +17,8 @@ public class TicketService {
     public void modifyTicket(int id, int newTicketPrice) {
         ticketRepository.modifyTicket(id, newTicketPrice);
     }
+
+    public void deleteTicket(int id) {
+        ticketRepository.deleteTicket(id);
+    }
 }
