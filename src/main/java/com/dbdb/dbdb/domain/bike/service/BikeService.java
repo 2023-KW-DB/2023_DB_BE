@@ -7,10 +7,10 @@ import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -70,6 +70,16 @@ public class BikeService {
         try {
             bikeRepository.delete(bikeDeleteDto.getId());
 
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public BikeDto.BikeDetailDto getOneBike(int id) {
+        try {
+            return bikeRepository.getBikeById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }

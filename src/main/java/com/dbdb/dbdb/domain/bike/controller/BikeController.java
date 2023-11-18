@@ -43,4 +43,10 @@ public class BikeController {
         bikeService.deleteBike(bikeDeleteDto);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeDeleteDto.getId()));
     }
+
+    @GetMapping("/get-one")
+    public ResponseEntity<JsonResponse> getOneBike(@RequestParam int id) {
+        BikeDto.BikeDetailDto bike = bikeService.getOneBike(id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bike));
+    }
 }

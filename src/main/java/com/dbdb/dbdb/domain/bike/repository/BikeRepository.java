@@ -41,4 +41,16 @@ public class BikeRepository {
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM `bike` WHERE id=?", id);
     }
+
+    public BikeDto.BikeDetailDto getBikeById(int id) {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeDto.BikeDetailDto.class);
+        return jdbcTemplate.queryForObject(
+                "SELECT * FROM " +
+                        "bike B LEFT OUTER JOIN bikestationinformation BS " +
+                        "ON B.lendplace_id = BS.lendplace_id " +
+                        "WHERE id=?",
+                bikeMapper,
+                id
+        );
+    }
 }
