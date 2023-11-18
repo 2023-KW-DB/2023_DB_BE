@@ -1,6 +1,6 @@
 package com.dbdb.dbdb.component;
 
-import com.dbdb.dbdb.service.ChangePasswordService;
+import com.dbdb.dbdb.domain.user.service.ChangePasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,8 +11,8 @@ public class ScheduledTasks {
     @Autowired
     private ChangePasswordService changePasswordService;
 
-    // 5ºÐ ÀÌ³»·Î ÀÎÁõÀ» ÁøÇàÇÏÁö ¾ÊÀº ¹øÈ£¸¦ ÀÚµ¿À¸·Î »èÁ¦ÇÏ´Â ½ºÄÉÁÙ¸µ ½ÇÇà
-    @Scheduled(fixedRate = 5000) // 5000 ¹Ð¸®ÃÊ == 5ÃÊ
+    // 5ï¿½ï¿½ ï¿½Ì³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+    @Scheduled(fixedRate = 5000) // 5000 ï¿½Ð¸ï¿½ï¿½ï¿½ == 5ï¿½ï¿½
     public void deleteExpiredAuthNum() {
         changePasswordService.deleteExpiredAuthNum();
     }

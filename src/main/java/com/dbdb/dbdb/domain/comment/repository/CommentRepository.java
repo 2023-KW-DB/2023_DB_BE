@@ -1,10 +1,8 @@
-package com.dbdb.dbdb.repository;
+package com.dbdb.dbdb.domain.comment.repository;
 
-import com.dbdb.dbdb.dto.BoardDto;
-import com.dbdb.dbdb.dto.CommentDto;
-import com.dbdb.dbdb.table.Board;
-import com.dbdb.dbdb.table.Comment;
-import com.dbdb.dbdb.table.CommentLike;
+import com.dbdb.dbdb.domain.comment.dto.CommentDto;
+import com.dbdb.dbdb.domain.comment.table.Comment;
+import com.dbdb.dbdb.domain.comment.table.CommentLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

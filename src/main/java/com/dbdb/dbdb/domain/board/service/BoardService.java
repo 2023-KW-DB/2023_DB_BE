@@ -1,14 +1,15 @@
-package com.dbdb.dbdb.service;
+package com.dbdb.dbdb.domain.board.service;
 
-import com.dbdb.dbdb.dto.BoardDto;
-import com.dbdb.dbdb.dto.CommentDto;
-import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.domain.board.dto.BoardDto;
+import com.dbdb.dbdb.domain.comment.dto.CommentDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.global.exception.GlobalException;
-import com.dbdb.dbdb.repository.BoardRepository;
-import com.dbdb.dbdb.repository.UserRepository;
-import com.dbdb.dbdb.table.Board;
-import com.dbdb.dbdb.table.BoardLike;
+import com.dbdb.dbdb.domain.board.repository.BoardRepository;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
+import com.dbdb.dbdb.domain.board.table.Board;
+import com.dbdb.dbdb.domain.board.table.BoardLike;
+import com.dbdb.dbdb.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

@@ -1,27 +1,20 @@
 package com.dbdb.dbdb.controller;
 
-import com.dbdb.dbdb.dto.BoardDto;
-import com.dbdb.dbdb.dto.CommentDto;
+import com.dbdb.dbdb.domain.board.dto.BoardDto;
+import com.dbdb.dbdb.domain.comment.dto.CommentDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
-import com.dbdb.dbdb.global.exception.ExceptionHandlers;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
-import com.dbdb.dbdb.service.BoardService;
-import com.dbdb.dbdb.service.CommentService;
-import com.dbdb.dbdb.table.BoardLike;
+import com.dbdb.dbdb.domain.board.service.BoardService;
+import com.dbdb.dbdb.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URLConnection;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

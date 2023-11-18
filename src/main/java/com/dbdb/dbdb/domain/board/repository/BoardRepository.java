@@ -1,17 +1,14 @@
-package com.dbdb.dbdb.repository;
+package com.dbdb.dbdb.domain.board.repository;
 
-import com.dbdb.dbdb.dto.BoardDto;
-import com.dbdb.dbdb.dto.UserDto;
-import com.dbdb.dbdb.table.Board;
-import com.dbdb.dbdb.table.BoardLike;
+import com.dbdb.dbdb.domain.board.dto.BoardDto;
+import com.dbdb.dbdb.domain.board.table.Board;
+import com.dbdb.dbdb.domain.board.table.BoardLike;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Repository

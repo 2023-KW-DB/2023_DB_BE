@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.table;
+package com.dbdb.dbdb.domain.board.table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.dto;
+package com.dbdb.dbdb.domain.user.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ public class UserDto {
     private String phone_number;
     private double weight;
     private int age;
-    private LocalDateTime last_accessed_at; // ÃÖ±Ù Á¢¼Ó ½Ã°£ÀÎ °Í °°Àºµ¥ ·Î±×ÀÎ ¼º°øÇÑ ¼ø°£À¸·Î?
+    private LocalDateTime last_accessed_at; // ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
     private int total_money;
 
     @NoArgsConstructor

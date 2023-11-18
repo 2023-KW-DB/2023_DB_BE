@@ -1,15 +1,13 @@
-package com.dbdb.dbdb.service;
+package com.dbdb.dbdb.domain.comment.service;
 
-import com.dbdb.dbdb.dto.CommentDto;
-import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.domain.comment.dto.CommentDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
-import com.dbdb.dbdb.repository.CommentRepository;
-import com.dbdb.dbdb.repository.UserRepository;
-import com.dbdb.dbdb.table.Board;
-import com.dbdb.dbdb.table.BoardLike;
-import com.dbdb.dbdb.table.Comment;
-import com.dbdb.dbdb.table.CommentLike;
+import com.dbdb.dbdb.domain.comment.repository.CommentRepository;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
+import com.dbdb.dbdb.domain.comment.table.Comment;
+import com.dbdb.dbdb.domain.comment.table.CommentLike;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;

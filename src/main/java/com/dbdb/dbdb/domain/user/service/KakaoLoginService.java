@@ -1,12 +1,11 @@
-package com.dbdb.dbdb.service;
+package com.dbdb.dbdb.domain.user.service;
 
-import com.dbdb.dbdb.dto.OAuthToken;
-import com.dbdb.dbdb.dto.UserDto;
-import com.dbdb.dbdb.repository.UserRepository;
+import com.dbdb.dbdb.domain.user.dto.OAuthToken;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -32,26 +31,26 @@ public class KakaoLoginService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    // ¾×¼¼½º ÅäÅ« ¿äÃ»
+    // ï¿½×¼ï¿½ï¿½ï¿½ ï¿½ï¿½Å« ï¿½ï¿½Ã»
     public JsonNode getAccessTokenResponse(String code) {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        // HttpHeader object »ý¼º
+        // HttpHeader object ï¿½ï¿½ï¿½ï¿½
         HttpHeaders headers = new HttpHeaders();;
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        // HttpBody object »ý¼º
+        // HttpBody object ï¿½ï¿½ï¿½ï¿½
         String clientId = env.getProperty("oauth.kakao.client-id");
         String redirectUri = env.getProperty("oauth.kakao.redirect-uri");
         String resourceUri = env.getProperty("oauth.kakao.resource-uri");
 
-        // È®ÀÎÀ» À§ÇÑ log
+        // È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ log
         log.info("clientId = {}", clientId);
         log.info("redirectUri = {}", redirectUri);
         log.info("resourceUri = {}", resourceUri);
 
-        // HttpHeader¿Í HttpBody¸¦ ÇÏ³ªÀÇ obejct¿¡ ´ã±â
+        // HttpHeaderï¿½ï¿½ HttpBodyï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ obejctï¿½ï¿½ ï¿½ï¿½ï¿½
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", clientId);
@@ -70,22 +69,22 @@ public class KakaoLoginService {
         return response;
     }
 
-    // ¾×¼¼½º ÅäÅ«À» ¾ò¾úÀ¸¹Ç·Î ÆÄ½ÌÇÏ¿© ¹ÝÈ¯
+    // ï¿½×¼ï¿½ï¿½ï¿½ ï¿½ï¿½Å«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½Ä½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½È¯
     public String parshingAccessToken(JsonNode responseBody){
         return responseBody.get("access_token").asText();
     }
 
-    // ¾×¼¼½º ÅäÅ«À» »ç¿ëÇÏ¿© ·Î±×ÀÎÇÑ À¯Àú¿¡ ´ëÇÑ Á¤º¸ ¿äÃ»
+    // ï¿½×¼ï¿½ï¿½ï¿½ ï¿½ï¿½Å«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
     public JsonNode getUserInfoByAccessTokenResponse(JsonNode accessToken) throws JsonProcessingException {
 
-        // json object¸¦ ÀÚ¹Ù¿¡¼­ Ã³¸®ÇÏ±â À§ÇÑ º¯È¯ °úÁ¤
+        // json objectï¿½ï¿½ ï¿½Ú¹Ù¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½
         ObjectMapper objectMapper = new ObjectMapper();
         OAuthToken oAuthToken = objectMapper.readValue(accessToken.toString(), OAuthToken.class);
         log.info("accesstoken = {}", oAuthToken.getAccess_token());
 
         RestTemplate restTemplate = new RestTemplate();
 
-        // HttpHeader object »ý¼º
+        // HttpHeader object ï¿½ï¿½ï¿½ï¿½
         HttpHeaders headers = new HttpHeaders();;
         headers.add("Authorization", "Bearer "+oAuthToken.getAccess_token());
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -94,10 +93,10 @@ public class KakaoLoginService {
 
         String userResourceUri = env.getProperty("oauth.kakao.user-resource-uri");
 
-        return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // À¯Àú Á¤º¸¸¦ jsonÀ¸·Î °¡Á®¿È.
+        return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ jsonï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
     }
 
-    // ¾òÀº À¯Àú¿¡ ´ëÇÑ Á¤º¸¿¡¼­ ÇÊ¿äÇÑ °Íµé¸¸ ÆÄ½Ì
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½Íµé¸¸ ï¿½Ä½ï¿½
     public UserDto parshingUserInfo(JsonNode userResourceNode) throws JsonProcessingException {
         log.info("userResorceNode = {}", userResourceNode);
 
@@ -107,7 +106,7 @@ public class KakaoLoginService {
         String is_email_verified = userResourceNode.get("kakao_account").get("is_email_verified").asText();
         String profile_image = userResourceNode.get("properties").get("profile_image").asText();
 
-        // Ä«Ä«¿À ¼­¹ö »ó¿¡¼­ °ËÁõµÈ ÀÌ¸ÞÀÏÀÎ °æ¿ì
+        // Ä«Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ó¿¡¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if(is_email_verified.equals("true")){
             UserDto userDto = userRepository.findUserByEmail(email);
             if(userDto != null)
@@ -129,7 +128,7 @@ public class KakaoLoginService {
     public String kakaoLogout(String accessToken){
         RestTemplate restTemplate = new RestTemplate();
         log.info("accessToken in kakaoLogout = {}", accessToken);
-        // HttpHeader object »ý¼º
+        // HttpHeader object ï¿½ï¿½ï¿½ï¿½
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer "+accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -138,7 +137,7 @@ public class KakaoLoginService {
 
         String logoutResourceUri = env.getProperty("oauth.kakao.logout-resource-uri");
 
-        ResponseEntity<String> responseId = restTemplate.exchange( // ·Î±×¾Æ¿ôÀÇ Á¤»óÀûÀÎ return °ªÀº Id
+        ResponseEntity<String> responseId = restTemplate.exchange( // ï¿½Î±×¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ return ï¿½ï¿½ï¿½ï¿½ Id
                 logoutResourceUri,
                 HttpMethod.POST,
                 logoutRequest,
