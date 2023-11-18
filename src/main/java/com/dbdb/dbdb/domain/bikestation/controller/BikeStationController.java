@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/station")
@@ -25,6 +27,12 @@ public class BikeStationController {
     public ResponseEntity<JsonResponse> modifyBikeStation(@RequestBody BikeStationDto.BikeStationDetailDto bikeStationModifyDto) {
         bikeStationService.modifyBikeStation(bikeStationModifyDto);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
+
+    @GetMapping("/get-lendplace")
+    public ResponseEntity<JsonResponse> getBikeStation(@RequestParam String lendplace_id) {
+        BikeStationDto.BikeStationWithBikeDto bikestation = bikeStationService.getBikeStation(lendplace_id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikestation));
     }
 
     @DeleteMapping("/delete-lendplace")

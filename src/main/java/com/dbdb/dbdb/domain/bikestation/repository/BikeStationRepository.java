@@ -2,6 +2,7 @@ package com.dbdb.dbdb.domain.bikestation.repository;
 
 import com.dbdb.dbdb.domain.bikestation.dto.BikeStationDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -53,5 +54,19 @@ public class BikeStationRepository {
 
     public void delete(String lendplaceId) {
         jdbcTemplate.update("DELETE FROM `bikestationinformation` WHERE lendplace_id=?", lendplaceId);
+    }
+
+    public BikeStationDto.BikeStationWithBikeDto findDetailByLendplaceId(String lendplaceId) {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithBikeDto.class);
+        return jdbcTemplate.queryForObject(
+                "WITH BikeCounts AS (" +
+                "    SELECT lendplace_id, COUNT(*) AS total_bikes " +
+                "    FROM bike " +
+                "    GROUP BY lendplace_id ) " +
+                "SELECT BS.*, COALESCE(BC.total_bikes, 0) AS total_bikes, (BS.max_stands - COALESCE(BC.total_bikes, 0)) AS empty_stands " +
+                "FROM bikestationinformation BS " +
+                "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id " +
+                "WHERE BS.lendplace_id = ?", bikeMapper, lendplaceId
+        );
     }
 }

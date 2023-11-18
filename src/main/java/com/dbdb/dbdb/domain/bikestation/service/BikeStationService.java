@@ -4,14 +4,13 @@ import com.dbdb.dbdb.domain.bikestation.dto.BikeStationDto;
 import com.dbdb.dbdb.domain.bikestation.repository.BikeStationRepository;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -52,6 +51,16 @@ public class BikeStationService {
             bikeStationRepository.delete(bikeStationDeleteDto.getLendplace_id());
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public BikeStationDto.BikeStationWithBikeDto getBikeStation(String lendplaceId) {
+        try {
+            return bikeStationRepository.findDetailByLendplaceId(lendplaceId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
+        } catch (Exception e) {
+            throw e; //new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 }
