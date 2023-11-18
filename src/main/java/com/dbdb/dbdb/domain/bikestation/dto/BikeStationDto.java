@@ -18,4 +18,11 @@ public class BikeStationDto {
         Double max_stands;
         Integer station_status;
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class BikeStationDeleteDto {
+        String lendplace_id;
+    }
 }

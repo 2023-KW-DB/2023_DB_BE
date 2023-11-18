@@ -35,4 +35,12 @@ public class BikeStationService {
         }
 
     }
+
+    public void deleteBikeStation(BikeStationDto.BikeStationDeleteDto bikeStationDeleteDto) {
+        try {
+            bikeStationRepository.delete(bikeStationDeleteDto.getLendplace_id());
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }

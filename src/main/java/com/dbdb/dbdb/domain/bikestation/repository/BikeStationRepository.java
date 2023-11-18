@@ -38,4 +38,8 @@ public class BikeStationRepository {
                     , bikeStation.getLendplace_id(), bikeStation.getStatn_addr1(), bikeStation.getStatn_addr2(), bikeStation.getStartn_lat(), bikeStation.getStartn_lnt(), bikeStation.getMax_stands(), bikeStation.getStation_status());
         }
     }
+
+    public void delete(String lendplaceId) {
+        jdbcTemplate.update("DELETE FROM `bikestationinformation` WHERE lendplace_id=?", lendplaceId);
+    }
 }
