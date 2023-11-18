@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.table;
+package com.dbdb.dbdb.domain.board.table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentLike {
+public class BoardLike {
     private int user_id;
+    private int category_id;
     private int liked_id;
 }

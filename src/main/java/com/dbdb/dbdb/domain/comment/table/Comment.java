@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.table;
+package com.dbdb.dbdb.domain.comment.table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

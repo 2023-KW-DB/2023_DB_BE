@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.dto;
+package com.dbdb.dbdb.domain.comment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

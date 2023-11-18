@@ -1,17 +1,15 @@
 package com.dbdb.dbdb.controller;
 
-import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
-import com.dbdb.dbdb.service.KakaoLoginService;
+import com.dbdb.dbdb.domain.user.service.KakaoLoginService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -27,7 +25,7 @@ public class KakaoLoginController {
     @Autowired
     private KakaoLoginService kakaoLoginService;
 
-    // ÀÎÁõ ÄÚµå ¹ÝÈ¯ Å×½ºÆ®¿ë
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½È¯ ï¿½×½ï¿½Æ®ï¿½ï¿½
     // https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=1534887d85f1d525b986e2521f7309b7&redirect_uri=http://localhost:8080/login/oauth2/code/kakao
 //    @GetMapping("/code/kakao")
 //    public @ResponseBody String kakaoCallback(@RequestParam String code){
@@ -36,16 +34,16 @@ public class KakaoLoginController {
 
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-        JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code¸¦ ÅëÇØ ¾òÀº response(access token°ú ¿©·¯ keyµé Á¸Àç)
+        JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // codeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ response(access tokenï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ keyï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
-        JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access tokenÀ» ÅëÇØ ¾òÀº response(À¯Àú Á¤º¸ Á¸Àç)
+        JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access tokenï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ response(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 
         UserDto userDto = kakaoLoginService.parshingUserInfo(userInfoResponse);
 
         HttpSession session = request.getSession();
         session.setAttribute("aaaa", accessToken);
 
-        // ÄíÅ° »ý¼º
+        // ï¿½ï¿½Å° ï¿½ï¿½ï¿½ï¿½
         Cookie idCookie = new Cookie("id", String.valueOf(userDto.getId()));
         Cookie emailCookie = new Cookie("email", userDto.getEmail());
         Cookie passwordCookie = new Cookie("password", userDto.getPassword());
@@ -56,28 +54,28 @@ public class KakaoLoginController {
         log.info("passwordCookie = {}", passwordCookie.getValue());
         //log.info("accessTokenCookie = {}", accessTokenCookie.getValue());
 
-        // ÄíÅ° À¯È¿ ½Ã°£ ¼³Á¤
-        idCookie.setMaxAge(7 * 24 * 60 * 60); // 7ÀÏ
+        // ï¿½ï¿½Å° ï¿½ï¿½È¿ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
+        idCookie.setMaxAge(7 * 24 * 60 * 60); // 7ï¿½ï¿½
         emailCookie.setMaxAge(7 * 24 * 60 * 60);
         passwordCookie.setMaxAge(7 * 24 * 60 * 60);
         usernameCookie.setMaxAge(7 * 24 * 60 * 60);
         //accessTokenCookie.setMaxAge(7 * 24 * 60 * 60);
 
-        // ÄíÅ°¿¡ HttpOnly ¼³Á¤
+        // ï¿½ï¿½Å°ï¿½ï¿½ HttpOnly ï¿½ï¿½ï¿½ï¿½
         idCookie.setHttpOnly(true);
         emailCookie.setHttpOnly(true);
         passwordCookie.setHttpOnly(true);
         usernameCookie.setHttpOnly(true);
         //accessTokenCookie.setHttpOnly(true);
 
-        // ÄíÅ° °æ·Î ¼³Á¤
+        // ï¿½ï¿½Å° ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         idCookie.setPath("/");
         emailCookie.setPath("/");
         passwordCookie.setPath("/");
         usernameCookie.setPath("/");
         //accessTokenCookie.setPath("/");
 
-        // ÀÀ´ä¿¡ ÄíÅ° Ãß°¡
+        // ï¿½ï¿½ï¿½ä¿¡ ï¿½ï¿½Å° ï¿½ß°ï¿½
         response.addCookie(idCookie);
         response.addCookie(emailCookie);
         response.addCookie(passwordCookie);
@@ -87,7 +85,7 @@ public class KakaoLoginController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_KAKAO_LOGIN, null));
     }
 
-    // ·Î±×¾Æ¿ô
+    // ï¿½Î±×¾Æ¿ï¿½
     @PostMapping("/users/kakao-signout")
     public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
 

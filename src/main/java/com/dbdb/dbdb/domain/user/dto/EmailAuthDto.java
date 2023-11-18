@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.dto;
+package com.dbdb.dbdb.domain.user.dto;
 
 import lombok.Data;
 

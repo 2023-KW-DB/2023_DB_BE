@@ -1,10 +1,9 @@
-package com.dbdb.dbdb.service;
+package com.dbdb.dbdb.domain.user.service;
 
-import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
-import com.dbdb.dbdb.repository.UserRepository;
-import org.apache.catalina.User;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

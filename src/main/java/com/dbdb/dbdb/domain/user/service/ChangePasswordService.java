@@ -1,8 +1,8 @@
-package com.dbdb.dbdb.service;
+package com.dbdb.dbdb.domain.user.service;
 
-import com.dbdb.dbdb.dto.EmailAuthDto;
-import com.dbdb.dbdb.repository.EmailAuthRepository;
-import com.dbdb.dbdb.repository.UserRepository;
+import com.dbdb.dbdb.domain.user.dto.EmailAuthDto;
+import com.dbdb.dbdb.domain.user.repository.EmailAuthRepository;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

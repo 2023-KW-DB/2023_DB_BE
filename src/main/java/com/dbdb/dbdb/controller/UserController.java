@@ -1,11 +1,11 @@
 package com.dbdb.dbdb.controller;
 
-import com.dbdb.dbdb.dto.EmailAuthDto;
-import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.domain.user.dto.EmailAuthDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
-import com.dbdb.dbdb.service.ChangePasswordService;
-import com.dbdb.dbdb.service.UserService;
+import com.dbdb.dbdb.domain.user.service.ChangePasswordService;
+import com.dbdb.dbdb.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

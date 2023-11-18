@@ -1,8 +1,7 @@
-package com.dbdb.dbdb.dto;
+package com.dbdb.dbdb.domain.board.dto;
 
-import com.dbdb.dbdb.table.Board;
+import com.dbdb.dbdb.domain.comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

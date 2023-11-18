@@ -1,10 +1,9 @@
 package com.dbdb.dbdb.controller;
 
-import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
-import com.dbdb.dbdb.service.AdminService;
-import org.apache.coyote.Response;
+import com.dbdb.dbdb.domain.user.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    // ¸ðµç À¯Àú Á¤º¸ È®ÀÎ
+    // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
     @GetMapping("/get-all-users")
     public ResponseEntity<?> getAllUsers(){
         List<UserDto> users = adminService.getAllUsers();
@@ -29,7 +28,7 @@ public class AdminController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_USERS_INFO, users));
     }
 
-    // À¯Àú Á¤º¸ ¼öÁ¤
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     @PatchMapping("/modify-user")
     public ResponseEntity<?> modifyUser(@RequestBody UserDto userDto){
 
@@ -37,7 +36,7 @@ public class AdminController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_USER_INFO, null));
     }
 
-    // À¯Àú Á¤º¸ »èÁ¦
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     @DeleteMapping("/delete-user")
     public ResponseEntity<?> deleteUser(@RequestBody UserDto userDto){
 

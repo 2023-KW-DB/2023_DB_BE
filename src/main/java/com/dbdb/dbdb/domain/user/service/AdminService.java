@@ -1,9 +1,7 @@
-package com.dbdb.dbdb.service;
+package com.dbdb.dbdb.domain.user.service;
 
-import com.dbdb.dbdb.dto.UserDto;
-import com.dbdb.dbdb.global.exception.GlobalException;
-import com.dbdb.dbdb.global.exception.ResponseStatus;
-import com.dbdb.dbdb.repository.UserRepository;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +13,7 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
-    // ¸ðµç À¯Àú Á¤º¸ È®ÀÎ
+    // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
     public List<UserDto> getAllUsers() {
         List<UserDto> users = userRepository.returnAllUsers();
         return userRepository.returnAllUsers();

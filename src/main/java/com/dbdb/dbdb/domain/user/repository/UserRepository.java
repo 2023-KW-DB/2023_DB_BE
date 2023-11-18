@@ -1,6 +1,6 @@
-package com.dbdb.dbdb.repository;
+package com.dbdb.dbdb.domain.user.repository;
 
-import com.dbdb.dbdb.dto.UserDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -33,7 +33,7 @@ public class UserRepository {
     public Boolean checkEmailDuplicate(UserDto userDto) {
         String sql = "SELECT COUNT(*) FROM user WHERE email = ?";
         try {
-            // queryForObject¸¦ »ç¿ëÇÏ¿© °á°ú°¡ 1 ÀÌ»óÀÌ¸é Á¸ÀçÇÏ´Â °ÍÀ¸·Î ÆÇ´Ü
+            // queryForObjectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 1 ï¿½Ì»ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½
             Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userDto.getEmail());
             return count != null && count > 0;
         } catch (EmptyResultDataAccessException e) {
@@ -47,7 +47,7 @@ public class UserRepository {
             Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userdto.getEmail(), userdto.getPassword());
             return count != null && count > 0;
         } catch (EmptyResultDataAccessException e) {
-            // ÀÌ¸ÞÀÏ°ú ºñ¹Ð¹øÈ£°¡ ÀÏÄ¡ÇÏ´Â ·¹ÄÚµå°¡ ¾øÀ¸¸é false ¹ÝÈ¯
+            // ï¿½Ì¸ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½Ð¹ï¿½È£ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½Úµå°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false ï¿½ï¿½È¯
             return false;
         }
     }
@@ -57,7 +57,7 @@ public class UserRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
         } catch (EmptyResultDataAccessException e) {
-            // ÀÌ¸ÞÀÏ¿¡ ÇØ´çÇÏ´Â user_id°¡ ¾øÀ¸¸é null ¹ÝÈ¯
+            // ï¿½Ì¸ï¿½ï¿½Ï¿ï¿½ ï¿½Ø´ï¿½ï¿½Ï´ï¿½ user_idï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ null ï¿½ï¿½È¯
             return null;
         }
     }
@@ -108,7 +108,7 @@ public class UserRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;  // °á°ú°¡ ¾øÀ¸¸é null ¹ÝÈ¯
+            return null;  // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ null ï¿½ï¿½È¯
         }
     }
 
@@ -117,7 +117,7 @@ public class UserRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;  // °á°ú°¡ ¾øÀ¸¸é null ¹ÝÈ¯
+            return null;  // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ null ï¿½ï¿½È¯
         }
     }
 
@@ -126,7 +126,7 @@ public class UserRepository {
 //            BeanPropertyRowMapper.newInstance(UserDto.class)
 //            );
 
-    // RowMapper ±¸Çö
+    // RowMapper ï¿½ï¿½ï¿½ï¿½
     private static class UserRowMapper implements RowMapper<UserDto> {
         @Override
         public UserDto mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -1,9 +1,9 @@
-package com.dbdb.dbdb.dto;
+package com.dbdb.dbdb.domain.user.dto;
 
 import lombok.Data;
 
 @Data
-public class OAuthToken {  // Oauth2 µ¥ÀÌÅÍ ÆÄ½ÌÀ» À§ÇÑ Å¬·¡½º
+public class OAuthToken {  // Oauth2 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½
 
     private String access_token;
     private String token_type;
@@ -12,7 +12,7 @@ public class OAuthToken {  // Oauth2 µ¥ÀÌÅÍ ÆÄ½ÌÀ» À§ÇÑ Å¬·¡½º
     private String scope;
     private String refresh_token_expires_in;
 
-    // body ÆÄ½Ì °á°ú
+    // body ï¿½Ä½ï¿½ ï¿½ï¿½ï¿½
     //  access_token: "vZ7bkplfgxl-9Wi0T1C_JeLGWvkzZIZatDXqN91vCj1zTgAAAYmV2PDg",
     //  token_type: "bearer",
     //  refresh_token: "D23i7P1iRmbqcWIQu66dgON6eGY7qtrRPgvNtjYhCj1zTgAAAYmV2PDf",
