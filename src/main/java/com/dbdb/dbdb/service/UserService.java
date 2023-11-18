@@ -4,6 +4,7 @@ import com.dbdb.dbdb.dto.UserDto;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.repository.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,14 @@ public class UserService {
 
     public int findUserIdByEmail(String email) {
         return userRepository.findUserIdByEmail(email);
+    }
+
+    public UserDto findUserByEmail(String email){
+        return userRepository.findUserByEmail(email);
+    }
+
+    public UserDto findUserByid(int id){
+        return userRepository.findUserById(id);
     }
 
     public void withdrawal(int id) {

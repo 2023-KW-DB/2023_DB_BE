@@ -27,8 +27,14 @@ public class UserController {
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserDto userDto) {
-        userService.signUp(userDto);
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS, null));
+
+        UserDto user = userService.findUserByEmail(userDto.getEmail());
+        if(user == null){
+            userService.signUp(userDto);
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SIGNUP, null));
+        }
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_SIGNUP, null));
     }
 
     // 이메일 중복 확인
@@ -142,5 +148,15 @@ public class UserController {
 
         changePasswordService.changePassword(userDto.getEmail(), userDto.getPassword());
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CHANGE_PASSWORD));
+    }
+
+    @GetMapping("/get-userinfo")
+    public ResponseEntity<?> getUserInfoById(@RequestBody UserDto userDto){
+        UserDto userInfo = userService.findUserByid(userDto.getId());
+
+        if (userInfo == null)
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_FIND_USER_BY_ID, null));
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_FIND_USER_BY_ID, userInfo));
     }
 }

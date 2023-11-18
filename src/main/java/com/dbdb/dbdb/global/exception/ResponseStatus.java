@@ -23,6 +23,10 @@ public enum ResponseStatus {
     SUCCESS_MODIFY_USER_INFO(true, 2011, "[관리자] 유저 정보 수정을 성공하였습니다."),
     SUCCESS_DELETE_USER(true, 2012, "[관리자] 해당 유저의 정보를 삭제(탈퇴)를 성공하였습니다"),
     SUCCESS_KAKAO_LOGIN(true, 2013, "카카오 로그인을 성공하였습니다."),
+    SUCCESS_FIND_USER_BY_ID(true, 2014, "id에 해당하는 유저 정보 반환에 성공했습니다."),
+    SUCCESS_NOT_FIND_USER_BY_ID(true, 2015, "id에 해당하는 유저 정보가 없습니다."),
+    SUCCESS_SIGNUP(true, 2016, "회원 가입에 성공했습니다"),
+    SUCCESS_NOT_SIGNUP(true, 2017, "해당 이메일로 가입이 되어 있는 회원입니다."),
 
 
 
