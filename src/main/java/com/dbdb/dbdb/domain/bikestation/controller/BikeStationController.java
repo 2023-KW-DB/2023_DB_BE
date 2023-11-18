@@ -21,6 +21,12 @@ public class BikeStationController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
     }
 
+    @PatchMapping("/modify-lendplace")
+    public ResponseEntity<JsonResponse> modifyBikeStation(@RequestBody BikeStationDto.BikeStationDetailDto bikeStationModifyDto) {
+        bikeStationService.modifyBikeStation(bikeStationModifyDto);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, null));
+    }
+
     @DeleteMapping("/delete-lendplace")
     public ResponseEntity<JsonResponse> deleteBikeStation(@RequestBody BikeStationDto.BikeStationDeleteDto bikeStationDeleteDto) {
         bikeStationService.deleteBikeStation(bikeStationDeleteDto);

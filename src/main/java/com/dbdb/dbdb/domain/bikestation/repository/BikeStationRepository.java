@@ -39,6 +39,18 @@ public class BikeStationRepository {
         }
     }
 
+    public void update(BikeStationDto.BikeStationDetailDto bikeStation) {
+        jdbcTemplate.update("UPDATE `bikestationinformation` SET " +
+                        "statn_addr1= ?, " +
+                        "statn_addr2=?, " +
+                        "startn_lat=?, " +
+                        "startn_lnt=?, " +
+                        "max_stands=?, " +
+                        "station_status=? " +
+                        "WHERE lendplace_id=?"
+                , bikeStation.getStatn_addr1(), bikeStation.getStatn_addr2(), bikeStation.getStartn_lat(), bikeStation.getStartn_lnt(), bikeStation.getMax_stands(), bikeStation.getStation_status(), bikeStation.getLendplace_id());
+    }
+
     public void delete(String lendplaceId) {
         jdbcTemplate.update("DELETE FROM `bikestationinformation` WHERE lendplace_id=?", lendplaceId);
     }

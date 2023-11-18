@@ -36,6 +36,17 @@ public class BikeStationService {
 
     }
 
+    public void modifyBikeStation(BikeStationDto.BikeStationDetailDto bikeStation) {
+        try {
+            bikeStationRepository.update(bikeStation);
+        } catch (NullPointerException e) {
+            throw new GlobalException(ResponseStatus.INVALID_REQUEST);
+        } catch (Exception e) {
+            throw e;
+            //throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
     public void deleteBikeStation(BikeStationDto.BikeStationDeleteDto bikeStationDeleteDto) {
         try {
             bikeStationRepository.delete(bikeStationDeleteDto.getLendplace_id());
