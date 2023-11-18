@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
@@ -17,6 +18,11 @@ import java.util.List;
 public class BikeStationService {
 
     private final BikeStationRepository bikeStationRepository;
+
+    @PostConstruct
+    public void initialize() {
+        bikeStationRepository.createBikeCountsView();
+    }
 
     public void createBikeStation(BikeStationDto.BikeStationDetailDto bikeStation) {
         try {
@@ -79,6 +85,14 @@ public class BikeStationService {
             throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public List<BikeStationDto.BikeStationWithCurrentBike> getAllStation() {
+        try {
+            return bikeStationRepository.findAll();
+        } catch (Exception e) {
+            throw e; //new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 }

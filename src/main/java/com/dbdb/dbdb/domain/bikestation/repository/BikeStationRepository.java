@@ -98,4 +98,24 @@ public class BikeStationRepository {
                         "WHERE BS.lendplace_id = ?", bikeMapper, lendplaceId
         );
     }
+
+    public void createBikeCountsView() {
+        jdbcTemplate.execute(
+                "CREATE VIEW IF NOT EXISTS BikeCounts AS " +
+                        "SELECT lendplace_id, COUNT(*) AS total_bikes " +
+                        "FROM bike " +
+                        "GROUP BY lendplace_id");
+    }
+
+    public List<BikeStationDto.BikeStationWithCurrentBike> findAll() {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithCurrentBike.class);
+        return jdbcTemplate.query(
+                "SELECT BS.*, " +
+                "       CASE " +
+                "           WHEN BC.total_bikes IS NULL THEN 0 " +
+                "           ELSE BC.total_bikes " +
+                "       END AS total_bikes " +
+                "FROM bikestationinformation BS " +
+                "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id", bikeMapper);
+    }
 }

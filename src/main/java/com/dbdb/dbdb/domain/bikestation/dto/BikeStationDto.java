@@ -51,4 +51,18 @@ public class BikeStationDto {
         int usable_bikes;
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class BikeStationWithCurrentBike {
+        String lendplace_id;
+        String statn_addr1;
+        String statn_addr2;
+        double startn_lat;
+        double startn_lnt;
+        Double max_stands;
+        Integer station_status;
+        int total_bikes;
+    }
+
 }
