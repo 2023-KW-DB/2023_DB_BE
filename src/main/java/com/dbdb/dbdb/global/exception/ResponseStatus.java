@@ -28,6 +28,7 @@ public enum ResponseStatus {
     SUCCESS_SIGNUP(true, 2016, "회원 가입에 성공했습니다"),
     SUCCESS_NOT_SIGNUP(true, 2017, "해당 이메일로 가입이 되어 있는 회원입니다."),
     SUCCESS_CREATE_TICKET(true, 2018, "[관리자] 새로운 가격의 이용권을 추가하였습니다."),
+    SUCCESS_MODIFY_TICKET(true, 2019, "[관리자] 해당 이용권의 가격을 수정하였습니다."),
 
 
 

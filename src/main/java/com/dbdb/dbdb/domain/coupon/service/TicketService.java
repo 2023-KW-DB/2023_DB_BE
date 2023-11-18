@@ -13,4 +13,8 @@ public class TicketService {
     public void createTicket(int ticketPrice) {
         ticketRepository.createTicket(ticketPrice);
     }
+
+    public void modifyTicket(int id, int newTicketPrice) {
+        ticketRepository.modifyTicket(id, newTicketPrice);
+    }
 }

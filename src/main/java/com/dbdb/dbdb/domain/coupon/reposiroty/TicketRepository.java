@@ -11,7 +11,12 @@ public class TicketRepository {
     private JdbcTemplate jdbcTemplate;
 
     public void createTicket(int ticket_price) {
-        String sql = "INSERT INTO Ticket (ticket_price) VALUES (?)";
+        String sql = "INSERT INTO ticket (ticket_price) VALUES (?)";
         jdbcTemplate.update(sql, ticket_price);
+    }
+
+    public void modifyTicket(int id, int newTicketPrice) {
+        String sql = "UPDATE Ticket SET ticket_price = ? WHERE id = ?";
+        jdbcTemplate.update(sql, newTicketPrice, id);
     }
 }

@@ -29,7 +29,9 @@ public class TicketController {
     @PatchMapping("/modify-ticket")
     public ResponseEntity<?> modifyTicket(@RequestBody TicketDto ticketDto) {
 
+        ticketService.modifyTicket(ticketDto.getId(), ticketDto.getTicket_price());
 
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_TICKET, null));
     }
 //
 //    // 이용권 종류 추가
