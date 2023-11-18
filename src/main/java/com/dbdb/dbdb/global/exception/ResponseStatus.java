@@ -52,6 +52,7 @@ public enum ResponseStatus {
     INVALID_AUTHORITY_DELETE(false, 5204, "게시글은 작성자만 삭제할 수 있습니다"),
     INVALID_AUTHORITY_MODIFY_COMMENT(false, 5205, "댓글은 작성자만 수정할 수 있습니다"),
     INVALID_AUTHORITY_DELETE_COMMENT(false, 5206, "댓글은 작성자만 삭제할 수 있습니다"),
+    INVALID_FK_VIOLATION(false, 5207, "존재하지 않는 대여소입니다"),
 
 
     // 6000 - Response Error
