@@ -1,5 +1,6 @@
 package com.dbdb.dbdb.domain.ticket.controller;
 
+import com.dbdb.dbdb.domain.paymenthistory.dto.PaymentHistoryDto;
 import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.ticket.service.TicketService;
 import com.dbdb.dbdb.global.dto.JsonResponse;
@@ -59,18 +60,6 @@ public class TicketController {
     @PostMapping("/users/purchase-ticket")
     public ResponseEntity<?> purchaseTicket(@RequestParam int userId, @RequestParam int ticketId){
         boolean isTotalMoneyEnough = ticketService.purchaseTicket(userId, ticketId);
-
-        if(!isTotalMoneyEnough)
-            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.FAILED_NOT_ENOUGHT_TOTAL_MONEY, null));
-        else
-            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_PURCHASE_TICKET, null));
-    }
-
-    // 이용권 구매 이력 조회
-    @GetMapping("/users/get-ticket/payment-history")
-    public ResponseEntity<?> purchaseTicket(@RequestParam int userId){
-
-        List<TicketDto> tickets = ticketService.getAllTicket();
 
         if(!isTotalMoneyEnough)
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.FAILED_NOT_ENOUGHT_TOTAL_MONEY, null));

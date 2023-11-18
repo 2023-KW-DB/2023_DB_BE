@@ -33,8 +33,8 @@ public enum ResponseStatus {
     SUCCESS_GET_ALL_TICKETS_INFO(true, 2021, "모든 티켓의 정보 반환에 성공하였습니다."),
     SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY(true, 2022, "저장된 티켓의 정보가 하나도 없습니다."),
     SUCCESS_PURCHASE_TICKET(true, 2023, "이용권 구매에 성공하였습니다."),
-
-
+    SUCCESS_GET_ALL_PAYMENT_HISTORY_INFO(true, 2024, "해당 유저의 모든 티켓 구매 내역 정보 반환에 성공하였습니다."),
+    SUCCESS_GET_ALL_PAYMENT_HISTORY_INFO_ISEMPTY(true, 2025, "해당 유저의 티켓 구매 내역 정보가 하나도 없습니다."),
 
 
 
