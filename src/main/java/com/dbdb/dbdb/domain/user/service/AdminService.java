@@ -15,7 +15,6 @@ public class AdminService {
 
     // ��� ���� ���� Ȯ��
     public List<UserDto> getAllUsers() {
-        List<UserDto> users = userRepository.returnAllUsers();
         return userRepository.returnAllUsers();
     }
 
