@@ -49,6 +49,7 @@ public class KakaoLoginController {
         Cookie idCookie = new Cookie("id", String.valueOf(userDto.getId()));
         Cookie emailCookie = new Cookie("email", userDto.getEmail());
         Cookie passwordCookie = new Cookie("password", userDto.getPassword());
+        Cookie usernameCookie = new Cookie("username", userDto.getUsername());
         //Cookie accessTokenCookie = new Cookie("access_token", accessToken);
         log.info("idCookie = {}", idCookie.getValue());
         log.info("emailCookie = {}", emailCookie.getValue());
@@ -59,24 +60,28 @@ public class KakaoLoginController {
         idCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
         emailCookie.setMaxAge(7 * 24 * 60 * 60);
         passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+        usernameCookie.setMaxAge(7 * 24 * 60 * 60);
         //accessTokenCookie.setMaxAge(7 * 24 * 60 * 60);
 
         // 쿠키에 HttpOnly 설정
         idCookie.setHttpOnly(true);
         emailCookie.setHttpOnly(true);
         passwordCookie.setHttpOnly(true);
+        usernameCookie.setHttpOnly(true);
         //accessTokenCookie.setHttpOnly(true);
 
         // 쿠키 경로 설정
         idCookie.setPath("/");
         emailCookie.setPath("/");
         passwordCookie.setPath("/");
+        usernameCookie.setPath("/");
         //accessTokenCookie.setPath("/");
 
         // 응답에 쿠키 추가
         response.addCookie(idCookie);
         response.addCookie(emailCookie);
         response.addCookie(passwordCookie);
+        response.addCookie(usernameCookie);
         //response.addCookie(accessTokenCookie);
 
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_KAKAO_LOGIN, null));
@@ -90,7 +95,7 @@ public class KakaoLoginController {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName())) {
+                if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName()) || "username".equals(cookie.getName())) {
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
                     response.addCookie(cookie);

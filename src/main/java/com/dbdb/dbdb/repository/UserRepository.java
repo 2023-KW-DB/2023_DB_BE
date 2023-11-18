@@ -112,6 +112,20 @@ public class UserRepository {
         }
     }
 
+    public UserDto findUserById(int id) {
+        String sql = "SELECT * FROM user WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;  // 결과가 없으면 null 반환
+        }
+    }
+
+//     return jdbcTemplate.query(
+//    sql,
+//            BeanPropertyRowMapper.newInstance(UserDto.class)
+//            );
+
     // RowMapper 구현
     private static class UserRowMapper implements RowMapper<UserDto> {
         @Override

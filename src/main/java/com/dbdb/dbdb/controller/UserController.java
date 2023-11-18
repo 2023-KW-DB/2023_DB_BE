@@ -27,8 +27,14 @@ public class UserController {
     // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserDto userDto) {
-        userService.signUp(userDto);
-        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS, null));
+
+        UserDto user = userService.findUserByEmail(userDto.getEmail());
+        if(user == null){
+            userService.signUp(userDto);
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_SIGNUP, null));
+        }
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_SIGNUP, null));
     }
 
     // 이메일 중복 확인
@@ -42,32 +48,37 @@ public class UserController {
 
     // 로그인
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody UserDto userdto, HttpServletResponse response){
-        if (userService.signIn(userdto)){
+    public ResponseEntity<?> signIn(@RequestBody UserDto userDto, HttpServletResponse response){
+        if (userService.signIn(userDto)){
             // 쿠키 생성
-            Cookie idCookie = new Cookie("id", String.valueOf(userService.findUserIdByEmail(userdto.getEmail())));
-            Cookie emailCookie = new Cookie("email", userdto.getEmail());
-            Cookie passwordCookie = new Cookie("password", userdto.getPassword());
+            Cookie idCookie = new Cookie("id", String.valueOf(userService.findUserIdByEmail(userDto.getEmail())));
+            Cookie emailCookie = new Cookie("email", userDto.getEmail());
+            Cookie passwordCookie = new Cookie("password", userDto.getPassword());
+            Cookie usernameCookie = new Cookie("username", userDto.getUsername());
 
             // 쿠키 유효 시간 설정
             idCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
             emailCookie.setMaxAge(7 * 24 * 60 * 60);
             passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+            usernameCookie.setMaxAge(7 * 24 * 60 * 60);
 
             // 쿠키에 HttpOnly 설정
             idCookie.setHttpOnly(true);
             emailCookie.setHttpOnly(true);
             passwordCookie.setHttpOnly(true);
+            usernameCookie.setHttpOnly(true);
 
             // 쿠키 경로 설정
             idCookie.setPath("/");
             emailCookie.setPath("/");
             passwordCookie.setPath("/");
+            usernameCookie.setPath("/");
 
             // 응답에 쿠키 추가
             response.addCookie(idCookie);
             response.addCookie(emailCookie);
             response.addCookie(passwordCookie);
+            response.addCookie(usernameCookie);
 
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_LOGIN, null));
         }
@@ -83,7 +94,7 @@ public class UserController {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName())) {
+                if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName()) || "username".equals(cookie.getName())) {
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
                     response.addCookie(cookie);
@@ -137,5 +148,15 @@ public class UserController {
 
         changePasswordService.changePassword(userDto.getEmail(), userDto.getPassword());
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CHANGE_PASSWORD));
+    }
+
+    @GetMapping("/get-userinfo")
+    public ResponseEntity<?> getUserInfoById(@RequestBody UserDto userDto){
+        UserDto userInfo = userService.findUserByid(userDto.getId());
+
+        if (userInfo == null)
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_FIND_USER_BY_ID, null));
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_FIND_USER_BY_ID, userInfo));
     }
 }
