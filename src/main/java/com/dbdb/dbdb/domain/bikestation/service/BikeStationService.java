@@ -68,7 +68,17 @@ public class BikeStationService {
         try {
             return bikeStationRepository.findDetailByName(name);
         } catch (Exception e) {
-            throw e;// new GlobalException(ResponseStatus.DATABASE_ERROR);
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public BikeStationDto.BikeStationStatus getBikeStationStatus(String lendplaceId) {
+        try {
+            return bikeStationRepository.findStatusById(lendplaceId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 }

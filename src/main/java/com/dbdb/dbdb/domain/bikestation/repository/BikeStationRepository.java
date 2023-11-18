@@ -79,4 +79,23 @@ public class BikeStationRepository {
                 bikeMapper, likePattern, likePattern
         );
     }
+
+    public BikeStationDto.BikeStationStatus findStatusById(String lendplaceId) {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationStatus.class);
+        return jdbcTemplate.queryForObject(
+                "SELECT BS.*, " +
+                        "       CASE " +
+                        "           WHEN BikeCount.available_bikes IS NULL THEN 0 " +
+                        "           ELSE BikeCount.available_bikes " +
+                        "       END AS usable_bikes " +
+                        "FROM bikestationinformation BS " +
+                        "LEFT JOIN ( " +
+                        "    SELECT lendplace_id, COUNT(*) AS available_bikes " +
+                        "    FROM bike " +
+                        "    WHERE use_status = 0 AND bike_status = 1 " +
+                        "    GROUP BY lendplace_id " +
+                        ") AS BikeCount ON BS.lendplace_id = BikeCount.lendplace_id " +
+                        "WHERE BS.lendplace_id = ?", bikeMapper, lendplaceId
+        );
+    }
 }

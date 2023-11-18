@@ -41,4 +41,14 @@ public class BikeStationDto {
         int empty_stands;
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class BikeStationStatus {
+        String lendplace_id;
+        String statn_addr1;
+        String statn_addr2;
+        int usable_bikes;
+    }
+
 }
