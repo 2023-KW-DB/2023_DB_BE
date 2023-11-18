@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.controller;
+package com.dbdb.dbdb.domain.board.controller;
 
 import com.dbdb.dbdb.domain.board.dto.BoardDto;
 import com.dbdb.dbdb.domain.comment.dto.CommentDto;

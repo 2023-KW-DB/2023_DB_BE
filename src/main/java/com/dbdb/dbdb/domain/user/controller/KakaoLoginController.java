@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.controller;
+package com.dbdb.dbdb.domain.user.controller;
 
 import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.global.dto.JsonResponse;
