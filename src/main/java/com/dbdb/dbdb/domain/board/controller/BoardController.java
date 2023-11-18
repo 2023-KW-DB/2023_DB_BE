@@ -45,14 +45,12 @@ public class BoardController {
     @GetMapping("/get-all-titles")
     public ResponseEntity<JsonResponse> allBoardTitle() {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = boardService.getAllBoardTitle();
-        if(boardTitleDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
     }
 
     @GetMapping("/get-category-titles")
     public ResponseEntity<JsonResponse> eachCategoryBoardTitle(@RequestParam int category_id) {
         List<BoardDto.GetBoardTitleDto> boardTitleDtoList = boardService.getEachCategoryBoardTitle(category_id);
-        if(boardTitleDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, boardTitleDtoList));
     }
 
@@ -92,7 +90,6 @@ public class BoardController {
     @GetMapping("/get-comments")
     public ResponseEntity<JsonResponse> getComments(@RequestParam int write_id, @RequestParam int user_id) {
         List<CommentDto.GetCommentDto> commentDtoList = commentService.getCommentEachBoard(write_id, user_id);
-        if(commentDtoList.isEmpty()) throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, commentDtoList));
 
     }
