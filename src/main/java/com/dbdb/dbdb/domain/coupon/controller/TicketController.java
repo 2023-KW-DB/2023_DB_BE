@@ -44,6 +44,7 @@ public class TicketController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_DELETE_TICKET, null));
     }
 
+    // 모든 이용권 종류 조회(유저&관리자 공통)
     @GetMapping("/get-all-ticket")
     public ResponseEntity<?> getAllTicket() {
 
@@ -53,5 +54,15 @@ public class TicketController {
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY, null));
 
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_TICKETS_INFO, tickets));
+    }
+
+    @PostMapping("/users/purchase-ticket")
+    public ResponseEntity<?> purchaseTicket(@RequestParam int userId, @RequestParam int ticketId){
+        boolean isTotalMoneyEnough = ticketService.purchaseTicket(userId, ticketId);
+
+        if(!isTotalMoneyEnough)
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.FAILED_NOT_ENOUGHT_TOTAL_MONEY, null));
+        else
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_PURCHASE_TICKET, null));
     }
 }

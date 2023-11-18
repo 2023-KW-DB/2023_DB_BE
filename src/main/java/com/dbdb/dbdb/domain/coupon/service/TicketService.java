@@ -29,4 +29,8 @@ public class TicketService {
     public List<TicketDto> getAllTicket() {
         return ticketRepository.returnAllTickets();
     }
+
+    public Boolean purchaseTicket(int userId, int ticketId){
+        return ticketRepository.purchaseTicket(userId, ticketId);
+    }
 }

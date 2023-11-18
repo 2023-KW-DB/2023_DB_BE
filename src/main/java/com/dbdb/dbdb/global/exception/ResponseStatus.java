@@ -32,6 +32,7 @@ public enum ResponseStatus {
     SUCCESS_DELETE_TICKET(true, 2020, "[관리자] 해당 이용권의 종류를 삭제에 성공하였습니다."),
     SUCCESS_GET_ALL_TICKETS_INFO(true, 2021, "모든 티켓의 정보 반환에 성공하였습니다."),
     SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY(true, 2022, "저장된 티켓의 정보가 하나도 없습니다."),
+    SUCCESS_PURCHASE_TICKET(true, 2023, "이용권 구매에 성공하였습니다."),
 
 
 
@@ -51,6 +52,7 @@ public enum ResponseStatus {
     COOKIE_ERROR(false, 5005, "존재하지 않는 쿠키입니다."),
     SESSION_ERROR(false, 5006, "존재하지 않는 세션입니다."),
     ACCESS_TOKEN_NULL(false, 5007, "존재하지 않는 액세스 토큰입니다"),
+    FAILED_NOT_ENOUGHT_TOTAL_MONEY(false, 5008, "해당 유저의 잔고(total_money)가 충분하지 않아 이용권 구매에 실패하였습니다."),
     FILE_READ_ERROR(false, 5201, "파일을 조회할 때 오류가 발생했습니다."),
     INVALID_AUTHORITY_NOTICE(false, 5202, "관리자만 공지를 작성할 수 있습니다"),
     INVALID_AUTHORITY_MODIFY(false, 5203, "게시글은 작성자만 수정할 수 있습니다"),
