@@ -1,8 +1,7 @@
-package com.dbdb.dbdb.domain.coupon.service;
+package com.dbdb.dbdb.domain.ticket.service;
 
-import com.dbdb.dbdb.domain.coupon.dto.TicketDto;
-import com.dbdb.dbdb.domain.coupon.reposiroty.TicketRepository;
-import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
+import com.dbdb.dbdb.domain.ticket.reposiroty.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

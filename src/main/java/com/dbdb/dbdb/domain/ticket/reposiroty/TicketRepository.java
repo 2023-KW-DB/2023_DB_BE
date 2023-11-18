@@ -1,7 +1,6 @@
-package com.dbdb.dbdb.domain.coupon.reposiroty;
+package com.dbdb.dbdb.domain.ticket.reposiroty;
 
-import com.dbdb.dbdb.domain.coupon.dto.TicketDto;
-import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

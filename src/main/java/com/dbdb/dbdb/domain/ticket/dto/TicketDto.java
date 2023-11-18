@@ -1,4 +1,4 @@
-package com.dbdb.dbdb.domain.coupon.dto;
+package com.dbdb.dbdb.domain.ticket.dto;
 
 import lombok.Data;
 
