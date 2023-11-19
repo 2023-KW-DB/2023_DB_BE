@@ -53,7 +53,12 @@ public class CommentService {
                     commentLikeDto.getLiked_id()
             );
 
-            commentRepository.insertCommentLike(commentLike);
+            boolean exists = commentRepository.findExistByCommentLike(commentLike);
+            if(!exists) {
+                commentRepository.insertCommentLike(commentLike);
+            } else {
+                commentRepository.deleteCommentLike(commentLike);
+            }
 
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);

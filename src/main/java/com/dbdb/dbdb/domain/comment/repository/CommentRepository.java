@@ -29,6 +29,16 @@ public class CommentRepository {
                 user_id, write_id, category_id, content, created_at, updated_at);
     }
 
+    public boolean findExistByCommentLike(CommentLike commentLike) {
+        Boolean isExists = jdbcTemplate.queryForObject(
+                "SELECT EXISTS ( " +
+                        "    SELECT 1 FROM comment_like " +
+                        "    WHERE user_id = ? AND liked_id = ? " +
+                        ") ", Boolean.class, commentLike.getUser_id(), commentLike.getLiked_id());
+
+        return isExists;
+    }
+
     public void insertCommentLike(CommentLike commentLike) {
         int user_id = commentLike.getUser_id();
         int liked_id = commentLike.getLiked_id();
