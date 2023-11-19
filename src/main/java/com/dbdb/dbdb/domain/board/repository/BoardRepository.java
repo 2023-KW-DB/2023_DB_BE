@@ -96,6 +96,17 @@ public class BoardRepository {
         jdbcTemplate.update("UPDATE `board` SET views = views + 1 WHERE id = ?", id);
     }
 
+    public boolean findExistByBoardLike(BoardLike boardLike) {
+        Boolean isExists = jdbcTemplate.queryForObject(
+                "SELECT EXISTS ( " +
+                        "SELECT 1 FROM board_like " +
+                        "WHERE user_id = ? AND category_id = ? AND liked_id = ? " +
+                        ")", Boolean.class, boardLike.getUser_id(), boardLike.getCategory_id(), boardLike.getLiked_id()
+        );
+
+        return Boolean.TRUE.equals(isExists);
+    }
+
     public void insertBoardLike(BoardLike boardLike) {
         int user_id = boardLike.getUser_id();
         int category_id = boardLike.getCategory_id();

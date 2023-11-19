@@ -171,7 +171,12 @@ public class BoardService {
                     boardLikeDto.getLiked_id()
             );
 
-            boardRepository.insertBoardLike(boardLike);
+            boolean isExists = boardRepository.findExistByBoardLike(boardLike);
+            if(!isExists) {
+                boardRepository.insertBoardLike(boardLike);
+            } else {
+                boardRepository.deleteBoardLike(boardLike);
+            }
 
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);
