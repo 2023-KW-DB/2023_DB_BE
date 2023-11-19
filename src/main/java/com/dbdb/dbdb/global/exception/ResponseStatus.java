@@ -35,6 +35,8 @@ public enum ResponseStatus {
     SUCCESS_PURCHASE_TICKET(true, 2023, "이용권 구매에 성공하였습니다."),
     SUCCESS_GET_ALL_PAYMENT_HISTORY_INFO(true, 2024, "해당 유저의 모든 티켓 구매 내역 정보 반환에 성공하였습니다."),
     SUCCESS_GET_ALL_PAYMENT_HISTORY_INFO_ISEMPTY(true, 2025, "해당 유저의 티켓 구매 내역 정보가 하나도 없습니다."),
+    SUCCESS_BIKE_RENTAL(true, 2026, "자전거 대여에 성공하였습니다."),
+    SUCCESS_BIKE_RETURN(true ,2027, "자전거 반납에 성공하였습니다."),
 
 
 
@@ -53,6 +55,10 @@ public enum ResponseStatus {
     SESSION_ERROR(false, 5006, "존재하지 않는 세션입니다."),
     ACCESS_TOKEN_NULL(false, 5007, "존재하지 않는 액세스 토큰입니다"),
     FAILED_NOT_ENOUGHT_TOTAL_MONEY(false, 5008, "해당 유저의 잔고(total_money)가 충분하지 않아 이용권 구매에 실패하였습니다."),
+    FAILED_INVALID_BIKE(false, 5009, "해당 대여소에서는 이용 가능한 자전거가 없습니다.(bike_status=0)"),
+    FAILED_INVALID_RENTAL_STATION(false, 5010, "해당 대여소에서는 대여가 불가능한 상태입니다.(station_status=0)"),
+    FAILED_INVALID_RETURN_STATION(false, 5011, "해당 대여소에서는 반납이 불가능한 상태입니다.(station_status=0"),
+    FAILED_NO_VALID_TICKET(false, 5012, "사용 가능한 이용권이 없어 대여가 불가능한 상태입니다."),
     FILE_READ_ERROR(false, 5201, "파일을 조회할 때 오류가 발생했습니다."),
     INVALID_AUTHORITY_NOTICE(false, 5202, "관리자만 공지를 작성할 수 있습니다"),
     INVALID_AUTHORITY_MODIFY(false, 5203, "게시글은 작성자만 수정할 수 있습니다"),
