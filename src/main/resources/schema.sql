@@ -105,6 +105,7 @@ CREATE TABLE if not exists `paymenthistory`  (
 
 
 CREATE TABLE if not exists `userlog`  (
+  `log_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `bike_id` int NOT NULL,
   `history_id` int NOT NULL,
@@ -115,6 +116,7 @@ CREATE TABLE if not exists `userlog`  (
   `use_time` int NULL DEFAULT NULL,
   `use_distance` int NULL DEFAULT NULL,
   `return_status` int NULL DEFAULT NULL,
+  PRIMARY KEY(`log_id`),
   CONSTRAINT `userlog_ibfk_1` FOREIGN KEY (`user_id`)
   REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `userlog_ibfk_2` FOREIGN KEY (`departure_station`)
