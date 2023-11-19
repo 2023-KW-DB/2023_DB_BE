@@ -112,7 +112,7 @@ CREATE TABLE if not exists `userlog`  (
   `arrival_station` varchar(255) NULL DEFAULT NULL,
   `departure_time` datetime NULL DEFAULT NULL,
   `arrival_time` datetime NULL DEFAULT NULL,
-  `use_time` time NULL DEFAULT NULL,
+  `use_time` int NULL DEFAULT NULL,
   `use_distance` int NULL DEFAULT NULL,
   `return_status` int NULL DEFAULT NULL,
   CONSTRAINT `userlog_ibfk_1` FOREIGN KEY (`user_id`)

@@ -14,7 +14,7 @@ public class UserlogDto {
     private String arrival_station;
     private LocalDateTime departure_time;
     private LocalDateTime arrival_time;
-    private LocalTime use_time;
+    private int use_time;
     private int use_distance;
     private int return_status;
 }

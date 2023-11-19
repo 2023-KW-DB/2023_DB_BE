@@ -19,8 +19,8 @@ public class UserlogController {
     // 자전거 대여
     @PostMapping("/users/bike-rental")
     public ResponseEntity<?> bikeRental(@RequestBody UserlogDto userlogDto){
-        String response = userlogService.bikeRental(userlogDto);
 
+        String response = userlogService.bikeRental(userlogDto);
 
         if(response=="FAILED_NO_VALID_TICKET")
             return ResponseEntity.ok(new JsonResponse(ResponseStatus.FAILED_NO_VALID_TICKET, null));
@@ -32,15 +32,17 @@ public class UserlogController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_BIKE_RENTAL, null));
     }
 
-//    // 자전거 반납
-//    @PostMapping("/users/bike-return")
-//    public ResponseEntity<?> bikeReturn(@RequestBody UserlogDto userlogDto){
-//
-//        String response = userlogService.bikeReturn();
-//
-//        if(response=="FAILED_RETURN_STATION")
-//            return ResponseEntity.ok(new JsonResponse(ResponseStatus.FAILED_INVALID_RETURN_STATION, null));
-//
-//        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_BIKE_RETURN, null));
-//    }
+    // 자전거 반납
+    @PostMapping("/users/bike-return")
+    public ResponseEntity<?> bikeReturn(@RequestBody UserlogDto userlogDto){
+
+        String response = userlogService.bikeReturn(userlogDto);
+
+        if(response=="FAILED_INVALID_RETURN_STATION")
+            return ResponseEntity.ok(new JsonResponse(ResponseStatus.FAILED_INVALID_RETURN_STATION, null));
+        else if(response=="FAILED_OVER_MAX_STANDS")
+            return ResponseEntity.ok(new JsonResponse(ResponseStatus.FAILED_OVER_MAX_STANDS, null));
+
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_BIKE_RETURN, null));
+    }
 }
