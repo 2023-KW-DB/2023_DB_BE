@@ -35,7 +35,7 @@ public class BikeService {
             if (rootCause instanceof SQLException) {
                 SQLException sqlEx = (SQLException) rootCause;
                 if (sqlEx.getErrorCode() == 1452) {
-                    throw new GlobalException(ResponseStatus.INVALID_FK_VIOLATION);
+                    throw new GlobalException(ResponseStatus.FK_VIOLATION_STATION);
                 }
             }
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
