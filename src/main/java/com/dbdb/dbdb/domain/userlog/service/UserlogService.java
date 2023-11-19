@@ -21,9 +21,7 @@ public class UserlogService {
 
     public String bikeReturn(UserlogDto userlogDto) {
         userlogDto.setArrival_time(LocalDateTime.now());
-        Duration duration = Duration.between(userlogDto.getDeparture_time(), userlogDto.getArrival_time());
-        long use_time = duration.getSeconds();
-        userlogDto.setUse_time(use_time);
-        return userlogRepository.bikeReturn(userlogDto.getUser_id(), userlogDto.getArrival_station(), userlogDto.getArrival_time(), userlogDto.getUse_time(), userlogDto.getUse_distance());
+
+        return userlogRepository.bikeReturn(userlogDto.getUser_id(), userlogDto.getArrival_station(), userlogDto.getArrival_time(), userlogDto.getUse_distance());
     }
 }

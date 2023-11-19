@@ -57,7 +57,7 @@ public enum ResponseStatus {
     FAILED_NOT_ENOUGHT_TOTAL_MONEY(false, 5008, "해당 유저의 잔고(total_money)가 충분하지 않아 이용권 구매에 실패하였습니다."),
     FAILED_INVALID_BIKE(false, 5009, "해당 대여소에서는 이용 가능한 자전거가 없습니다.(bike_status=0)"),
     FAILED_INVALID_RENTAL_STATION(false, 5010, "해당 대여소에서는 대여가 불가능한 상태입니다.(station_status=0)"),
-    FAILED_INVALID_RETURN_STATION(false, 5011, "해당 대여소에서는 반납이 불가능한 상태입니다.(station_status=0"),
+    FAILED_INVALID_RETURN_STATION(false, 5011, "해당 대여소에서는 반납이 불가능한 상태입니다.(station_status=0)"),
     FAILED_NO_VALID_TICKET(false, 5012, "사용 가능한 이용권이 없어 대여가 불가능한 상태입니다."),
     FAILED_OVER_MAX_STANDS(false, 5013, "해당 대여소의 최대 거치 가능 자전거 수를 초과하였습니다."),
     FILE_READ_ERROR(false, 5201, "파일을 조회할 때 오류가 발생했습니다."),

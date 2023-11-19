@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -86,7 +87,8 @@ public class UserlogRepository {
         return "SUCCESS_BIKE_RENTAL";
     }
 
-    public String bikeReturn(int userId, String arrivalStation, LocalDateTime arrivalTime, long useTime, int useDistance) {
+    public String bikeReturn(int userId, String arrivalStation, LocalDateTime arrivalTime, int useDistance) {
+
         Integer bike_id, history_id, station_status;
         int max_stands = 20, cur_stands;
 
@@ -111,6 +113,24 @@ public class UserlogRepository {
         if (cur_stands >= max_stands)
             return "FAILED_OVER_MAX_STANDS";
 
+        LocalDateTime departure_time;
+
+        try {
+            departure_time = jdbcTemplate.queryForObject(
+                    "SELECT ul.departure_time FROM userlog ul " +
+                            "WHERE ul.user_id = ? AND ul.return_status = 0 " +
+                            "ORDER BY ul.departure_time DESC LIMIT 1",
+                    new Object[]{userId},
+                    LocalDateTime.class
+            );
+        } catch (EmptyResultDataAccessException e) {
+            departure_time = null;
+        }
+
+        LocalDateTime arrival_time = arrivalTime;
+        Duration duration = Duration.between(departure_time, arrival_time);
+        long use_time = duration.getSeconds() / 60;
+
         // userlog table에서 user_id에 해당하는 유저의 return_status가 0인 bike_id를 반환하여 bike_id 지역 변수에 저장하기
 
         try {
@@ -125,12 +145,12 @@ public class UserlogRepository {
             bike_id = null;
         }
         // userlog table에서 매개변수 userId와 user_id가 같고, 매개변수 bike_id와 bike_id가 같고,
-        // return_status가 0인 컬럼의 arrival_station에 매개변수 arrivalStation, arrival_time에 매개변수 arrival_time,user_time에 매개변수 useTime,
+        // return_status가 0인 컬럼의 arrival_station에 매개변수 arrivalStation, arrival_time에 매개변수 arrival_time,use_time에 매개변수 useTime,
         // use_distance에 매개변수 useDistance, return_status는 0인 경우 1로 바꾸기
         jdbcTemplate.update(
-                "UPDATE userlog SET arrival_station = ?, arrival_time = ?, user_time = ?, use_distance = ?, return_status = 1 " +
+                "UPDATE userlog SET arrival_station = ?, arrival_time = ?, use_time = ?, use_distance = ?, return_status = 1 " +
                         "WHERE user_id = ? AND bike_id = ? AND return_status = 0",
-                arrivalStation, arrivalTime, useTime, useDistance, userId, bike_id
+                arrivalStation, arrivalTime, use_time, useDistance, userId, bike_id
         );
 
         // 지역 변수 bike_id와 일치하는 bike table의 id에 해당하는 컬럼의 use_status를 1에서 0으로 바꾸고, bike table의 lendplaced_id를 매개변수인 arrivalStation으로 바꾸기
