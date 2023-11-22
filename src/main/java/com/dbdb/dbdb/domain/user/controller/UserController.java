@@ -63,10 +63,10 @@ public class UserController {
             usernameCookie.setMaxAge(7 * 24 * 60 * 60);
 
             // 쿠키에 HttpOnly 설정
-            idCookie.setHttpOnly(true);
-            emailCookie.setHttpOnly(true);
-            passwordCookie.setHttpOnly(true);
-            usernameCookie.setHttpOnly(true);
+//            idCookie.setHttpOnly(true);
+//            emailCookie.setHttpOnly(true);
+//            passwordCookie.setHttpOnly(true);
+//            usernameCookie.setHttpOnly(true);
 
             // 쿠키 경로 설정
             idCookie.setPath("/");
@@ -151,8 +151,8 @@ public class UserController {
     }
 
     @GetMapping("/get-userinfo")
-    public ResponseEntity<?> getUserInfoById(@RequestBody UserDto userDto){
-        UserDto userInfo = userService.findUserByid(userDto.getId());
+    public ResponseEntity<?> getUserInfoById(@RequestParam int user_id){
+        UserDto userInfo = userService.findUserByid(user_id);
 
         if (userInfo == null)
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_FIND_USER_BY_ID, null));
