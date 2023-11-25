@@ -3,6 +3,7 @@ package com.dbdb.dbdb.fcm;
 import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,10 @@ public class FCMService {
 
         String token = fcmTokenRepository.getToken(email);
         Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("로그인 완료 알림")
+                        .setBody("로그인 되었쥬?")
+                        .build())
                 .putData("title", "로그인 완료 알림")
                 .putData("content", "로그인 되었쥬?")
                 .setToken(token)
