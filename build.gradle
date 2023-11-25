@@ -31,6 +31,7 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.6.3' // 이메일 인증 코드
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-security' // 비밀번호 인코더
+	implementation 'com.google.firebase:firebase-admin:7.1.1' // FCM을 사용하기 위한 firebase-admin
 }
 
 tasks.named('test') {

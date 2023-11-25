@@ -4,11 +4,12 @@ CREATE TABLE if not exists `user`  (
   `username` varchar(255) NOT NULL,
   `user_type` int NOT NULL,
   `email` varchar(255) NULL DEFAULT NULL,
-  `phone_number` double NULL DEFAULT NULL,
+  `phone_number` varchar(255) NULL DEFAULT NULL,
   `weight` double NULL DEFAULT NULL,
   `age` int NULL DEFAULT NULL,
   `last_accessed_at` datetime NULL DEFAULT NULL,
   `total_money` int NOT NULL DEFAULT 50000,
+  `fcm_token` varchar(255) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 

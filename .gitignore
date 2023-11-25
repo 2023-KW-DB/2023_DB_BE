@@ -9,6 +9,7 @@ build/
 *.properties
 *.yml
 !/gradlew
+dbdb-fe370-firebase-adminsdk-4prum-10c1f52200.json
 
 ### STS ###
 .apt_generated
