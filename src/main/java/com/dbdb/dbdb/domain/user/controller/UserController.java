@@ -2,6 +2,7 @@ package com.dbdb.dbdb.domain.user.controller;
 
 import com.dbdb.dbdb.domain.user.dto.EmailAuthDto;
 import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.fcm.FCMService;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.domain.user.service.ChangePasswordService;
@@ -23,6 +24,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ChangePasswordService changePasswordService;
+    @Autowired
+    private FCMService fcmService;
 
     // 회원가입
     @PostMapping("/signup")
@@ -55,6 +58,10 @@ public class UserController {
             Cookie emailCookie = new Cookie("email", userDto.getEmail());
             Cookie passwordCookie = new Cookie("password", userDto.getPassword());
             Cookie usernameCookie = new Cookie("username", userDto.getUsername());
+
+            fcmService.saveToken(userDto);
+            fcmService.sendLogincompletedMessage(userDto.getEmail());
+
 
             // 쿠키 유효 시간 설정
             idCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
@@ -91,6 +98,7 @@ public class UserController {
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
 
         Cookie[] cookies = request.getCookies();
+
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {

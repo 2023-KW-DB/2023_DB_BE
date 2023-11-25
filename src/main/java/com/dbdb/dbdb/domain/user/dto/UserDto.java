@@ -17,6 +17,7 @@ public class UserDto {
     private int age;
     private LocalDateTime last_accessed_at; // �ֱ� ���� �ð��� �� ������ �α��� ������ ��������?
     private int total_money;
+    private String fcm_token; // FCM token
 
     @NoArgsConstructor
     @Data
