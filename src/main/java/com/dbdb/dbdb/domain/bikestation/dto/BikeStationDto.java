@@ -65,6 +65,7 @@ public class BikeStationDto {
         Integer station_status;
         int total_bikes;
         int usable_bikes;
+        double average_rating;
     }
 
 }

@@ -115,8 +115,12 @@ public class BikeStationRepository {
         return jdbcTemplate.query(
                 "SELECT BS.*, " +
                 "       COALESCE(BC.total_bikes, 0) AS total_bikes, " +
-                "       COALESCE(BC.usable_bikes, 0) AS usable_bikes " +
+                "       COALESCE(BC.usable_bikes, 0) AS usable_bikes, " +
+                "       COALESCE(AVG(BR.rating), 0) AS average_rating " +
                 "FROM bikestationinformation BS " +
-                "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id", bikeMapper);
+                "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id " +
+                "LEFT JOIN bikestationrating BR ON BS.lendplace_id = BR.lendplace_id " +
+                "GROUP BY BS.lendplace_id",
+                bikeMapper);
     }
 }
