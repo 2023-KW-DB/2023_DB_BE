@@ -110,4 +110,80 @@ public class FCMService {
 
         send(message);
     }
+
+    public void sendBikeRentalSuccessMessage(String email) {
+        if (!fcmTokenRepository.hasKey(email)) {
+            return;
+        }
+
+        String token = fcmTokenRepository.getToken(email);
+        Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("자전거 대여 성공 알림")
+                        .setBody("자전거 대여를 성공하였습니다.")
+                        .build())
+                .putData("title", "자전거 대여 성공 알림")
+                .putData("content", "자전거 대여를 성공하였습니다.")
+                .setToken(token)
+                .build();
+
+        send(message);
+    }
+
+    public void sendBikeRentalFailedMessage(String email) {
+        if (!fcmTokenRepository.hasKey(email)) {
+            return;
+        }
+
+        String token = fcmTokenRepository.getToken(email);
+        Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("자전거 대여 실패 알림")
+                        .setBody("자전거 대여를 실패하였습니다.")
+                        .build())
+                .putData("title", "자전거 대여 실패 알림")
+                .putData("content", "자전거 대여를 실패하였습니다.")
+                .setToken(token)
+                .build();
+
+        send(message);
+    }
+
+    public void sendBikeReturnSuccessMessage(String email) {
+        if (!fcmTokenRepository.hasKey(email)) {
+            return;
+        }
+
+        String token = fcmTokenRepository.getToken(email);
+        Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("자전거 반납 성공 알림")
+                        .setBody("자전거 반납을 성공하였습니다.")
+                        .build())
+                .putData("title", "자전거 반납 성공 알림")
+                .putData("content", "자전거 반납을 성공하였습니다.")
+                .setToken(token)
+                .build();
+
+        send(message);
+    }
+
+    public void sendBikeReturnFailedMessage(String email) {
+        if (!fcmTokenRepository.hasKey(email)) {
+            return;
+        }
+
+        String token = fcmTokenRepository.getToken(email);
+        Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("자전거 반납 실패 알림")
+                        .setBody("자전거 반납을 실패하였습니다.")
+                        .build())
+                .putData("title", "자전거 반납 실패 알림")
+                .putData("content", "자전거 반납을 실패하였습니다.")
+                .setToken(token)
+                .build();
+
+        send(message);
+    }
 }
