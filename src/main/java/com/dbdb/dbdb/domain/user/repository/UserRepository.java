@@ -51,6 +51,8 @@ public class UserRepository {
         String sql = "SELECT COUNT(*) FROM user WHERE email = ? AND password = ?";
         try {
             Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userdto.getEmail(), userdto.getPassword());
+            userdto.setId(findUserIdByEmail(userdto.getEmail()));
+            updateLastAccessedAt(userdto);
             return count != null && count > 0;
         } catch (EmptyResultDataAccessException e) {
             // �̸��ϰ� ��й�ȣ�� ��ġ�ϴ� ���ڵ尡 ������ false ��ȯ
