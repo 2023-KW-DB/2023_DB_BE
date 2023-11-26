@@ -18,7 +18,7 @@ public class UserRepository {
     private JdbcTemplate jdbcTemplate;
 
     public Boolean insertUser(UserDto userDto) {
-        String sql = "INSERT INTO user (password, username, user_type, email, phone_number, weight, age) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (password, username, user_type, email, phone_number, weight, age, last_accessed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 userDto.getPassword(),
                 userDto.getUsername(),
@@ -26,8 +26,14 @@ public class UserRepository {
                 userDto.getEmail(),
                 userDto.getPhone_number(),
                 userDto.getWeight(),
-                userDto.getAge());
+                userDto.getAge(),
+                userDto.getLast_accessed_at());
         return true;
+    }
+
+    public void updateLastAccessedAt(UserDto userDto) {
+        String sql = "UPDATE user SET last_accessed_at = ? WHERE id = ?";
+        jdbcTemplate.update(sql, userDto.getLast_accessed_at(), userDto.getId());
     }
 
     public Boolean checkEmailDuplicate(UserDto userDto) {

@@ -112,7 +112,7 @@ public class KakaoLoginService {
             UserDto userDto = userRepository.findUserByEmail(email);
             if(userDto != null) {
                 userDto.setLast_accessed_at(LocalDateTime.now());
-                userRepository.insertUser(userDto);
+                userRepository.updateLastAccessedAt(userDto);
                 return userDto;
             }
             else{
