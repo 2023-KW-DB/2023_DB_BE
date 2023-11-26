@@ -123,4 +123,27 @@ public class BikeStationRepository {
                 "GROUP BY BS.lendplace_id",
                 bikeMapper);
     }
+
+    public List<BikeStationDto.BikeStationSimpleState> findRecentByUserId(int userId) {
+        var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleState.class);
+        return null;
+//        return jdbcTemplate.query(
+//
+//        )
+    }
+
+    public List<BikeStationDto.BikeStationSimpleState> findPopular() {
+        var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleState.class);
+        return jdbcTemplate.query(
+                "SELECT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2 " +
+                        "FROM (" +
+                        "    SELECT lendplace_id, AVG(rating) AS average_rating " +
+                        "    FROM bikestationrating " +
+                        "    GROUP BY lendplace_id " +
+                        "    ORDER BY average_rating DESC " +
+                        "    LIMIT 2" +
+                        ") AS BR " +
+                        "LEFT JOIN bikestationinformation BSI ON BR.lendplace_id = BSI.lendplace_id",
+                stationMapper);
+    }
 }

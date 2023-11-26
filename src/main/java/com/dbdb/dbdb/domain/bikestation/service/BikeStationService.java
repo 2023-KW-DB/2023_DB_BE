@@ -94,4 +94,20 @@ public class BikeStationService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public List<BikeStationDto.BikeStationSimpleState> getRecentStation(int userId) {
+        try {
+            return bikeStationRepository.findRecentByUserId(userId);
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public List<BikeStationDto.BikeStationSimpleState> getPopularStation() {
+        try {
+            return bikeStationRepository.findPopular();
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }

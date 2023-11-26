@@ -59,4 +59,16 @@ public class BikeStationController {
         List<BikeStationDto.BikeStationWithCurrentBike> bikeStationList = bikeStationService.getAllStation();
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationList));
     }
+
+    @GetMapping("/get-recent-lendplace")
+    public ResponseEntity<JsonResponse> getRecentStation(int user_id) {
+        List<BikeStationDto.BikeStationSimpleState> bikeStationStatusList = bikeStationService.getRecentStation(user_id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatusList));
+    }
+
+    @GetMapping("/get-popular-lendplace")
+    public ResponseEntity<JsonResponse> getPopularStation() {
+        List<BikeStationDto.BikeStationSimpleState> bikeStationStatusList = bikeStationService.getPopularStation();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatusList));
+    }
 }
