@@ -187,7 +187,7 @@ public class FCMService {
         send(message);
     }
 
-    public void sendCommentLikeMessage(String email) {
+    public void sendCommentLikeMessage(String email, String title) {
         if (!fcmTokenRepository.hasKey(email)) {
             return;
         }
@@ -195,7 +195,7 @@ public class FCMService {
         String token = fcmTokenRepository.getToken(email);
         Message message = Message.builder()
                 .setNotification(Notification.builder()
-                        .setTitle("댓글 좋아요 알림입니다")
+                        .setTitle("["+title+"]에 작성한 댓글에 좋아요")
                         .setBody("작성한 댓글에 좋아요가 눌렸습니다")
                         .build())
                 .putData("title", "댓글 좋아요 알림입니다")

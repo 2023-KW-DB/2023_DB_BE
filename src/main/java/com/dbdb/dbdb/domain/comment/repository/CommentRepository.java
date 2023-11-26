@@ -77,6 +77,16 @@ public class CommentRepository {
         );
     }
 
+    public CommentDto.CommentBoardTitleDto getCommentWriterIdAndBoardTitle(int commentId) {
+        var commentMapper = BeanPropertyRowMapper.newInstance(CommentDto.CommentBoardTitleDto.class);
+        return jdbcTemplate.queryForObject(
+                "SELECT C.user_id, B.title " +
+                        "FROM comment C JOIN board B ON C.write_id = B.id WHERE C.id=?",
+                commentMapper,
+                commentId
+        );
+    }
+
     public void deleteComment(int id) {
         jdbcTemplate.update("DELETE FROM `comment` WHERE id=?",
                 id);
