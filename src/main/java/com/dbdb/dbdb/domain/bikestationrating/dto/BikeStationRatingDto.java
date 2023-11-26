@@ -19,4 +19,13 @@ public class BikeStationRatingDto {
         private String review2;
 
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class BikeStationReview {
+        private Integer rating;
+        private String review;
+
+    }
 }

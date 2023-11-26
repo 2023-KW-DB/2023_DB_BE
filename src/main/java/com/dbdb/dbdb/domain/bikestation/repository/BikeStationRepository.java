@@ -1,6 +1,7 @@
 package com.dbdb.dbdb.domain.bikestation.repository;
 
 import com.dbdb.dbdb.domain.bikestation.dto.BikeStationDto;
+import com.dbdb.dbdb.domain.bikestationrating.dto.BikeStationRatingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -82,23 +83,38 @@ public class BikeStationRepository {
         );
     }
 
-    public BikeStationDto.BikeStationStatus findStatusById(String lendplaceId) {
+    public BikeStationDto.BikeStationStatus findStatusById(String lendplaceId, int userId) {
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationStatus.class);
-        return jdbcTemplate.queryForObject(
-                "SELECT BS.*, " +
-                        "       CASE " +
-                        "           WHEN BikeCount.available_bikes IS NULL THEN 0 " +
-                        "           ELSE BikeCount.available_bikes " +
-                        "       END AS usable_bikes " +
+        List<BikeStationRatingDto.BikeStationReview> reviews = jdbcTemplate.query(
+                "SELECT rating, review FROM bikestationrating WHERE lendplace_id = ?",
+                new BeanPropertyRowMapper<>(BikeStationRatingDto.BikeStationReview.class),
+                lendplaceId
+        );
+
+        BikeStationDto.BikeStationStatus bikeStationStatus = jdbcTemplate.queryForObject(
+                "SELECT BS.lendplace_id, BS.statn_addr1, BS.statn_addr2, " +
+                        "       COALESCE(BC.available_bikes, 0) AS usable_bikes, " +
+                        "       COALESCE(AVG(BR.rating), 0) AS average_rating, " +
+                        "       CASE WHEN FAV.lendplace_id IS NOT NULL THEN TRUE ELSE FALSE END AS favorite " +
                         "FROM bikestationinformation BS " +
                         "LEFT JOIN ( " +
                         "    SELECT lendplace_id, COUNT(*) AS available_bikes " +
                         "    FROM bike " +
                         "    WHERE use_status = 0 AND bike_status = 1 " +
                         "    GROUP BY lendplace_id " +
-                        ") AS BikeCount ON BS.lendplace_id = BikeCount.lendplace_id " +
-                        "WHERE BS.lendplace_id = ?", bikeMapper, lendplaceId
+                        ") AS BC ON BS.lendplace_id = BC.lendplace_id " +
+                        "LEFT JOIN bikestationrating BR ON BS.lendplace_id = BR.lendplace_id " +
+                        "LEFT JOIN favorite FAV ON BS.lendplace_id = FAV.lendplace_id AND FAV.user_id = ? " +
+                        "WHERE BS.lendplace_id = ? " +
+                        "GROUP BY BS.lendplace_id",
+                bikeMapper,
+                userId, lendplaceId
         );
+
+        bikeStationStatus.setBikeStationReviews(reviews);
+
+        return bikeStationStatus;
+
     }
 
     public void createBikeCountsView() {
@@ -110,13 +126,57 @@ public class BikeStationRepository {
                         "GROUP BY lendplace_id");
     }
 
-    public List<BikeStationDto.BikeStationWithCurrentBike> findAll() {
+    public List<BikeStationDto.BikeStationWithCurrentBike> findAll(int userId) {
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithCurrentBike.class);
         return jdbcTemplate.query(
                 "SELECT BS.*, " +
-                "       COALESCE(BC.total_bikes, 0) AS total_bikes, " +
-                "       COALESCE(BC.usable_bikes, 0) AS usable_bikes " +
-                "FROM bikestationinformation BS " +
-                "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id", bikeMapper);
+                        "       COALESCE(BC.total_bikes, 0) AS total_bikes, " +
+                        "       COALESCE(BC.usable_bikes, 0) AS usable_bikes, " +
+                        "       COALESCE(AVG(BR.rating), 0) AS average_rating, " +
+                        "       CASE WHEN FAV.lendplace_id IS NOT NULL THEN TRUE ELSE FALSE END AS favorite " +
+                        "FROM bikestationinformation BS " +
+                        "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id " +
+                        "LEFT JOIN bikestationrating BR ON BS.lendplace_id = BR.lendplace_id " +
+                        "LEFT JOIN (SELECT lendplace_id FROM favorite WHERE user_id = ?) FAV ON BS.lendplace_id = FAV.lendplace_id " +
+                        "GROUP BY BS.lendplace_id",
+                bikeMapper,
+                userId);
+    }
+
+    public List<BikeStationDto.BikeStationSimpleWithState> findRecentByUserId(int userId) {
+        var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleWithState.class);
+        return jdbcTemplate.query(
+                "SELECT DISTINCT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time " +
+                        "FROM (" +
+                        "    SELECT departure_station AS station, departure_time AS time " +
+                        "    FROM userlog " +
+                        "    WHERE user_id = ? AND departure_time IS NOT NULL " +
+                        "    UNION ALL " +
+                        "    SELECT arrival_station AS station, arrival_time AS time " +
+                        "    FROM userlog " +
+                        "    WHERE user_id = ? AND arrival_time IS NOT NULL " +
+                        ") AS UL " +
+                        "JOIN bikestationinformation BSI ON BSI.lendplace_id = UL.station " +
+                        "ORDER BY UL.time DESC " +
+                        "LIMIT 2",
+                stationMapper,
+                userId,
+                userId
+        );
+    }
+
+    public List<BikeStationDto.BikeStationSimpleState> findPopular() {
+        var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleState.class);
+        return jdbcTemplate.query(
+                "SELECT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2 " +
+                        "FROM (" +
+                        "    SELECT lendplace_id, AVG(rating) AS average_rating " +
+                        "    FROM bikestationrating " +
+                        "    GROUP BY lendplace_id " +
+                        "    ORDER BY average_rating DESC " +
+                        "    LIMIT 2" +
+                        ") AS BR " +
+                        "LEFT JOIN bikestationinformation BSI ON BR.lendplace_id = BSI.lendplace_id",
+                stationMapper);
     }
 }

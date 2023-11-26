@@ -1,8 +1,12 @@
 package com.dbdb.dbdb.domain.bikestation.dto;
 
+import com.dbdb.dbdb.domain.bikestationrating.dto.BikeStationRatingDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class BikeStationDto {
 
@@ -50,6 +54,9 @@ public class BikeStationDto {
         String statn_addr1;
         String statn_addr2;
         int usable_bikes;
+        Boolean favorite;
+        double average_rating;
+        List<BikeStationRatingDto.BikeStationReview> bikeStationReviews;
     }
 
     @NoArgsConstructor
@@ -65,6 +72,28 @@ public class BikeStationDto {
         Integer station_status;
         int total_bikes;
         int usable_bikes;
+        double average_rating;
+
+        Boolean favorite;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class BikeStationSimpleState {
+        String lendplace_id;
+        String statn_addr1;
+        String statn_addr2;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class BikeStationSimpleWithState {
+        String lendplace_id;
+        String statn_addr1;
+        String statn_addr2;
+        LocalDateTime time;
     }
 
 }

@@ -49,14 +49,26 @@ public class BikeStationController {
     }
 
     @GetMapping("/get-lendplace-status")
-    public ResponseEntity<JsonResponse> getStationStatus(@RequestParam String lendplace_id) {
-        BikeStationDto.BikeStationStatus bikeStationStatus = bikeStationService.getBikeStationStatus(lendplace_id);
+    public ResponseEntity<JsonResponse> getStationStatus(@RequestParam String lendplace_id, @RequestParam int user_id) {
+        BikeStationDto.BikeStationStatus bikeStationStatus = bikeStationService.getBikeStationStatus(lendplace_id, user_id);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatus));
     }
 
     @GetMapping("/get-all-lendplace")
-    public ResponseEntity<JsonResponse> getAllStation() {
-        List<BikeStationDto.BikeStationWithCurrentBike> bikeStationList = bikeStationService.getAllStation();
+    public ResponseEntity<JsonResponse> getAllStation(@RequestParam int user_id) {
+        List<BikeStationDto.BikeStationWithCurrentBike> bikeStationList = bikeStationService.getAllStation(user_id);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationList));
+    }
+
+    @GetMapping("/get-recent-lendplace")
+    public ResponseEntity<JsonResponse> getRecentStation(@RequestParam int user_id) {
+        List<BikeStationDto.BikeStationSimpleWithState> bikeStationStatusList = bikeStationService.getRecentStation(user_id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatusList));
+    }
+
+    @GetMapping("/get-popular-lendplace")
+    public ResponseEntity<JsonResponse> getPopularStation() {
+        List<BikeStationDto.BikeStationSimpleState> bikeStationStatusList = bikeStationService.getPopularStation();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatusList));
     }
 }

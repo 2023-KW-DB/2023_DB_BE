@@ -60,7 +60,8 @@ public class BoardRepository {
                 "SELECT B.id, B.category_id, B.user_id, B.views, B.title, B.notice, B.created_at, COUNT(C.id) as comment_count " +
                         "FROM board B LEFT OUTER JOIN comment C " +
                         "ON B.id = C.write_id AND B.category_id = C.category_id " +
-                        "GROUP BY B.category_id, B.id"
+                        "GROUP BY B.category_id, B.id " +
+                        "ORDER BY B.created_at DESC"
                 , boardCommentMapper
         );
     }
@@ -73,7 +74,8 @@ public class BoardRepository {
                         "FROM comment C RIGHT OUTER JOIN board B " +
                         "ON C.write_id = B.id AND C.category_id = B.category_id " +
                         "WHERE B.category_id=? " +
-                        "GROUP BY B.id"
+                        "GROUP BY B.id " +
+                        "ORDER BY B.created_at DESC"
                 , boardCommentMapper, category_id
         );
     }
@@ -90,6 +92,18 @@ public class BoardRepository {
         );
 
         return boardWithLikes;
+    }
+
+    public BoardDto.BoardSimpleInfo findBoardByOnlyId(int id) {
+        var boardWithLikesMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardSimpleInfo.class);
+
+        BoardDto.BoardSimpleInfo boardSimpleInfo = jdbcTemplate.queryForObject(
+                "SELECT B.id, B.category_id, B.user_id, B.title " +
+                        "FROM board B WHERE B.id = ?",
+                boardWithLikesMapper, id
+        );
+
+        return boardSimpleInfo;
     }
 
     public void increaseViewCount(int id) {

@@ -2,6 +2,8 @@ package com.dbdb.dbdb.domain.comment.service;
 
 import com.dbdb.dbdb.domain.comment.dto.CommentDto;
 import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.user.service.UserService;
+import com.dbdb.dbdb.fcm.FCMService;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.domain.comment.repository.CommentRepository;
@@ -22,6 +24,8 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final FCMService fcmService;
+    private final UserService userService;
 
     public void createComment(CommentDto.CreateCommentDto createCommentDto) {
         try {
@@ -55,6 +59,8 @@ public class CommentService {
 
             boolean exists = commentRepository.findExistByCommentLike(commentLike);
             if(!exists) {
+                CommentDto.CommentBoardTitleDto commentBoardTitleDto = commentRepository.getCommentWriterIdAndBoardTitle(commentLikeDto.getLiked_id());
+                fcmService.sendCommentLikeMessage(userService.findUserEmailById(commentBoardTitleDto.getUser_id()), commentBoardTitleDto.getTitle());
                 commentRepository.insertCommentLike(commentLike);
             } else {
                 commentRepository.deleteCommentLike(commentLike);
