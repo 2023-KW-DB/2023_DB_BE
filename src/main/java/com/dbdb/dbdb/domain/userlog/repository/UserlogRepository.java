@@ -178,6 +178,11 @@ public class UserlogRepository {
         return jdbcTemplate.query(sql, new Object[]{userId}, new UserlogRowMapper());
     }
 
+    public List<UserlogDto> getAllUserlog() {
+        String sql = "SELECT * FROM userlog";
+        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserlogDto.class));
+    }
+
     private static class UserlogRowMapper implements RowMapper<UserlogDto> {
         @Override
         public UserlogDto mapRow(ResultSet rs, int rowNum) throws SQLException {

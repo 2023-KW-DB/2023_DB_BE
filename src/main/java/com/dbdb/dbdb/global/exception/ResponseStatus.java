@@ -40,6 +40,7 @@ public enum ResponseStatus {
     SUCCESS_GET_USERLOG(true, 2028, "해당 유저의 대여 기록(userlog) 조회에 성공하였습니다."),
     SUCCESS_GET_USERLOG_EMPTY(true, 2029, "해당 유저의 대여 기록(userlog) 조회에 성공하였으나, 아무 기록도 존재하지 않습니다."),
     SUCCESS_GET_ALL_USERLOG(true, 2030, "모든 유저의 모든 대여 기록(userlog) 조회에 성공하였습니다."),
+    SUCCESS_GET_ALL_USERLOG_EMPTY(true, 2031, "모든 유저의 모든 대여 기록(userlog) 조회에 성공하였으나, 아무 기록도 존재하지 않습니다."),
 
 
 

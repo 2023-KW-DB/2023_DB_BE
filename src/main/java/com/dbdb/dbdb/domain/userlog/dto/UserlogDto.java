@@ -8,9 +8,9 @@ import java.time.LocalTime;
 @Data
 public class UserlogDto {
     private int log_id;
-    private int user_id;
-    private int bike_id;
-    private int history_id;
+    private Integer user_id;
+    private Integer bike_id;
+    private Integer history_id;
     private String departure_station;
     private String arrival_station;
     private LocalDateTime departure_time;
