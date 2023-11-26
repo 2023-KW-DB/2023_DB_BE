@@ -59,13 +59,15 @@ public class BikeStationRepository {
     public BikeStationDto.BikeStationWithBikeDto findDetailByLendplaceId(String lendplaceId) { //TODO
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithBikeDto.class);
         return jdbcTemplate.queryForObject(
-                "WITH BikeCounts AS (" +
-                "    SELECT lendplace_id, COUNT(*) AS total_bikes " +
+                "WITH BikeCount AS (" +
+                "    SELECT lendplace_id, COUNT(*) AS total_bikes, " +
+                "    SUM(CASE WHEN use_status = 0 AND bike_status = 1 THEN 1 ELSE 0 END) AS usable_bikes " +
                 "    FROM bike " +
                 "    GROUP BY lendplace_id ) " +
-                "SELECT BS.*, COALESCE(BC.total_bikes, 0) AS total_bikes, (BS.max_stands - COALESCE(BC.total_bikes, 0)) AS empty_stands " +
+                "SELECT BS.*, COALESCE(BC.total_bikes, 0) AS total_bikes, (BS.max_stands - COALESCE(BC.total_bikes, 0)) AS empty_stands, " +
+                "COALESCE(BC.usable_bikes, 0) AS usable_bikes " +
                 "FROM bikestationinformation BS " +
-                "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id " +
+                "LEFT JOIN BikeCount BC ON BS.lendplace_id = BC.lendplace_id " +
                 "WHERE BS.lendplace_id = ?", bikeMapper, lendplaceId
         );
     }
