@@ -46,6 +46,7 @@ public enum ResponseStatus {
     SUCCESS_DELETE_COUPON(true, 2034, "[관리자] 해당 쿠폰에 대해 삭제를 성공하였습니다."),
     SUCCESS_GET_ALL_COUPON(true, 2035, "[관리자] 모든 쿠폰 조회를 성공하였습니다."),
     SUCCESS_GET_ALL_COUPON_EMPTY(true, 2036, "[관리자] 모든 쿠폰 조회를 성공하였으나, 아무 쿠폰도 존재하지 않습니다."),
+    SUCCESS_REGISTRATION_COUPON(true, 2037, "쿠폰 등록을 성공하였습니다."),
 
 
 
@@ -69,6 +70,8 @@ public enum ResponseStatus {
     FAILED_INVALID_RETURN_STATION(false, 5011, "해당 대여소에서는 반납이 불가능한 상태입니다.(station_status=0)"),
     FAILED_NO_VALID_TICKET(false, 5012, "사용 가능한 이용권이 없어 대여가 불가능한 상태입니다."),
     FAILED_OVER_MAX_STANDS(false, 5013, "해당 대여소의 최대 거치 가능 자전거 수를 초과하였습니다."),
+    FAILED_REGISTRATION_COUPON_ALREADY_USED(false, 5014, "쿠폰 등록을 실패하였습니다. 이미 사용한 쿠폰입니다."),
+    FAILED_REGISTRATION_COUPON_NOT_EXIST(false, 5015, "쿠폰 등록을 실패하였습니다. 일치하는 쿠폰이 존재하지 않습니다."),
     FILE_READ_ERROR(false, 5201, "파일을 조회할 때 오류가 발생했습니다."),
     INVALID_AUTHORITY_NOTICE(false, 5202, "관리자만 공지를 작성할 수 있습니다"),
     INVALID_AUTHORITY_MODIFY(false, 5203, "게시글은 작성자만 수정할 수 있습니다"),

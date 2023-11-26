@@ -30,4 +30,8 @@ public class CouponService {
     public List<CouponFullOuterJoinTicketDto> getAllCoupon() {
         return couponRepository.getAllCoupon();
     }
+
+    public Integer registrationCoupon(int userId, String value) {
+        return couponRepository.registrationCoupon(userId, value);
+    }
 }

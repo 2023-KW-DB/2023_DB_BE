@@ -52,5 +52,17 @@ public class CouponController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_COUPON, allCoupon));
     }
 
+    // 사용자의 쿠폰 등록
+    @PostMapping("/users/registration-coupon")
+    public ResponseEntity<?> registrationCoupon(@RequestParam int userId, @RequestParam String value){
+        Integer ticketId = couponService.registrationCoupon(userId, value);
 
+        if(ticketId == null) {
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.FAILED_REGISTRATION_COUPON_ALREADY_USED, null));
+        } else if(ticketId == -1) {
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.FAILED_REGISTRATION_COUPON_NOT_EXIST, null));
+        }
+
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_REGISTRATION_COUPON, null));
+    }
 }

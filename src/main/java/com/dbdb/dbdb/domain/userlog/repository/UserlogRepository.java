@@ -196,7 +196,7 @@ public class UserlogRepository {
             userlogDto.setArrival_station(rs.getString("arrival_station"));
             userlogDto.setDeparture_time(rs.getTimestamp("departure_time").toLocalDateTime());
             userlogDto.setArrival_time(rs.getTimestamp("arrival_time").toLocalDateTime());
-            userlogDto.setUse_time(rs.getInt("use_time"));
+            userlogDto.setUse_time(rs.getLong("use_time"));
             userlogDto.setUse_distance(rs.getInt("use_distance"));
             userlogDto.setReturn_status(rs.getInt("return_status"));
             return userlogDto;
