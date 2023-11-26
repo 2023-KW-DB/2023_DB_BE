@@ -175,7 +175,8 @@ public class UserlogRepository {
 
     public List<UserlogDto> getUserlog(int userId) {
         String sql = "SELECT * FROM userlog WHERE user_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{userId}, new UserlogRowMapper());
+        List<UserlogDto> userlogs = jdbcTemplate.query(sql, new Object[]{userId}, new UserlogRowMapper());
+        return userlogs.isEmpty() ? null : userlogs;
     }
 
     public List<UserlogDto> getAllUserlog() {

@@ -41,6 +41,11 @@ public enum ResponseStatus {
     SUCCESS_GET_USERLOG_EMPTY(true, 2029, "해당 유저의 대여 기록(userlog) 조회에 성공하였으나, 아무 기록도 존재하지 않습니다."),
     SUCCESS_GET_ALL_USERLOG(true, 2030, "모든 유저의 모든 대여 기록(userlog) 조회에 성공하였습니다."),
     SUCCESS_GET_ALL_USERLOG_EMPTY(true, 2031, "모든 유저의 모든 대여 기록(userlog) 조회에 성공하였으나, 아무 기록도 존재하지 않습니다."),
+    SUCCESS_CREATE_COUPON(true, 2032, "[관리자] 새로운 쿠폰 생성을 성공하였습니다."),
+    SUCCESS_MODIFY_COUPON(true, 2033, "[관리자] 해당 쿠폰 정보 변경을 성공하였습니다."),
+    SUCCESS_DELETE_COUPON(true, 2034, "[관리자] 해당 쿠폰에 대해 삭제를 성공하였습니다."),
+    SUCCESS_GET_ALL_COUPON(true, 2035, "[관리자] 모든 쿠폰 조회를 성공하였습니다."),
+    SUCCESS_GET_ALL_COUPON_EMPTY(true, 2036, "[관리자] 모든 쿠폰 조회를 성공하였으나, 아무 쿠폰도 존재하지 않습니다."),
 
 
 
