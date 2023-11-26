@@ -77,9 +77,9 @@ public class BikeStationService {
         }
     }
 
-    public BikeStationDto.BikeStationStatus getBikeStationStatus(String lendplaceId) {
+    public BikeStationDto.BikeStationStatus getBikeStationStatus(String lendplaceId, int userId) {
         try {
-            return bikeStationRepository.findStatusById(lendplaceId);
+            return bikeStationRepository.findStatusById(lendplaceId, userId);
         } catch (EmptyResultDataAccessException e) {
             throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         } catch (Exception e) {
