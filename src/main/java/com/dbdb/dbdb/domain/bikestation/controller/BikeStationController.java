@@ -49,14 +49,14 @@ public class BikeStationController {
     }
 
     @GetMapping("/get-lendplace-status")
-    public ResponseEntity<JsonResponse> getStationStatus(@RequestParam String lendplace_id) {
-        BikeStationDto.BikeStationStatus bikeStationStatus = bikeStationService.getBikeStationStatus(lendplace_id);
+    public ResponseEntity<JsonResponse> getStationStatus(@RequestParam String lendplace_id, @RequestParam int user_id) {
+        BikeStationDto.BikeStationStatus bikeStationStatus = bikeStationService.getBikeStationStatus(lendplace_id, user_id);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatus));
     }
 
     @GetMapping("/get-all-lendplace")
-    public ResponseEntity<JsonResponse> getAllStation() {
-        List<BikeStationDto.BikeStationWithCurrentBike> bikeStationList = bikeStationService.getAllStation();
+    public ResponseEntity<JsonResponse> getAllStation(@RequestParam int user_id) {
+        List<BikeStationDto.BikeStationWithCurrentBike> bikeStationList = bikeStationService.getAllStation(user_id);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationList));
     }
 

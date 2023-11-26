@@ -77,9 +77,9 @@ public class BikeStationService {
         }
     }
 
-    public BikeStationDto.BikeStationStatus getBikeStationStatus(String lendplaceId) {
+    public BikeStationDto.BikeStationStatus getBikeStationStatus(String lendplaceId, int userId) {
         try {
-            return bikeStationRepository.findStatusById(lendplaceId);
+            return bikeStationRepository.findStatusById(lendplaceId, userId);
         } catch (EmptyResultDataAccessException e) {
             throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         } catch (Exception e) {
@@ -87,9 +87,9 @@ public class BikeStationService {
         }
     }
 
-    public List<BikeStationDto.BikeStationWithCurrentBike> getAllStation() {
+    public List<BikeStationDto.BikeStationWithCurrentBike> getAllStation(int user_id) {
         try {
-            return bikeStationRepository.findAll();
+            return bikeStationRepository.findAll(user_id);
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
