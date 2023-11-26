@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 public class BikeStationDto {
 
     @NoArgsConstructor
@@ -75,6 +77,16 @@ public class BikeStationDto {
         String lendplace_id;
         String statn_addr1;
         String statn_addr2;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class BikeStationSimpleWithState {
+        String lendplace_id;
+        String statn_addr1;
+        String statn_addr2;
+        LocalDateTime time;
     }
 
 }

@@ -95,7 +95,7 @@ public class BikeStationService {
         }
     }
 
-    public List<BikeStationDto.BikeStationSimpleState> getRecentStation(int userId) {
+    public List<BikeStationDto.BikeStationSimpleWithState> getRecentStation(int userId) {
         try {
             return bikeStationRepository.findRecentByUserId(userId);
         } catch (Exception e) {

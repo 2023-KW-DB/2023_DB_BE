@@ -61,8 +61,8 @@ public class BikeStationController {
     }
 
     @GetMapping("/get-recent-lendplace")
-    public ResponseEntity<JsonResponse> getRecentStation(int user_id) {
-        List<BikeStationDto.BikeStationSimpleState> bikeStationStatusList = bikeStationService.getRecentStation(user_id);
+    public ResponseEntity<JsonResponse> getRecentStation(@RequestParam int user_id) {
+        List<BikeStationDto.BikeStationSimpleWithState> bikeStationStatusList = bikeStationService.getRecentStation(user_id);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatusList));
     }
 

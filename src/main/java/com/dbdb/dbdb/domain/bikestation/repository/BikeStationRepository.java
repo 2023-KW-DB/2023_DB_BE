@@ -124,12 +124,26 @@ public class BikeStationRepository {
                 bikeMapper);
     }
 
-    public List<BikeStationDto.BikeStationSimpleState> findRecentByUserId(int userId) {
-        var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleState.class);
-        return null;
-//        return jdbcTemplate.query(
-//
-//        )
+    public List<BikeStationDto.BikeStationSimpleWithState> findRecentByUserId(int userId) {
+        var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleWithState.class);
+        return jdbcTemplate.query(
+                "SELECT DISTINCT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time " +
+                        "FROM (" +
+                        "    SELECT departure_station AS station, departure_time AS time " +
+                        "    FROM userlog " +
+                        "    WHERE user_id = ? AND departure_time IS NOT NULL " +
+                        "    UNION ALL " +
+                        "    SELECT arrival_station AS station, arrival_time AS time " +
+                        "    FROM userlog " +
+                        "    WHERE user_id = ? AND arrival_time IS NOT NULL " +
+                        ") AS UL " +
+                        "JOIN bikestationinformation BSI ON BSI.lendplace_id = UL.station " +
+                        "ORDER BY UL.time DESC " +
+                        "LIMIT 2",
+                stationMapper,
+                userId,
+                userId
+        );
     }
 
     public List<BikeStationDto.BikeStationSimpleState> findPopular() {
