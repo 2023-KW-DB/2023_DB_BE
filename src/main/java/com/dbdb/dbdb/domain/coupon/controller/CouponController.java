@@ -33,14 +33,14 @@ public class CouponController {
         couponService.modifyCoupon(couponDto);
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_COUPON, null));
     }
-//
-//    // 쿠폰 삭제
-//    @DeleteMapping("/delete-coupon")
-//    public ResponseEntity<?> deleteCoupon(@RequestBody CouponDto couponDto){
-//
-//        couponService.deleteCoupon(couponDto);
-//        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_DELETE_COUPON, null));
-//    }
+
+    // 쿠폰 삭제
+    @DeleteMapping("/delete-coupon")
+    public ResponseEntity<?> deleteCoupon(@RequestBody CouponDto couponDto){
+
+        couponService.deleteCoupon(couponDto);
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_DELETE_COUPON, null));
+    }
 
     // 모든 쿠폰 조회
     @GetMapping("/get-all-coupon")

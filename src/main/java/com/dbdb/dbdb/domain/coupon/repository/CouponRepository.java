@@ -28,10 +28,10 @@ public class CouponRepository {
         jdbcTemplate.update(sql, couponDto.getTicket_id(), couponDto.getValue());
     }
 
-//    public void deleteCoupon(CouponDto couponDto) {
-//        String sql = "DELETE FROM coupon WHERE value = ?";
-//        jdbcTemplate.update(sql, couponDto.getValue());
-//    }
+    public void deleteCoupon(CouponDto couponDto) {
+        String sql = "DELETE FROM coupon WHERE value = ?";
+        jdbcTemplate.update(sql, couponDto.getValue());
+    }
 
     public List<CouponFullOuterJoinTicketDto> getAllCoupon() {
         String sql = "SELECT * FROM coupon LEFT OUTER JOIN ticket ON coupon.ticket_id = ticket.id " +

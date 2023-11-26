@@ -22,10 +22,10 @@ public class CouponService {
     public void modifyCoupon(CouponDto couponDto) {
         couponRepository.modifyCoupon(couponDto);
     }
-//
-//    public void deleteCoupon(CouponDto couponDto) {
-//        couponRepository.deleteCoupon(couponDto);
-//    }
+
+    public void deleteCoupon(CouponDto couponDto) {
+        couponRepository.deleteCoupon(couponDto);
+    }
 
     public List<CouponFullOuterJoinTicketDto> getAllCoupon() {
         return couponRepository.getAllCoupon();
