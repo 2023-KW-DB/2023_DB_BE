@@ -186,4 +186,23 @@ public class FCMService {
 
         send(message);
     }
+
+    public void sendCommentLikeMessage(String email) {
+        if (!fcmTokenRepository.hasKey(email)) {
+            return;
+        }
+
+        String token = fcmTokenRepository.getToken(email);
+        Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("댓글 좋아요 알림입니다")
+                        .setBody("작성한 댓글에 좋아요가 눌렸습니다")
+                        .build())
+                .putData("title", "댓글 좋아요 알림입니다")
+                .putData("content", "작성한 댓글에 좋아요가 눌렸습니다")
+                .setToken(token)
+                .build();
+
+        send(message);
+    }
 }
