@@ -1,6 +1,5 @@
 package com.dbdb.dbdb.domain.ticket.controller;
 
-import com.dbdb.dbdb.domain.paymenthistory.dto.PaymentHistoryDto;
 import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.ticket.service.TicketService;
 import com.dbdb.dbdb.domain.user.service.UserService;

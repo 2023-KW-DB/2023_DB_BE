@@ -175,7 +175,13 @@ public class UserlogRepository {
 
     public List<UserlogDto> getUserlog(int userId) {
         String sql = "SELECT * FROM userlog WHERE user_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{userId}, new UserlogRowMapper());
+        List<UserlogDto> userlogs = jdbcTemplate.query(sql, new Object[]{userId}, new UserlogRowMapper());
+        return userlogs.isEmpty() ? null : userlogs;
+    }
+
+    public List<UserlogDto> getAllUserlog() {
+        String sql = "SELECT * FROM userlog";
+        return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserlogDto.class));
     }
 
     private static class UserlogRowMapper implements RowMapper<UserlogDto> {
@@ -190,7 +196,7 @@ public class UserlogRepository {
             userlogDto.setArrival_station(rs.getString("arrival_station"));
             userlogDto.setDeparture_time(rs.getTimestamp("departure_time").toLocalDateTime());
             userlogDto.setArrival_time(rs.getTimestamp("arrival_time").toLocalDateTime());
-            userlogDto.setUse_time(rs.getInt("use_time"));
+            userlogDto.setUse_time(rs.getLong("use_time"));
             userlogDto.setUse_distance(rs.getInt("use_distance"));
             userlogDto.setReturn_status(rs.getInt("return_status"));
             return userlogDto;
