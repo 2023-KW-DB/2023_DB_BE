@@ -54,7 +54,9 @@ CREATE TABLE if not exists `ticket`  (
 CREATE TABLE if not exists `coupon` (
 	`value` varchar(255) UNIQUE NOT NULL,
 	`is_used` int NULL DEFAULT NULL,
-    PRIMARY KEY (`value`)
+	`ticket_id` int NOT NULL,
+    PRIMARY KEY (`value`),
+    CONSTRAINT `coupon_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `ticket` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -107,9 +109,9 @@ CREATE TABLE if not exists `paymenthistory`  (
 
 CREATE TABLE if not exists `userlog`  (
   `log_id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `bike_id` int NOT NULL,
-  `history_id` int NOT NULL,
+  `user_id` int NULL DEFAULT NULL,
+  `bike_id` int NULL DEFAULT NULL,
+  `history_id` int NULL DEFAULT NULL,
   `departure_station` varchar(255) NULL DEFAULT NULL,
   `arrival_station` varchar(255) NULL DEFAULT NULL,
   `departure_time` datetime NULL DEFAULT NULL,
@@ -133,7 +135,7 @@ CREATE TABLE if not exists `userlog`  (
 
 CREATE TABLE if not exists `board_like` (
   `user_id` int NOT NULL,
-	`category_id` int NOT NULL,
+    `category_id` int NOT NULL,
   `liked_id` int NOT NULL,
   UNIQUE (`user_id`, `liked_id`),
   CONSTRAINT `board_like_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -156,6 +158,7 @@ CREATE TABLE if not exists `bikestationrating`  (
   `lendplace_id` varchar(255) NOT NULL,
   `user_id` int NOT NULL,
   `rating` int NOT NULL,
+  `review` varchar(255) NULL DEFAULT NULL,
   CONSTRAINT `bikestationrating_ibfk_1` FOREIGN KEY (`lendplace_id`) REFERENCES `bikestationinformation` (`lendplace_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `bikestationrating_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
