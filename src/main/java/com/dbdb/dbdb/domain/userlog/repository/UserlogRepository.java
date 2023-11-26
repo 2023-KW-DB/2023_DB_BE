@@ -1,13 +1,22 @@
 package com.dbdb.dbdb.domain.userlog.repository;
 
+import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
+import com.dbdb.dbdb.domain.userlog.dto.UserlogDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Repository
@@ -162,5 +171,29 @@ public class UserlogRepository {
 
         return "SUCCESS_BIKE_RETURN";
 
+    }
+
+    public List<UserlogDto> getUserlog(int userId) {
+        String sql = "SELECT * FROM userlog WHERE user_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{userId}, new UserlogRowMapper());
+    }
+
+    private static class UserlogRowMapper implements RowMapper<UserlogDto> {
+        @Override
+        public UserlogDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+            UserlogDto userlogDto = new UserlogDto();
+            userlogDto.setLog_id(rs.getInt("log_id"));
+            userlogDto.setUser_id(rs.getInt("user_id"));
+            userlogDto.setBike_id(rs.getInt("bike_id"));
+            userlogDto.setHistory_id(rs.getInt("history_id"));
+            userlogDto.setDeparture_station(rs.getString("departure_station"));
+            userlogDto.setArrival_station(rs.getString("arrival_station"));
+            userlogDto.setDeparture_time(rs.getTimestamp("departure_time").toLocalDateTime());
+            userlogDto.setArrival_time(rs.getTimestamp("arrival_time").toLocalDateTime());
+            userlogDto.setUse_time(rs.getInt("use_time"));
+            userlogDto.setUse_distance(rs.getInt("use_distance"));
+            userlogDto.setReturn_status(rs.getInt("return_status"));
+            return userlogDto;
+        }
     }
 }

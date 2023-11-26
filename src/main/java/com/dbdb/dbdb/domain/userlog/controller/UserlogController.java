@@ -1,5 +1,6 @@
 package com.dbdb.dbdb.domain.userlog.controller;
 
+import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.user.service.UserService;
 import com.dbdb.dbdb.domain.userlog.dto.UserlogDto;
 import com.dbdb.dbdb.domain.userlog.service.UserlogService;
@@ -8,9 +9,9 @@ import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserlogController {
@@ -63,4 +64,26 @@ public class UserlogController {
         fcmService.sendBikeReturnSuccessMessage(userService.findUserEmailById(userlogDto.getUser_id()));
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_BIKE_RETURN, null));
     }
+
+    // 해당 유저의 모든 로그 조회
+    @GetMapping("/get-userlog")
+    public ResponseEntity<?> getUserLog(@RequestParam int userId) {
+        List<UserlogDto> userlog = userlogService.getUserlog(userId);
+
+        if(userlog.isEmpty())
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_USERLOG_EMPTY, null));
+
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, userlog));
+    }
+
+//    // 모든 유저의 모든 로그 조회
+//    @GetMapping("/get-all-userlog")
+//    public ResponseEntity<?> getAllUserLog(@RequestParam int userId) {
+//        List<UserlogDto> allUserlog = userlogService.getAllUserlog();
+//
+//        if(allUserlog.isEmpty())
+//            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY, null));
+//
+//        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, allUserlog));
+//    }
 }

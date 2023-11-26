@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class UserlogService {
@@ -23,5 +24,9 @@ public class UserlogService {
         userlogDto.setArrival_time(LocalDateTime.now());
 
         return userlogRepository.bikeReturn(userlogDto.getUser_id(), userlogDto.getArrival_station(), userlogDto.getArrival_time(), userlogDto.getUse_distance());
+    }
+
+    public List<UserlogDto> getUserlog(int userId) {
+        return userlogRepository.getUserlog(userId);
     }
 }

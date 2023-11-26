@@ -37,6 +37,9 @@ public enum ResponseStatus {
     SUCCESS_GET_ALL_PAYMENT_HISTORY_INFO_ISEMPTY(true, 2025, "해당 유저의 티켓 구매 내역 정보가 하나도 없습니다."),
     SUCCESS_BIKE_RENTAL(true, 2026, "자전거 대여에 성공하였습니다."),
     SUCCESS_BIKE_RETURN(true ,2027, "자전거 반납에 성공하였습니다."),
+    SUCCESS_GET_USERLOG(true, 2028, "해당 유저의 대여 기록(userlog) 조회에 성공하였습니다."),
+    SUCCESS_GET_USERLOG_EMPTY(true, 2029, "해당 유저의 대여 기록(userlog) 조회에 성공하였으나, 아무 기록도 존재하지 않습니다."),
+    SUCCESS_GET_ALL_USERLOG(true, 2030, "모든 유저의 모든 대여 기록(userlog) 조회에 성공하였습니다."),
 
 
 
