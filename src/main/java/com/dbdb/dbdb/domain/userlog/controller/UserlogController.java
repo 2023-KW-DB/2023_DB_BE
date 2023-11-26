@@ -76,14 +76,14 @@ public class UserlogController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, userlog));
     }
 
-//    // 모든 유저의 모든 로그 조회
-//    @GetMapping("/get-all-userlog")
-//    public ResponseEntity<?> getAllUserLog(@RequestParam int userId) {
-//        List<UserlogDto> allUserlog = userlogService.getAllUserlog();
-//
-//        if(allUserlog.isEmpty())
-//            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY, null));
-//
-//        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, allUserlog));
-//    }
+    // 모든 유저의 모든 로그 조회
+    @GetMapping("/get-all-userlog")
+    public ResponseEntity<?> getAllUserLog() {
+        List<UserlogDto> allUserlog = userlogService.getAllUserlog();
+
+        if(allUserlog.isEmpty())
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_USERLOG_EMPTY, null));
+
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_ALL_USERLOG, allUserlog));
+    }
 }

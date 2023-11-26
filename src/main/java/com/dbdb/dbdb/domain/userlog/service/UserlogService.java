@@ -29,4 +29,8 @@ public class UserlogService {
     public List<UserlogDto> getUserlog(int userId) {
         return userlogRepository.getUserlog(userId);
     }
+
+    public List<UserlogDto> getAllUserlog() {
+        return userlogRepository.getAllUserlog();
+    }
 }
