@@ -29,6 +29,10 @@ public class FCMService {
         return fcmTokenRepository.hasKey(email);
     }
 
+    public void send(Message message) {
+        FirebaseMessaging.getInstance().sendAsync(message);
+    }
+
     public void sendLogincompletedMessage(String email) {
         if (!fcmTokenRepository.hasKey(email)) {
             return;
@@ -38,32 +42,72 @@ public class FCMService {
         Message message = Message.builder()
                 .setNotification(Notification.builder()
                         .setTitle("로그인 완료 알림")
-                        .setBody("로그인 되었쥬?")
+                        .setBody("로그인 되었습니다.")
                         .build())
                 .putData("title", "로그인 완료 알림")
-                .putData("content", "로그인 되었쥬?")
+                .putData("content", "로그인 되었습니다.")
                 .setToken(token)
                 .build();
 
         send(message);
     }
 
-    public void sendPurchaseCompletedMessage(String email) {
+    public void sendLogoutcompletedMessage(String email) {
         if (!fcmTokenRepository.hasKey(email)) {
             return;
         }
 
         String token = fcmTokenRepository.getToken(email);
         Message message = Message.builder()
-                .putData("title", "구매 완료 알림")
-                .putData("content", "등록하신 구매 입찰이 낙찰되었습니다.")
+                .setNotification(Notification.builder()
+                        .setTitle("로그아웃 완료 알림")
+                        .setBody("로그아웃 되었습니다.")
+                        .build())
+                .putData("title", "로그아웃 완료 알림")
+                .putData("content", "로그아웃 되었습니다.")
                 .setToken(token)
                 .build();
 
         send(message);
     }
 
-    public void send(Message message) {
-        FirebaseMessaging.getInstance().sendAsync(message);
+    public void sendTicketPurchaseFailedMessage(String email) {
+        if (!fcmTokenRepository.hasKey(email)) {
+            return;
+        }
+
+        String token = fcmTokenRepository.getToken(email);
+        Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("이용권 구매 실패 알림")
+                        .setBody("잔액이 부족하여 이용권 구매를 실패하였습니다.")
+                        .build())
+                .putData("title", "이용권 구매 실패 알림")
+                .putData("content", "잔액이 부족하여 이용권 구매를 실패하였습니다.")
+                .setToken(token)
+                .build();
+
+        send(message);
+    }
+
+
+
+    public void sendTicketPurchaseSuccessMessage(String email) {
+        if (!fcmTokenRepository.hasKey(email)) {
+            return;
+        }
+
+        String token = fcmTokenRepository.getToken(email);
+        Message message = Message.builder()
+                .setNotification(Notification.builder()
+                        .setTitle("이용권 구매 성공 알림")
+                        .setBody("이용권 구매를 성공하였습니다.")
+                        .build())
+                .putData("title", "이용권 구매 성공 알림")
+                .putData("content", "이용권 구매를 성공하였습니다.")
+                .setToken(token)
+                .build();
+
+        send(message);
     }
 }

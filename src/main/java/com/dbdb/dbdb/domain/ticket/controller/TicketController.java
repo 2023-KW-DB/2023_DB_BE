@@ -3,6 +3,8 @@ package com.dbdb.dbdb.domain.ticket.controller;
 import com.dbdb.dbdb.domain.paymenthistory.dto.PaymentHistoryDto;
 import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.ticket.service.TicketService;
+import com.dbdb.dbdb.domain.user.service.UserService;
+import com.dbdb.dbdb.fcm.FCMService;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,10 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
+    @Autowired
+    private FCMService fcmService;
+    @Autowired
+    private UserService userService;
 
     // 이용권 종류 추가
     @PostMapping("/admin/create-ticket")
@@ -61,9 +67,15 @@ public class TicketController {
     public ResponseEntity<?> purchaseTicket(@RequestParam int userId, @RequestParam int ticketId){
         boolean isTotalMoneyEnough = ticketService.purchaseTicket(userId, ticketId);
 
-        if(!isTotalMoneyEnough)
+        if(!isTotalMoneyEnough) {
+            fcmService.sendTicketPurchaseFailedMessage(userService.findUserEmailById(userId));
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.FAILED_NOT_ENOUGHT_TOTAL_MONEY, null));
+        }
         else
+        {
+            fcmService.sendTicketPurchaseSuccessMessage(userService.findUserEmailById(userId));
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_PURCHASE_TICKET, null));
+        }
+
     }
 }

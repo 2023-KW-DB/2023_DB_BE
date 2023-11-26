@@ -57,7 +57,15 @@ public class UserRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{email}, Integer.class);
         } catch (EmptyResultDataAccessException e) {
-            // �̸��Ͽ� �ش��ϴ� user_id�� ������ null ��ȯ
+            return null;
+        }
+    }
+
+    public String findUserEmailById(int userId) {
+        String sql = "SELECT email FROM user WHERE id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{userId}, String.class);
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
