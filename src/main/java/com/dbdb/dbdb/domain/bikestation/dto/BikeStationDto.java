@@ -38,6 +38,7 @@ public class BikeStationDto {
         Double max_stands;
         Integer station_status;
         int total_bikes;
+        int usable_bikes;
         int empty_stands;
     }
 
@@ -63,6 +64,7 @@ public class BikeStationDto {
         Double max_stands;
         Integer station_status;
         int total_bikes;
+        int usable_bikes;
     }
 
 }

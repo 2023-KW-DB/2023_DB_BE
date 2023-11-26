@@ -56,7 +56,7 @@ public class BikeStationRepository {
         jdbcTemplate.update("DELETE FROM `bikestationinformation` WHERE lendplace_id=?", lendplaceId);
     }
 
-    public BikeStationDto.BikeStationWithBikeDto findDetailByLendplaceId(String lendplaceId) {
+    public BikeStationDto.BikeStationWithBikeDto findDetailByLendplaceId(String lendplaceId) { //TODO
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithBikeDto.class);
         return jdbcTemplate.queryForObject(
                 "WITH BikeCounts AS (" +
@@ -102,7 +102,8 @@ public class BikeStationRepository {
     public void createBikeCountsView() {
         jdbcTemplate.execute(
                 "CREATE VIEW IF NOT EXISTS BikeCounts AS " +
-                        "SELECT lendplace_id, COUNT(*) AS total_bikes " +
+                        "SELECT lendplace_id, COUNT(*) AS total_bikes, " +
+                        "COUNT(CASE WHEN use_status=0 AND bike_status=1 THEN 1 END) AS usable_bikes " +
                         "FROM bike " +
                         "GROUP BY lendplace_id");
     }
@@ -111,10 +112,8 @@ public class BikeStationRepository {
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithCurrentBike.class);
         return jdbcTemplate.query(
                 "SELECT BS.*, " +
-                "       CASE " +
-                "           WHEN BC.total_bikes IS NULL THEN 0 " +
-                "           ELSE BC.total_bikes " +
-                "       END AS total_bikes " +
+                "       COALESCE(BC.total_bikes, 0) AS total_bikes, " +
+                "       COALESCE(BC.usable_bikes, 0) AS usable_bikes " +
                 "FROM bikestationinformation BS " +
                 "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id", bikeMapper);
     }

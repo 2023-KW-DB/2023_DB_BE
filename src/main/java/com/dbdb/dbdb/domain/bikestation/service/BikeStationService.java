@@ -47,8 +47,7 @@ public class BikeStationService {
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);
         } catch (Exception e) {
-            throw e;
-            //throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 
@@ -92,7 +91,7 @@ public class BikeStationService {
         try {
             return bikeStationRepository.findAll();
         } catch (Exception e) {
-            throw e; //new GlobalException(ResponseStatus.DATABASE_ERROR);
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 }
