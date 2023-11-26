@@ -115,6 +115,16 @@ public class BoardDto {
     @NoArgsConstructor
     @Data
     @AllArgsConstructor
+    public static class BoardSimpleInfo{
+        private int id;
+        private int category_id;
+        private int user_id;
+        private String title;
+    }
+
+    @NoArgsConstructor
+    @Data
+    @AllArgsConstructor
     public static class BoardDeleteDto{
         private int id;
         private int user_id;
