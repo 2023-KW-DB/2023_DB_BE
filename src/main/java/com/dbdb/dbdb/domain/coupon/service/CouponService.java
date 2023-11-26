@@ -1,6 +1,7 @@
 package com.dbdb.dbdb.domain.coupon.service;
 
 import com.dbdb.dbdb.domain.coupon.dto.CouponDto;
+import com.dbdb.dbdb.domain.coupon.dto.CouponFullOuterJoinTicketDto;
 import com.dbdb.dbdb.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,15 @@ public class CouponService {
         couponRepository.createCoupon(couponDto);
     }
 
-    public void modifyCoupon(CouponDto couponDto) {
-        couponRepository.modifyCoupon(couponDto);
-    }
+//    public void modifyCoupon(CouponDto couponDto) {
+//        couponRepository.modifyCoupon(couponDto);
+//    }
+//
+//    public void deleteCoupon(CouponDto couponDto) {
+//        couponRepository.deleteCoupon(couponDto);
+//    }
 
-    public void deleteCoupon(CouponDto couponDto) {
-        couponRepository.deleteCoupon(couponDto);
-    }
-
-    public List<CouponDto> getAllCoupon() {
+    public List<CouponFullOuterJoinTicketDto> getAllCoupon() {
         return couponRepository.getAllCoupon();
     }
 }
