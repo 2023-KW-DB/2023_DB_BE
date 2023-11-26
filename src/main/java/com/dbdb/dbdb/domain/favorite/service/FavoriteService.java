@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -35,6 +36,15 @@ public class FavoriteService {
 
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public List<FavoriteDto.FavoriteAllDto> findAllLendplace(int userId) {
+        try {
+            return favoriteRepository.findAllLendplaceIdByUserId(userId);
+
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
