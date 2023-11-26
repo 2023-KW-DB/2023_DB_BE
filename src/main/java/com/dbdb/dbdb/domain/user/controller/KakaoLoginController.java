@@ -25,22 +25,19 @@ public class KakaoLoginController {
     @Autowired
     private KakaoLoginService kakaoLoginService;
 
-    // ���� �ڵ� ��ȯ �׽�Ʈ��
-    // https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=1534887d85f1d525b986e2521f7309b7&redirect_uri=http://localhost:8080/login/oauth2/code/kakao
-//    @GetMapping("/code/kakao")
-//    public @ResponseBody String kakaoCallback(@RequestParam String code){
-//        return code;
-//    }
 
+    // kakao login
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-        JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code�� ���� ���� response(access token�� ���� key�� ����)
+        JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code를 통해 얻은 response(access token과 여러 key들 존재)
         String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
-        JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token�� ���� ���� response(���� ���� ����)
+        JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
 
         UserDto userDto = kakaoLoginService.parshingUserInfo(userInfoResponse);
 
-        // ��Ű ����
+        HttpSession session = request.getSession();
+        session.setAttribute("access_token", accessToken);
+
         Cookie idCookie = new Cookie("id", String.valueOf(userDto.getId()));
         Cookie emailCookie = new Cookie("email", userDto.getEmail());
         Cookie passwordCookie = new Cookie("password", userDto.getPassword());
@@ -51,28 +48,21 @@ public class KakaoLoginController {
         log.info("passwordCookie = {}", passwordCookie.getValue());
         //log.info("accessTokenCookie = {}", accessTokenCookie.getValue());
 
-        // ��Ű ��ȿ �ð� ����
-        idCookie.setMaxAge(7 * 24 * 60 * 60); // 7��
+        idCookie.setMaxAge(7 * 24 * 60 * 60);
         emailCookie.setMaxAge(7 * 24 * 60 * 60);
         passwordCookie.setMaxAge(7 * 24 * 60 * 60);
         usernameCookie.setMaxAge(7 * 24 * 60 * 60);
-        //accessTokenCookie.setMaxAge(7 * 24 * 60 * 60);
 
-        // ��Ű�� HttpOnly ����
         idCookie.setHttpOnly(true);
         emailCookie.setHttpOnly(true);
         passwordCookie.setHttpOnly(true);
         usernameCookie.setHttpOnly(true);
-        //accessTokenCookie.setHttpOnly(true);
 
-        // ��Ű ��� ����
         idCookie.setPath("/");
         emailCookie.setPath("/");
         passwordCookie.setPath("/");
         usernameCookie.setPath("/");
-        //accessTokenCookie.setPath("/");
 
-        // ���信 ��Ű �߰�
         response.addCookie(idCookie);
         response.addCookie(emailCookie);
         response.addCookie(passwordCookie);
@@ -82,7 +72,7 @@ public class KakaoLoginController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_KAKAO_LOGIN, null));
     }
 
-    // �α׾ƿ�
+    // kakao logout
     @PostMapping("/users/kakao-signout")
     public ResponseEntity<?> kakaoLogout(HttpServletRequest request, HttpServletResponse response) {
 
@@ -104,7 +94,7 @@ public class KakaoLoginController {
         String responseId = "";
         if (session != null) {
             log.info("session is not null");
-            String accessToken = (String) session.getAttribute("aaaa");
+            String accessToken = (String) session.getAttribute("access_token");
             if (accessToken != null) {
                 responseId = kakaoLoginService.kakaoLogout(accessToken);
                 log.info("responseId = {}", responseId);
