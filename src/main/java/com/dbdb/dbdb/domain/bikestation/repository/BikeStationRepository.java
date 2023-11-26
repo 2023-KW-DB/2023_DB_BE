@@ -110,18 +110,21 @@ public class BikeStationRepository {
                         "GROUP BY lendplace_id");
     }
 
-    public List<BikeStationDto.BikeStationWithCurrentBike> findAll() {
+    public List<BikeStationDto.BikeStationWithCurrentBike> findAll(int userId) {
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithCurrentBike.class);
         return jdbcTemplate.query(
                 "SELECT BS.*, " +
-                "       COALESCE(BC.total_bikes, 0) AS total_bikes, " +
-                "       COALESCE(BC.usable_bikes, 0) AS usable_bikes, " +
-                "       COALESCE(AVG(BR.rating), 0) AS average_rating " +
-                "FROM bikestationinformation BS " +
-                "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id " +
-                "LEFT JOIN bikestationrating BR ON BS.lendplace_id = BR.lendplace_id " +
-                "GROUP BY BS.lendplace_id",
-                bikeMapper);
+                        "       COALESCE(BC.total_bikes, 0) AS total_bikes, " +
+                        "       COALESCE(BC.usable_bikes, 0) AS usable_bikes, " +
+                        "       COALESCE(AVG(BR.rating), 0) AS average_rating, " +
+                        "       CASE WHEN FAV.lendplace_id IS NOT NULL THEN TRUE ELSE FALSE END AS favorite " +
+                        "FROM bikestationinformation BS " +
+                        "LEFT JOIN BikeCounts BC ON BS.lendplace_id = BC.lendplace_id " +
+                        "LEFT JOIN bikestationrating BR ON BS.lendplace_id = BR.lendplace_id " +
+                        "LEFT JOIN (SELECT lendplace_id FROM favorite WHERE user_id = ?) FAV ON BS.lendplace_id = FAV.lendplace_id " +
+                        "GROUP BY BS.lendplace_id",
+                bikeMapper,
+                userId);
     }
 
     public List<BikeStationDto.BikeStationSimpleWithState> findRecentByUserId(int userId) {

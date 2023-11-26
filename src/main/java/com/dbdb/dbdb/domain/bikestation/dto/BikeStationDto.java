@@ -68,6 +68,8 @@ public class BikeStationDto {
         int total_bikes;
         int usable_bikes;
         double average_rating;
+
+        Boolean favorite;
     }
 
     @NoArgsConstructor

@@ -87,9 +87,9 @@ public class BikeStationService {
         }
     }
 
-    public List<BikeStationDto.BikeStationWithCurrentBike> getAllStation() {
+    public List<BikeStationDto.BikeStationWithCurrentBike> getAllStation(int user_id) {
         try {
-            return bikeStationRepository.findAll();
+            return bikeStationRepository.findAll(user_id);
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
