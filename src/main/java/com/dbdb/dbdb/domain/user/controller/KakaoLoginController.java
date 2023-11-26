@@ -40,9 +40,6 @@ public class KakaoLoginController {
 
         UserDto userDto = kakaoLoginService.parshingUserInfo(userInfoResponse);
 
-        HttpSession session = request.getSession();
-        session.setAttribute("aaaa", accessToken);
-
         // ��Ű ����
         Cookie idCookie = new Cookie("id", String.valueOf(userDto.getId()));
         Cookie emailCookie = new Cookie("email", userDto.getEmail());

@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -109,13 +110,17 @@ public class KakaoLoginService {
         // īī�� ���� �󿡼� ������ �̸����� ���
         if(is_email_verified.equals("true")){
             UserDto userDto = userRepository.findUserByEmail(email);
-            if(userDto != null)
+            if(userDto != null) {
+                userDto.setLast_accessed_at(LocalDateTime.now());
+                userRepository.insertUser(userDto);
                 return userDto;
+            }
             else{
                 UserDto newKakaoUserDto = new UserDto();
                 newKakaoUserDto.setEmail(email);
                 newKakaoUserDto.setUsername(nickName);
                 newKakaoUserDto.setUser_type(2);
+                newKakaoUserDto.setLast_accessed_at(LocalDateTime.now());
                 newKakaoUserDto.setPassword(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()));
                 userRepository.insertUser(newKakaoUserDto);
                 return newKakaoUserDto;
