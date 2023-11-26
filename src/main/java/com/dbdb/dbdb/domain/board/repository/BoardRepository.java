@@ -94,6 +94,18 @@ public class BoardRepository {
         return boardWithLikes;
     }
 
+    public BoardDto.BoardSimpleInfo findBoardByOnlyId(int id) {
+        var boardWithLikesMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardSimpleInfo.class);
+
+        BoardDto.BoardSimpleInfo boardSimpleInfo = jdbcTemplate.queryForObject(
+                "SELECT B.id, B.category_id, B.user_id, B.title " +
+                        "FROM board B WHERE B.id = ?",
+                boardWithLikesMapper, id
+        );
+
+        return boardSimpleInfo;
+    }
+
     public void increaseViewCount(int id) {
         jdbcTemplate.update("UPDATE `board` SET views = views + 1 WHERE id = ?", id);
     }

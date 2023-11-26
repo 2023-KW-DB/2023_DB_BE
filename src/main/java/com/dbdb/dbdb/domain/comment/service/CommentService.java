@@ -59,8 +59,8 @@ public class CommentService {
 
             boolean exists = commentRepository.findExistByCommentLike(commentLike);
             if(!exists) {
-                int writerId = commentRepository.getCommentWriterId(commentLikeDto.getLiked_id());
-                fcmService.sendCommentLikeMessage(userService.findUserEmailById(writerId));
+                CommentDto.CommentBoardTitleDto commentBoardTitleDto = commentRepository.getCommentWriterIdAndBoardTitle(commentLikeDto.getLiked_id());
+                fcmService.sendCommentLikeMessage(userService.findUserEmailById(commentBoardTitleDto.getUser_id()), commentBoardTitleDto.getTitle());
                 commentRepository.insertCommentLike(commentLike);
             } else {
                 commentRepository.deleteCommentLike(commentLike);

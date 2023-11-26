@@ -3,6 +3,8 @@ package com.dbdb.dbdb.domain.board.service;
 import com.dbdb.dbdb.domain.board.dto.BoardDto;
 import com.dbdb.dbdb.domain.comment.dto.CommentDto;
 import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.user.service.UserService;
+import com.dbdb.dbdb.fcm.FCMService;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.domain.board.repository.BoardRepository;
@@ -31,6 +33,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CommentService commentService;
+    private final FCMService fcmService;
+    private final UserService userService;
 
     public void createBoard(BoardDto.CreateBoardDto createBoardDto) {
         try {
@@ -173,6 +177,8 @@ public class BoardService {
 
             boolean isExists = boardRepository.findExistByBoardLike(boardLike);
             if(!isExists) {
+                BoardDto.BoardSimpleInfo boardSimpleInfo = boardRepository.findBoardByOnlyId(boardLikeDto.getLiked_id());
+                fcmService.sendBoardLikeMessage(userService.findUserEmailById(boardSimpleInfo.getUser_id()), boardSimpleInfo.getTitle());
                 boardRepository.insertBoardLike(boardLike);
             } else {
                 boardRepository.deleteBoardLike(boardLike);
