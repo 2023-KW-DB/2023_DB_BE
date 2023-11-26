@@ -19,9 +19,9 @@ public class CouponService {
         couponRepository.createCoupon(couponDto);
     }
 
-//    public void modifyCoupon(CouponDto couponDto) {
-//        couponRepository.modifyCoupon(couponDto);
-//    }
+    public void modifyCoupon(CouponDto couponDto) {
+        couponRepository.modifyCoupon(couponDto);
+    }
 //
 //    public void deleteCoupon(CouponDto couponDto) {
 //        couponRepository.deleteCoupon(couponDto);

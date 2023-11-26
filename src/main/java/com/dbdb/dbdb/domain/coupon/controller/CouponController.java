@@ -26,13 +26,13 @@ public class CouponController {
         return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_CREATE_COUPON, null));
     }
 
-//    // 쿠폰 수정
-//    @PatchMapping("/modify-coupon")
-//    public ResponseEntity<?> modifyCoupon(@RequestBody CouponDto couponDto){
-//
-//        couponService.modifyCoupon(couponDto);
-//        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_COUPON, null));
-//    }
+    // 쿠폰 수정
+    @PatchMapping("/modify-coupon")
+    public ResponseEntity<?> modifyCoupon(@RequestBody CouponDto couponDto){
+
+        couponService.modifyCoupon(couponDto);
+        return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_MODIFY_COUPON, null));
+    }
 //
 //    // 쿠폰 삭제
 //    @DeleteMapping("/delete-coupon")

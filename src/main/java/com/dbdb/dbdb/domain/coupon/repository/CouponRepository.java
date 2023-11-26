@@ -23,11 +23,11 @@ public class CouponRepository {
         jdbcTemplate.update(sql, couponDto.getValue(), couponDto.getIs_used(), couponDto.getTicket_id());
     }
 
-//    public void modifyCoupon(CouponDto couponDto) {
-//        String sql = "UPDATE coupon SET ticket_id = ? WHERE value = ?";
-//        jdbcTemplate.update(sql, couponDto.getTicket_id(), couponDto.getValue());
-//    }
-//
+    public void modifyCoupon(CouponDto couponDto) {
+        String sql = "UPDATE coupon SET ticket_id = ? WHERE value = ?";
+        jdbcTemplate.update(sql, couponDto.getTicket_id(), couponDto.getValue());
+    }
+
 //    public void deleteCoupon(CouponDto couponDto) {
 //        String sql = "DELETE FROM coupon WHERE value = ?";
 //        jdbcTemplate.update(sql, couponDto.getValue());
