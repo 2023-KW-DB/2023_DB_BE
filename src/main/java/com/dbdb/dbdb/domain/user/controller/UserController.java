@@ -99,10 +99,14 @@ public class UserController {
 
         Cookie[] cookies = request.getCookies();
 
-
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName()) || "username".equals(cookie.getName())) {
+                    if("email".equals(cookie.getName())){
+                        fcmService.sendLogoutcompletedMessage(cookie.getValue());
+                        fcmService.deleteToken(cookie.getValue());
+                    }
+
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
                     response.addCookie(cookie);

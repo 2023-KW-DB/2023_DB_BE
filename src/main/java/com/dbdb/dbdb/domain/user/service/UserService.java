@@ -51,6 +51,10 @@ public class UserService {
         return userRepository.findUserIdByEmail(email);
     }
 
+    public String findUserEmailById(int userId) {
+        return userRepository.findUserEmailById(userId);
+    }
+
     public UserDto findUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }
