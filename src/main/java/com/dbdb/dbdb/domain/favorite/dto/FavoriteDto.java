@@ -28,6 +28,7 @@ public class FavoriteDto {
         int total_bikes;
         int usable_bikes;
         Boolean isFavorite;
+        double average_rating;
     }
 
 }
