@@ -46,7 +46,6 @@ public class KakaoLoginController {
         log.info("idCookie = {}", idCookie.getValue());
         log.info("emailCookie = {}", emailCookie.getValue());
         log.info("passwordCookie = {}", passwordCookie.getValue());
-        //log.info("accessTokenCookie = {}", accessTokenCookie.getValue());
 
         idCookie.setMaxAge(7 * 24 * 60 * 60);
         emailCookie.setMaxAge(7 * 24 * 60 * 60);

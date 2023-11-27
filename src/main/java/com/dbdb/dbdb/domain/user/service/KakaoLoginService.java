@@ -94,7 +94,8 @@ public class KakaoLoginService {
 
         String userResourceUri = env.getProperty("oauth.kakao.user-resource-uri");
 
-        return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // ���� ������ json���� ������.
+        // get user information by json
+        return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody();
     }
 
     // Parsing only what you need from information about the user
@@ -133,7 +134,7 @@ public class KakaoLoginService {
     public String kakaoLogout(String accessToken){
         RestTemplate restTemplate = new RestTemplate();
         log.info("accessToken in kakaoLogout = {}", accessToken);
-        // HttpHeader object ����
+        // generate HttpHeader object
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer "+accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");

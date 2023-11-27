@@ -53,13 +53,13 @@ public class ChangePasswordService {
     // 메일 양식 작성
     public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
 
-        createCode(email); //인증 코드 생성
-        String setFrom = "kw2023db@gmail.com"; //email-config에 설정한 자신의 이메일 주소(보내는 사람)
+        createCode(email); // 인증 코드 생성
+        String setFrom = "kw2023db@gmail.com"; // email-config에 설정한 자신의 이메일 주소(보내는 사람)
         String toEmail = email; // 받는 사람
         String title = "[데베및데베시각화] 인증 코드는 " + authNum + "입니다"; //제목
 
         MimeMessage message = emailSender.createMimeMessage();
-        message.addRecipients(MimeMessage.RecipientType.TO, email); //보낼 이메일 설정
+        message.addRecipients(MimeMessage.RecipientType.TO, email); // 보낼 이메일 설정
         message.setSubject(title); // 제목 설정
         message.setFrom(setFrom); // 보내는 이메일
         message.setText(setContext(authNum), "utf-8", "html");
@@ -109,8 +109,7 @@ public class ChangePasswordService {
         if (code.equals(authNumStr)) {
             LocalDateTime now = LocalDateTime.now();
             Duration duration = Duration.between(emailAuthDto.getCreated_at(), now);
-            //log.info("duration = {}", duration);
-            //log.info("duration.toMinutes = {}", duration.toMinutes());
+
             if (duration.toMinutes() < 5) { // 5분 이하로 인증 코드를 맞춘 경우
                 emailAuthRepository.deleteByUserId(emailAuthDto.getUser_id());
                 return "Success";
