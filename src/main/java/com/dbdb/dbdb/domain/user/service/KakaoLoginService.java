@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -31,26 +32,26 @@ public class KakaoLoginService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    // �׼��� ��ū ��û
+    // request access token
     public JsonNode getAccessTokenResponse(String code) {
 
         RestTemplate restTemplate = new RestTemplate();
 
-        // HttpHeader object ����
+        // generate HttpHeader object
         HttpHeaders headers = new HttpHeaders();;
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        // HttpBody object ����
+        // generate HttpBody object
         String clientId = env.getProperty("oauth.kakao.client-id");
         String redirectUri = env.getProperty("oauth.kakao.redirect-uri");
         String resourceUri = env.getProperty("oauth.kakao.resource-uri");
 
-        // Ȯ���� ���� log
+        // log(for check)
         log.info("clientId = {}", clientId);
         log.info("redirectUri = {}", redirectUri);
         log.info("resourceUri = {}", resourceUri);
 
-        // HttpHeader�� HttpBody�� �ϳ��� obejct�� ���
+        // HttpHeader and HttpBody in one objct
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", clientId);
@@ -69,22 +70,22 @@ public class KakaoLoginService {
         return response;
     }
 
-    // �׼��� ��ū�� ������Ƿ� �Ľ��Ͽ� ��ȯ
+    // Parse and return the access token as it has been obtained
     public String parshingAccessToken(JsonNode responseBody){
         return responseBody.get("access_token").asText();
     }
 
-    // �׼��� ��ū�� ����Ͽ� �α����� ������ ���� ���� ��û
+    // Request information about users logged in using access tokens
     public JsonNode getUserInfoByAccessTokenResponse(JsonNode accessToken) throws JsonProcessingException {
 
-        // json object�� �ڹٿ��� ó���ϱ� ���� ��ȯ ����
+        // Transformation process for processing json objects in Java
         ObjectMapper objectMapper = new ObjectMapper();
         OAuthToken oAuthToken = objectMapper.readValue(accessToken.toString(), OAuthToken.class);
         log.info("accesstoken = {}", oAuthToken.getAccess_token());
 
         RestTemplate restTemplate = new RestTemplate();
 
-        // HttpHeader object ����
+        // generate HttpHeader object
         HttpHeaders headers = new HttpHeaders();;
         headers.add("Authorization", "Bearer "+oAuthToken.getAccess_token());
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -93,10 +94,11 @@ public class KakaoLoginService {
 
         String userResourceUri = env.getProperty("oauth.kakao.user-resource-uri");
 
-        return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody(); // ���� ������ json���� ������.
+        // get user information by json
+        return restTemplate.exchange(userResourceUri, HttpMethod.POST, userInfoRequest, JsonNode.class).getBody();
     }
 
-    // ���� ������ ���� �������� �ʿ��� �͵鸸 �Ľ�
+    // Parsing only what you need from information about the user
     public UserDto parshingUserInfo(JsonNode userResourceNode) throws JsonProcessingException {
         log.info("userResorceNode = {}", userResourceNode);
 
@@ -106,16 +108,20 @@ public class KakaoLoginService {
         String is_email_verified = userResourceNode.get("kakao_account").get("is_email_verified").asText();
         String profile_image = userResourceNode.get("properties").get("profile_image").asText();
 
-        // īī�� ���� �󿡼� ������ �̸����� ���
+        // If this is a verified email on the Kakao server
         if(is_email_verified.equals("true")){
             UserDto userDto = userRepository.findUserByEmail(email);
-            if(userDto != null)
+            if(userDto != null) {
+                userDto.setLast_accessed_at(LocalDateTime.now());
+                userRepository.updateLastAccessedAt(userDto);
                 return userDto;
+            }
             else{
                 UserDto newKakaoUserDto = new UserDto();
                 newKakaoUserDto.setEmail(email);
                 newKakaoUserDto.setUsername(nickName);
                 newKakaoUserDto.setUser_type(2);
+                newKakaoUserDto.setLast_accessed_at(LocalDateTime.now());
                 newKakaoUserDto.setPassword(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()));
                 userRepository.insertUser(newKakaoUserDto);
                 return newKakaoUserDto;
@@ -128,7 +134,7 @@ public class KakaoLoginService {
     public String kakaoLogout(String accessToken){
         RestTemplate restTemplate = new RestTemplate();
         log.info("accessToken in kakaoLogout = {}", accessToken);
-        // HttpHeader object ����
+        // generate HttpHeader object
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer "+accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");

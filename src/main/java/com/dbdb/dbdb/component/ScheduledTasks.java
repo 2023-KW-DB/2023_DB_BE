@@ -11,8 +11,8 @@ public class ScheduledTasks {
     @Autowired
     private ChangePasswordService changePasswordService;
 
-    // 5�� �̳��� ������ �������� ���� ��ȣ�� �ڵ����� �����ϴ� �����ٸ� ����
-    @Scheduled(fixedRate = 5000) // 5000 �и��� == 5��
+    // Enable scheduling to automatically delete numbers that have not been authenticated within 5 minutes
+    @Scheduled(fixedRate = 5000) // 5000ms == 5s
     public void deleteExpiredAuthNum() {
         changePasswordService.deleteExpiredAuthNum();
     }
