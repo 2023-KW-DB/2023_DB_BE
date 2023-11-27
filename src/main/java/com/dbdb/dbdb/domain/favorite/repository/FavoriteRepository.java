@@ -38,14 +38,13 @@ public class FavoriteRepository {
         var favoriteMapper = BeanPropertyRowMapper.newInstance(FavoriteDto.FavoriteAllDto.class);
 
         return jdbcTemplate.query(
-                "SELECT DISTINCT BSI.*, " +
+                "SELECT BSI.*, " +
                         "       (SELECT COUNT(*) FROM bike WHERE bike.lendplace_id = BSI.lendplace_id) AS total_bikes, " +
                         "       (SELECT COUNT(*) FROM bike WHERE bike.lendplace_id = BSI.lendplace_id AND bike.use_status = 0 AND bike.bike_status = 1) AS usable_bikes, " +
+                        "       (SELECT COALESCE(AVG(rating), 0) FROM bikestationrating WHERE lendplace_id = BSI.lendplace_id) AS average_rating, " +
                         "       TRUE AS isFavorite " +
-                        "FROM " +
-                        "    bikestationinformation BSI " +
-                        "WHERE " +
-                        "    BSI.lendplace_id IN (SELECT lendplace_id FROM favorite WHERE user_id = ?)",
+                        "FROM bikestationinformation BSI " +
+                        "WHERE BSI.lendplace_id IN (SELECT lendplace_id FROM favorite WHERE user_id = ?)",
                 favoriteMapper,
                 userId
         );

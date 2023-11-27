@@ -21,6 +21,7 @@ public class BikeStationDto {
         double startn_lnt;
         Double max_stands;
         Integer station_status;
+        double average_rating;
     }
 
     @NoArgsConstructor
@@ -84,6 +85,7 @@ public class BikeStationDto {
         String lendplace_id;
         String statn_addr1;
         String statn_addr2;
+        double average_rating;
     }
 
     @NoArgsConstructor
@@ -94,6 +96,7 @@ public class BikeStationDto {
         String statn_addr1;
         String statn_addr2;
         LocalDateTime time;
+        double average_rating;
     }
 
 }

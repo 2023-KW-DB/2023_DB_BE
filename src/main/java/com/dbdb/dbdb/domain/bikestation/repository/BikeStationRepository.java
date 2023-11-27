@@ -76,9 +76,13 @@ public class BikeStationRepository {
     public List<BikeStationDto.BikeStationDetailDto> findDetailByName(String name) {
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationDetailDto.class);
         String likePattern = "%" + name + "%";
+
         return jdbcTemplate.query(
-                "SELECT * FROM bikestationinformation " +
-                        "WHERE statn_addr1 LIKE ? OR statn_addr2 LIKE ?",
+                "SELECT BSI.*, COALESCE(AVG(BSR.rating), 0) AS average_rating " + // 평균 평점을 계산합니다.
+                        "FROM bikestationinformation BSI " +
+                        "LEFT JOIN bikestationrating BSR ON BSI.lendplace_id = BSR.lendplace_id " + // bikestationrating과 조인합니다.
+                        "WHERE BSI.statn_addr1 LIKE ? OR BSI.statn_addr2 LIKE ? " +
+                        "GROUP BY BSI.lendplace_id", // lendplace_id에 대해 그룹화합니다.
                 bikeMapper, likePattern, likePattern
         );
     }
@@ -146,7 +150,7 @@ public class BikeStationRepository {
     public List<BikeStationDto.BikeStationSimpleWithState> findRecentByUserId(int userId) {
         var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleWithState.class);
         return jdbcTemplate.query(
-                "SELECT DISTINCT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time " +
+                "SELECT DISTINCT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time, COALESCE(AVG(BR.rating), 0) AS average_rating " +
                         "FROM (" +
                         "    SELECT departure_station AS station, departure_time AS time " +
                         "    FROM userlog " +
@@ -157,6 +161,8 @@ public class BikeStationRepository {
                         "    WHERE user_id = ? AND arrival_time IS NOT NULL " +
                         ") AS UL " +
                         "JOIN bikestationinformation BSI ON BSI.lendplace_id = UL.station " +
+                        "LEFT JOIN bikestationrating BR ON BSI.lendplace_id = BR.lendplace_id " +
+                        "GROUP BY BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time " +
                         "ORDER BY UL.time DESC " +
                         "LIMIT 2",
                 stationMapper,
@@ -168,7 +174,7 @@ public class BikeStationRepository {
     public List<BikeStationDto.BikeStationSimpleState> findPopular() {
         var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleState.class);
         return jdbcTemplate.query(
-                "SELECT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2 " +
+                "SELECT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, BR.average_rating " +
                         "FROM (" +
                         "    SELECT lendplace_id, AVG(rating) AS average_rating " +
                         "    FROM bikestationrating " +
