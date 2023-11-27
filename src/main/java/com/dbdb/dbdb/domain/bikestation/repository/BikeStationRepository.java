@@ -168,7 +168,7 @@ public class BikeStationRepository {
     public List<BikeStationDto.BikeStationSimpleState> findPopular() {
         var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleState.class);
         return jdbcTemplate.query(
-                "SELECT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2 " +
+                "SELECT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, BR.average_rating " +
                         "FROM (" +
                         "    SELECT lendplace_id, AVG(rating) AS average_rating " +
                         "    FROM bikestationrating " +

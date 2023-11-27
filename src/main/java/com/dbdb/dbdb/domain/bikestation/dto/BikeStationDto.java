@@ -84,6 +84,7 @@ public class BikeStationDto {
         String lendplace_id;
         String statn_addr1;
         String statn_addr2;
+        double average_rating;
     }
 
     @NoArgsConstructor
