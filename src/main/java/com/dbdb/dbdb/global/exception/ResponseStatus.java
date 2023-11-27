@@ -80,6 +80,7 @@ public enum ResponseStatus {
     INVALID_AUTHORITY_DELETE_COMMENT(false, 5206, "댓글은 작성자만 삭제할 수 있습니다"),
     FK_VIOLATION_STATION(false, 5207, "존재하지 않는 대여소입니다"),
     DUPLICATE_STATION(false, 5208, "이미 존재하는 대여소 id입니다"),
+    DATA_INITIALIZER_ERROR(false, 5209, "데이터 구축에 실패했습니다."),
 
 
     // 6000 - Response Error
