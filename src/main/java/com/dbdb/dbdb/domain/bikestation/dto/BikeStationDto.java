@@ -95,6 +95,7 @@ public class BikeStationDto {
         String statn_addr1;
         String statn_addr2;
         LocalDateTime time;
+        double average_rating;
     }
 
 }

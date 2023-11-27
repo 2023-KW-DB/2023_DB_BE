@@ -146,7 +146,7 @@ public class BikeStationRepository {
     public List<BikeStationDto.BikeStationSimpleWithState> findRecentByUserId(int userId) {
         var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleWithState.class);
         return jdbcTemplate.query(
-                "SELECT DISTINCT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time " +
+                "SELECT DISTINCT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time, COALESCE(AVG(BR.rating), 0) AS average_rating " +
                         "FROM (" +
                         "    SELECT departure_station AS station, departure_time AS time " +
                         "    FROM userlog " +
@@ -157,6 +157,8 @@ public class BikeStationRepository {
                         "    WHERE user_id = ? AND arrival_time IS NOT NULL " +
                         ") AS UL " +
                         "JOIN bikestationinformation BSI ON BSI.lendplace_id = UL.station " +
+                        "LEFT JOIN bikestationrating BR ON BSI.lendplace_id = BR.lendplace_id " +
+                        "GROUP BY BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time " +
                         "ORDER BY UL.time DESC " +
                         "LIMIT 2",
                 stationMapper,
