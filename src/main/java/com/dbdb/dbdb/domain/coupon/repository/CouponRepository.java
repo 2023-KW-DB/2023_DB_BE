@@ -57,13 +57,15 @@ public class CouponRepository {
                 return null; // 이미 사용한 쿠폰인 경우(is_used가 1인 경우)
             }
 
+            jdbcTemplate.update("SET @userId = ?", userId);
+
             // 쿠폰을 사용했으므로 is_used를 1로 변경
             String sqlUpdate = "UPDATE coupon SET is_used = 1 WHERE value = ?";
             jdbcTemplate.update(sqlUpdate, value);
 
-            assert couponDto != null;
-            String insertHistory = String.format("INSERT INTO paymenthistory (user_id, ticket_id, is_used, registration_at) VALUES (%d, %d, 0, '%s')", userId, couponDto.getTicket_id(), LocalDateTime.now().toString());
-            jdbcTemplate.update(insertHistory);
+//            assert couponDto != null;
+//            String insertHistory = String.format("INSERT INTO paymenthistory (user_id, ticket_id, is_used, registration_at) VALUES (%d, %d, 0, '%s')", userId, couponDto.getTicket_id(), LocalDateTime.now().toString());
+//            jdbcTemplate.update(insertHistory);
 
             return couponDto.getTicket_id();
         } catch (EmptyResultDataAccessException e) {
