@@ -99,7 +99,7 @@ public class UserRepository {
     }
 
     public List<UserDto> returnAllUsers() {
-        String sql = "SELECT * FROM user";
+        String sql = "SELECT * FROM user WHERE id = SOME (SELECT id FROM user WHERE id > 0)";
         return jdbcTemplate.query(
                 sql,
                 BeanPropertyRowMapper.newInstance(UserDto.class)
@@ -133,7 +133,7 @@ public class UserRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;  // ����� ������ null ��ȯ
+            return null;
         }
     }
 
