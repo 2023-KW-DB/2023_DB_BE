@@ -1,7 +1,10 @@
 package com.dbdb.dbdb.domain.userlog.service;
 
 import com.dbdb.dbdb.domain.userlog.dto.UserlogDto;
+import com.dbdb.dbdb.domain.userlog.dto.VisualizationUserlogDto;
 import com.dbdb.dbdb.domain.userlog.repository.UserlogRepository;
+import com.dbdb.dbdb.global.exception.GlobalException;
+import com.dbdb.dbdb.global.exception.ResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +31,21 @@ public class UserlogService {
 
     public List<UserlogDto> getUserlog(int userId) {
         return userlogRepository.getUserlog(userId);
+    }
+
+    public List<VisualizationUserlogDto.userUseTimeInfo> getTopUseTime() {
+        try {
+            return userlogRepository.getTopUseTime();
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public List<VisualizationUserlogDto.userUseCountInfo> getTopUseCount() {
+        try {
+            return userlogRepository.getTopUseCount();
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
     }
 }

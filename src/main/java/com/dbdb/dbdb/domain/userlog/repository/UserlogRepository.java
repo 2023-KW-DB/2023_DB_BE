@@ -4,6 +4,7 @@ import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import com.dbdb.dbdb.domain.userlog.dto.UserlogDto;
+import com.dbdb.dbdb.domain.userlog.dto.VisualizationUserlogDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -176,6 +177,23 @@ public class UserlogRepository {
     public List<UserlogDto> getUserlog(int userId) {
         String sql = "SELECT * FROM userlog WHERE user_id = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, new UserlogRowMapper());
+    }
+
+    public List<VisualizationUserlogDto.userUseTimeInfo> getTopUseTime() {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseTimeInfo.class);
+        return jdbcTemplate.query("SELECT U.*, SUM(UL.use_time) AS total_use_time " +
+                "FROM userlog UL " +
+                "JOIN user U ON UL.user_id = U.id " +
+                "WHERE UL.user_id IS NOT NULL " +
+                "GROUP BY U.id " +
+                "ORDER BY total_use_time DESC; ",
+                rowMapper
+        );
+    }
+
+    public List<VisualizationUserlogDto.userUseCountInfo> getTopUseCount() {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseCountInfo.class);
+        return null;
     }
 
     private static class UserlogRowMapper implements RowMapper<UserlogDto> {

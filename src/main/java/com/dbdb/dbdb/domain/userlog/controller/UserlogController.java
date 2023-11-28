@@ -3,6 +3,7 @@ package com.dbdb.dbdb.domain.userlog.controller;
 import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.user.service.UserService;
 import com.dbdb.dbdb.domain.userlog.dto.UserlogDto;
+import com.dbdb.dbdb.domain.userlog.dto.VisualizationUserlogDto;
 import com.dbdb.dbdb.domain.userlog.service.UserlogService;
 import com.dbdb.dbdb.fcm.FCMService;
 import com.dbdb.dbdb.global.dto.JsonResponse;
@@ -86,4 +87,17 @@ public class UserlogController {
 //
 //        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, allUserlog));
 //    }
+
+    @GetMapping("/get-highest-usetime")
+    public ResponseEntity<?> getTopUseTime() {
+        List<VisualizationUserlogDto.userUseTimeInfo> userLog = userlogService.getTopUseTime();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
+    @GetMapping("/get-highest-usecount")
+    public ResponseEntity<?> getTopUseCount() {
+        List<VisualizationUserlogDto.userUseCountInfo> userLog = userlogService.getTopUseCount();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
 }

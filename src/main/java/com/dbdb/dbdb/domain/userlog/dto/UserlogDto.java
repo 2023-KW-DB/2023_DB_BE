@@ -1,6 +1,7 @@
 package com.dbdb.dbdb.domain.userlog.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,4 +19,5 @@ public class UserlogDto {
     private long use_time;
     private int use_distance;
     private int return_status;
+
 }
