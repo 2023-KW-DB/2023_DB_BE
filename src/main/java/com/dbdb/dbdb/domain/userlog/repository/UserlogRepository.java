@@ -193,7 +193,13 @@ public class UserlogRepository {
 
     public List<VisualizationUserlogDto.userUseCountInfo> getTopUseCount() {
         var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseCountInfo.class);
-        return null;
+        return jdbcTemplate.query("SELECT U.*, COUNT(UL.user_id) AS total_use_count " +
+                "FROM user U LEFT JOIN userlog UL ON U.id = UL.user_id " +
+                "WHERE UL.user_id IS NOT NULL " +
+                "GROUP BY U.id " +
+                "ORDER BY total_use_count DESC;",
+                rowMapper
+        );
     }
 
     private static class UserlogRowMapper implements RowMapper<UserlogDto> {
