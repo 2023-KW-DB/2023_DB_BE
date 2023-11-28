@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -210,6 +211,16 @@ public class UserlogRepository {
                         "GROUP BY U.id " +
                         "ORDER BY total_use_distance DESC;",
                 rowMapper
+        );
+    }
+
+    public List<VisualizationUserlogDto.userLogDto> getBetweenUserlog(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userLogDto.class);
+        return jdbcTemplate.query(
+                "SELECT * FROM userlog WHERE departure_time >= ? AND arrival_time <= ?",
+                rowMapper,
+                Timestamp.valueOf(startDateTime),
+                Timestamp.valueOf(endDateTime)
         );
     }
 

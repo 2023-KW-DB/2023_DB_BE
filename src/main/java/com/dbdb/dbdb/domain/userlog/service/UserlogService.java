@@ -56,4 +56,12 @@ public class UserlogService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public List<VisualizationUserlogDto.userLogDto> getBetweenUserlog(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        try {
+            return userlogRepository.getBetweenUserlog(startDateTime, endDateTime);
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -103,6 +105,16 @@ public class UserlogController {
     @GetMapping("/get-highest-distance")
     public ResponseEntity<?> getTopUseDistance() {
         List<VisualizationUserlogDto.userUseDistanceInfo> userLog = userlogService.getTopUseDistance();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
+    @GetMapping("/get-between-userlog")
+    public ResponseEntity<?> getBetweenUserlog(@RequestParam String start, @RequestParam String end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startDateTime = LocalDateTime.parse(start, formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(end, formatter);
+
+        List<VisualizationUserlogDto.userLogDto> userLog = userlogService.getBetweenUserlog(startDateTime, endDateTime);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
     }
 
