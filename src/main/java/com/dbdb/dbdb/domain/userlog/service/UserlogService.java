@@ -64,9 +64,9 @@ public class UserlogService {
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
+    }
 
     public List<UserlogDto> getAllUserlog() {
         return userlogRepository.getAllUserlog();
-
     }
 }
