@@ -120,7 +120,9 @@ public class UserRepository {
     }
 
     public UserDto findUserByEmail(String email) {
-        String sql = "SELECT * FROM user WHERE email = ?";
+        String sql = "SELECT * FROM user " +
+                "INTERSECT " +
+                "SELECT * FROM user WHERE email = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
