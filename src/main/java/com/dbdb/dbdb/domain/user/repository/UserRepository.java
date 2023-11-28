@@ -124,12 +124,14 @@ public class UserRepository {
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{email}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
-            return null;  // ����� ������ null ��ȯ
+            return null;
         }
     }
 
     public UserDto findUserById(int id) {
-        String sql = "SELECT * FROM user WHERE id = ?";
+        String sql = "SELECT * FROM user " +
+                "EXCEPT " +
+                "SELECT * FROM user WHERE id <> ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{id}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
