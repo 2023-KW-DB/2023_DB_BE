@@ -33,6 +33,7 @@ public class UserlogService {
         return userlogRepository.getUserlog(userId);
     }
 
+
     public List<VisualizationUserlogDto.userUseTimeInfo> getTopUseTime() {
         try {
             return userlogRepository.getTopUseTime();
@@ -63,5 +64,9 @@ public class UserlogService {
         } catch (Exception e) {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
+
+    public List<UserlogDto> getAllUserlog() {
+        return userlogRepository.getAllUserlog();
+
     }
 }

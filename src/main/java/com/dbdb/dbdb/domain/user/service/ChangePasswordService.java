@@ -34,10 +34,38 @@ public class ChangePasswordService {
     private String authNum;
     private final SpringTemplateEngine templateEngine;
 
+    // 실제 메일 전송 - controller에서 호출
+    public String sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
+
+        // 메일 전송에 필요한 정보 설정
+        MimeMessage emailForm = createEmailForm(toEmail);
+        // 실제 메일 전송
+        emailSender.send(emailForm);
+
+        return authNum; //인증 코드 반환
+    }
+
+    // 메일 양식 작성
+    public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
+
+        createCode(email); // 인증 코드 생성
+        String setFrom = "kw2023db@gmail.com"; // email-config에 설정한 자신의 이메일 주소(보내는 사람)
+        String toEmail = email; // 받는 사람
+        String title = "[데베및데베시각화] 인증 코드는 " + authNum + "입니다"; //제목
+
+        MimeMessage message = emailSender.createMimeMessage();
+        message.addRecipients(MimeMessage.RecipientType.TO, email); // 보낼 이메일 설정
+        message.setSubject(title); // 제목 설정
+        message.setFrom(setFrom); // 송신자 이메일
+        message.setText(setContext(authNum), "utf-8", "html");
+
+        return message;
+    }
+
     // 랜덤 인증 코드 생성
     public void createCode(String email) {
         Random random = new Random();
-        authNum = String.valueOf(random.nextInt(8888)+1000); // 범위 : 1000 ~ 9999
+        authNum = String.valueOf(random.nextInt(9000)+1000); // 범위: 1000 ~ 9999
 
         EmailAuthDto emailAuthDto = new EmailAuthDto();
         emailAuthDto.setUser_id(userRepository.findUserIdByEmail(email));
@@ -50,39 +78,11 @@ public class ChangePasswordService {
 
     }
 
-    // 메일 양식 작성
-    public MimeMessage createEmailForm(String email) throws MessagingException, UnsupportedEncodingException {
-
-        createCode(email); //인증 코드 생성
-        String setFrom = "kw2023db@gmail.com"; //email-config에 설정한 자신의 이메일 주소(보내는 사람)
-        String toEmail = email; // 받는 사람
-        String title = "[데베및데베시각화] 인증 코드는 " + authNum + "입니다"; //제목
-
-        MimeMessage message = emailSender.createMimeMessage();
-        message.addRecipients(MimeMessage.RecipientType.TO, email); //보낼 이메일 설정
-        message.setSubject(title); // 제목 설정
-        message.setFrom(setFrom); // 보내는 이메일
-        message.setText(setContext(authNum), "utf-8", "html");
-
-        return message;
-    }
-
     // 타임리프를 이용한 context 설정
     public String setContext(String code) {
         Context context = new Context();
         context.setVariable("code", code);
-        return templateEngine.process("mail", context); //mail.html
-    }
-
-    // 실제 메일 전송 - controller에서 호출
-    public String sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
-
-        // 메일 전송에 필요한 정보 설정
-        MimeMessage emailForm = createEmailForm(toEmail);
-        // 실제 메일 전송
-        emailSender.send(emailForm);
-
-        return authNum; //인증 코드 반환
+        return templateEngine.process("mail", context); // mail.html
     }
 
     public void deleteExistCode(String email){ // 한 유저가 2번 이상 연속으로 인증 코드를 보낼 경우에 대한 예외 처리를 위해 기존의 코드 삭제
@@ -109,8 +109,7 @@ public class ChangePasswordService {
         if (code.equals(authNumStr)) {
             LocalDateTime now = LocalDateTime.now();
             Duration duration = Duration.between(emailAuthDto.getCreated_at(), now);
-            //log.info("duration = {}", duration);
-            //log.info("duration.toMinutes = {}", duration.toMinutes());
+
             if (duration.toMinutes() < 5) { // 5분 이하로 인증 코드를 맞춘 경우
                 emailAuthRepository.deleteByUserId(emailAuthDto.getUser_id());
                 return "Success";

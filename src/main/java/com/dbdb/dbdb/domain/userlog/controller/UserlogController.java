@@ -73,7 +73,7 @@ public class UserlogController {
     public ResponseEntity<?> getUserLog(@RequestParam int userId) {
         List<UserlogDto> userlog = userlogService.getUserlog(userId);
 
-        if(userlog.isEmpty())
+        if((userlog==null) || (userlog.isEmpty()))
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_USERLOG_EMPTY, null));
 
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, userlog));
@@ -116,6 +116,17 @@ public class UserlogController {
 
         List<VisualizationUserlogDto.userLogDto> userLog = userlogService.getBetweenUserlog(startDateTime, endDateTime);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
+    // 모든 유저의 모든 로그 조회
+    @GetMapping("/get-all-userlog")
+    public ResponseEntity<?> getAllUserLog() {
+        List<UserlogDto> allUserlog = userlogService.getAllUserlog();
+
+        if((allUserlog==null) || (allUserlog.isEmpty()))
+            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_USERLOG_EMPTY, null));
+
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_ALL_USERLOG, allUserlog));
     }
 
 }

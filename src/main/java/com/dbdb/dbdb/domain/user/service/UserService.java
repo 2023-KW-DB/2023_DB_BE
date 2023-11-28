@@ -7,6 +7,8 @@ import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserService {
 
@@ -39,6 +41,7 @@ public class UserService {
     // 로그인
     public Boolean signIn(UserDto userdto) {
         try {
+            userdto.setLast_accessed_at(LocalDateTime.now());
             return userRepository.validateUser(userdto);
         } catch (NullPointerException e) {
             throw new GlobalException(ResponseStatus.INVALID_REQUEST);
