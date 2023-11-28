@@ -11,8 +11,8 @@ public class ScheduledTasks {
     @Autowired
     private ChangePasswordService changePasswordService;
 
-    // Enable scheduling to automatically delete numbers that have not been authenticated within 5 minutes
-    @Scheduled(fixedRate = 5000) // 5000ms == 5s
+    // 생성한 인증 번호가 5분이 되면 자동으로 만료(DB에서 인증번호 삭제)
+    @Scheduled(fixedRate = 5000)
     public void deleteExpiredAuthNum() {
         changePasswordService.deleteExpiredAuthNum();
     }

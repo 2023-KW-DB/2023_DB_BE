@@ -11,9 +11,14 @@ public class FCMTokenRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public void saveToken(UserDto userDto) {
+    public void saveTokenByObject(UserDto userDto) {
         String sql = "UPDATE user SET fcm_token = ? WHERE email = ?";
         jdbcTemplate.update(sql, userDto.getFcm_token(), userDto.getEmail());
+    }
+
+    public void saveTokenByVariable(String fcm_token, String email) {
+        String sql = "UPDATE user SET fcm_token = ? WHERE email = ?";
+        jdbcTemplate.update(sql, fcm_token, email);
     }
 
     public String getToken(String email) {

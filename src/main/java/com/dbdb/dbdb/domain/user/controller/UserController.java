@@ -59,7 +59,7 @@ public class UserController {
             Cookie passwordCookie = new Cookie("password", userDto.getPassword());
             Cookie usernameCookie = new Cookie("username", userDto.getUsername());
 
-            fcmService.saveToken(userDto);
+            fcmService.saveTokenByObject(userDto);
             fcmService.sendLogincompletedMessage(userDto.getEmail());
 
 

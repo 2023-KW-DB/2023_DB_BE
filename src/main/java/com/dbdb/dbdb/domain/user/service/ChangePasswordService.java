@@ -81,7 +81,7 @@ public class ChangePasswordService {
     // 타임리프를 이용한 context 설정
     public String setContext(String code) {
         Context context = new Context();
-        context.setVariable("code", code);
+        context.setVariable("code", code); // 생성한 인증 번호가 th:text="${code}와 매핑
         return templateEngine.process("mail", context); // mail.html
     }
 
@@ -93,6 +93,7 @@ public class ChangePasswordService {
         List<EmailAuthDto> emailAuthEntityList = emailAuthRepository.findAll();
 
         for(EmailAuthDto emailAuthDto : emailAuthEntityList){
+            // 현재 시간 - 인증 번호 발급 시간 계산
             Duration duration = Duration.between(emailAuthDto.getCreated_at(), LocalDateTime.now());
 
             if(duration.toMinutes() >= 5){

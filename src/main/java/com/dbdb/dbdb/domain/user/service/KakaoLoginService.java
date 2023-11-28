@@ -3,6 +3,7 @@ package com.dbdb.dbdb.domain.user.service;
 import com.dbdb.dbdb.domain.user.dto.OAuthToken;
 import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.domain.user.repository.UserRepository;
+import com.dbdb.dbdb.fcm.FCMService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,14 +32,18 @@ public class KakaoLoginService {
     private Environment env;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private FCMService fcmService;
+
+    private String fcm_token;
 
     // request access token
-    public JsonNode getAccessTokenResponse(String code) {
-
+    public JsonNode getAccessTokenResponse(String fcm, String code) {
+        fcm_token = fcm;
         RestTemplate restTemplate = new RestTemplate();
 
         // generate HttpHeader object
-        HttpHeaders headers = new HttpHeaders();;
+        HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // generate HttpBody object
@@ -107,12 +112,13 @@ public class KakaoLoginService {
         String nickName = userResourceNode.get("properties").get("nickname").asText();
         String is_email_verified = userResourceNode.get("kakao_account").get("is_email_verified").asText();
         String profile_image = userResourceNode.get("properties").get("profile_image").asText();
-
+        log.info("fcm_token={}", fcm_token);
         // If this is a verified email on the Kakao server
         if(is_email_verified.equals("true")){
             UserDto userDto = userRepository.findUserByEmail(email);
             if(userDto != null) {
                 userDto.setLast_accessed_at(LocalDateTime.now());
+                fcmService.saveTokenByObject(userDto);
                 userRepository.updateLastAccessedAt(userDto);
                 return userDto;
             }
@@ -124,6 +130,8 @@ public class KakaoLoginService {
                 newKakaoUserDto.setLast_accessed_at(LocalDateTime.now());
                 newKakaoUserDto.setPassword(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()));
                 userRepository.insertUser(newKakaoUserDto);
+                fcmService.saveTokenByVariable(fcm_token, email);
+                fcmService.sendLogincompletedMessage(newKakaoUserDto.getEmail());
                 return newKakaoUserDto;
             }
         }

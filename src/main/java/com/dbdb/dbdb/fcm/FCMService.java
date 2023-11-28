@@ -13,8 +13,12 @@ public class FCMService {
 
     private final FCMTokenRepository fcmTokenRepository;
 
-    public void saveToken(UserDto userDto) {
-        fcmTokenRepository.saveToken(userDto);
+    public void saveTokenByObject(UserDto userDto) {
+        fcmTokenRepository.saveTokenByObject(userDto);
+    }
+
+    public void saveTokenByVariable(String fcm_token, String email) {
+        fcmTokenRepository.saveTokenByVariable(fcm_token, email);
     }
 
     public String getToken(String email) {

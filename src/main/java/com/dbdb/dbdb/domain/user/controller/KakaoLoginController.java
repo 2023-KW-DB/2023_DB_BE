@@ -1,6 +1,7 @@
 package com.dbdb.dbdb.domain.user.controller;
 
 import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.fcm.FCMService;
 import com.dbdb.dbdb.global.dto.JsonResponse;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import com.dbdb.dbdb.domain.user.service.KakaoLoginService;
@@ -25,11 +26,13 @@ public class KakaoLoginController {
     @Autowired
     private KakaoLoginService kakaoLoginService;
 
+    @Autowired
+    private FCMService fcmService;
 
     // kakao login
     @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<?> kakaoLogin(@RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
-        JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(code); // code를 통해 얻은 response(access token과 여러 key들 존재)
+    public ResponseEntity<?> kakaoLogin(@RequestParam String fcm, @RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+        JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(fcm, code); // code를 통해 얻은 response(access token과 여러 key들 존재)
         String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
         JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
 
@@ -80,6 +83,10 @@ public class KakaoLoginController {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName()) || "username".equals(cookie.getName())) {
+                    if("email".equals(cookie.getName())){
+                        fcmService.sendLogoutcompletedMessage(cookie.getValue());
+                        fcmService.deleteToken(cookie.getValue());
+                    }
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
                     response.addCookie(cookie);
@@ -92,7 +99,6 @@ public class KakaoLoginController {
         HttpSession session = request.getSession(false);
         String responseId = "";
         if (session != null) {
-            log.info("session is not null");
             String accessToken = (String) session.getAttribute("access_token");
             if (accessToken != null) {
                 responseId = kakaoLoginService.kakaoLogout(accessToken);
