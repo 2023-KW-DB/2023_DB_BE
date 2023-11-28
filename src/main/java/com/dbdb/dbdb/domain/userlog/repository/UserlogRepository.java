@@ -31,7 +31,7 @@ public class UserlogRepository {
         Integer bike_id, history_id, station_status;
 
         try {
-            // INNER JOIN
+            // MIN, INNER JOIN
             history_id = jdbcTemplate.queryForObject(
                     "SELECT MIN(ph.history_id) FROM paymenthistory ph " +
                             "INNER JOIN user u ON ph.user_id = u.id " +
@@ -118,10 +118,16 @@ public class UserlogRepository {
         if (station_status == 0 || station_status == null)
             return "FAILED_INVALID_RETURN_STATION";
 
-        String sql = "SELECT COUNT(*) FROM bike WHERE lendplace_id = ?";
-        cur_stands = jdbcTemplate.queryForObject(sql, new Object[]{arrivalStation}, Integer.class);
+//        String sql = "SELECT COUNT(*) FROM bike WHERE lendplace_id = ?";
+//        cur_stands = jdbcTemplate.queryForObject(sql, new Object[]{arrivalStation}, Integer.class);
+        boolean standsFull = jdbcTemplate.queryForObject(
+                "SELECT MAX(COUNT(*)) >= ? FROM bike WHERE lendplace_id = ?",
+                new Object[]{max_stands, arrivalStation},
+                Boolean.class
+        );
 
-        if (cur_stands >= max_stands)
+//        if (cur_stands >= max_stands)
+        if(standsFull)
             return "FAILED_OVER_MAX_STANDS";
 
         LocalDateTime departure_time;
