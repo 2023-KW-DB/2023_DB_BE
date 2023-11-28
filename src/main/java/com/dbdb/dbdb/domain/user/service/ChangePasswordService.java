@@ -34,20 +34,15 @@ public class ChangePasswordService {
     private String authNum;
     private final SpringTemplateEngine templateEngine;
 
-    // 랜덤 인증 코드 생성
-    public void createCode(String email) {
-        Random random = new Random();
-        authNum = String.valueOf(random.nextInt(8888)+1000); // 범위 : 1000 ~ 9999
+    // 실제 메일 전송 - controller에서 호출
+    public String sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
 
-        EmailAuthDto emailAuthDto = new EmailAuthDto();
-        emailAuthDto.setUser_id(userRepository.findUserIdByEmail(email));
-        log.info("email = {}", email);
-        emailAuthDto.setEmail(email);
-        emailAuthDto.setAuth_num(Integer.parseInt(authNum));
-        emailAuthDto.setCreated_at(LocalDateTime.now());
+        // 메일 전송에 필요한 정보 설정
+        MimeMessage emailForm = createEmailForm(toEmail);
+        // 실제 메일 전송
+        emailSender.send(emailForm);
 
-        emailAuthRepository.createAuthCode(emailAuthDto);
-
+        return authNum; //인증 코드 반환
     }
 
     // 메일 양식 작성
@@ -61,28 +56,33 @@ public class ChangePasswordService {
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, email); // 보낼 이메일 설정
         message.setSubject(title); // 제목 설정
-        message.setFrom(setFrom); // 보내는 이메일
+        message.setFrom(setFrom); // 송신자 이메일
         message.setText(setContext(authNum), "utf-8", "html");
 
         return message;
+    }
+
+    // 랜덤 인증 코드 생성
+    public void createCode(String email) {
+        Random random = new Random();
+        authNum = String.valueOf(random.nextInt(9000)+1000); // 범위: 1000 ~ 9999
+
+        EmailAuthDto emailAuthDto = new EmailAuthDto();
+        emailAuthDto.setUser_id(userRepository.findUserIdByEmail(email));
+        log.info("email = {}", email);
+        emailAuthDto.setEmail(email);
+        emailAuthDto.setAuth_num(Integer.parseInt(authNum));
+        emailAuthDto.setCreated_at(LocalDateTime.now());
+
+        emailAuthRepository.createAuthCode(emailAuthDto);
+
     }
 
     // 타임리프를 이용한 context 설정
     public String setContext(String code) {
         Context context = new Context();
         context.setVariable("code", code);
-        return templateEngine.process("mail", context); //mail.html
-    }
-
-    // 실제 메일 전송 - controller에서 호출
-    public String sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
-
-        // 메일 전송에 필요한 정보 설정
-        MimeMessage emailForm = createEmailForm(toEmail);
-        // 실제 메일 전송
-        emailSender.send(emailForm);
-
-        return authNum; //인증 코드 반환
+        return templateEngine.process("mail", context); // mail.html
     }
 
     public void deleteExistCode(String email){ // 한 유저가 2번 이상 연속으로 인증 코드를 보낼 경우에 대한 예외 처리를 위해 기존의 코드 삭제
