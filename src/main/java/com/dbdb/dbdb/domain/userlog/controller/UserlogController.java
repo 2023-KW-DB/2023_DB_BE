@@ -3,6 +3,7 @@ package com.dbdb.dbdb.domain.userlog.controller;
 import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.user.service.UserService;
 import com.dbdb.dbdb.domain.userlog.dto.UserlogDto;
+import com.dbdb.dbdb.domain.userlog.dto.VisualizationUserlogDto;
 import com.dbdb.dbdb.domain.userlog.service.UserlogService;
 import com.dbdb.dbdb.fcm.FCMService;
 import com.dbdb.dbdb.global.dto.JsonResponse;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -76,6 +79,45 @@ public class UserlogController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, userlog));
     }
 
+//    // 모든 유저의 모든 로그 조회
+//    @GetMapping("/get-all-userlog")
+//    public ResponseEntity<?> getAllUserLog(@RequestParam int userId) {
+//        List<UserlogDto> allUserlog = userlogService.getAllUserlog();
+//
+//        if(allUserlog.isEmpty())
+//            return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_GET_ALL_TICKETS_INFO_ISEMPTY, null));
+//
+//        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_USERLOG, allUserlog));
+//    }
+
+    @GetMapping("/get-highest-usetime")
+    public ResponseEntity<?> getTopUseTime() {
+        List<VisualizationUserlogDto.userUseTimeInfo> userLog = userlogService.getTopUseTime();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
+    @GetMapping("/get-highest-usecount")
+    public ResponseEntity<?> getTopUseCount() {
+        List<VisualizationUserlogDto.userUseCountInfo> userLog = userlogService.getTopUseCount();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
+    @GetMapping("/get-highest-distance")
+    public ResponseEntity<?> getTopUseDistance() {
+        List<VisualizationUserlogDto.userUseDistanceInfo> userLog = userlogService.getTopUseDistance();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
+    @GetMapping("/get-between-userlog")
+    public ResponseEntity<?> getBetweenUserlog(@RequestParam String start, @RequestParam String end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startDateTime = LocalDateTime.parse(start, formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(end, formatter);
+
+        List<VisualizationUserlogDto.userLogDto> userLog = userlogService.getBetweenUserlog(startDateTime, endDateTime);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
     // 모든 유저의 모든 로그 조회
     @GetMapping("/get-all-userlog")
     public ResponseEntity<?> getAllUserLog() {
@@ -86,4 +128,5 @@ public class UserlogController {
 
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS_GET_ALL_USERLOG, allUserlog));
     }
+
 }

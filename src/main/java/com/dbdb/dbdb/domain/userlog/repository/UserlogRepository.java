@@ -4,6 +4,7 @@ import com.dbdb.dbdb.domain.ticket.dto.TicketDto;
 import com.dbdb.dbdb.domain.user.dto.UserDto;
 import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import com.dbdb.dbdb.domain.userlog.dto.UserlogDto;
+import com.dbdb.dbdb.domain.userlog.dto.VisualizationUserlogDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -182,6 +184,50 @@ public class UserlogRepository {
     public List<UserlogDto> getAllUserlog() {
         String sql = "SELECT * FROM userlog";
         return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserlogDto.class));
+    }
+
+    public List<VisualizationUserlogDto.userUseTimeInfo> getTopUseTime() {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseTimeInfo.class);
+        return jdbcTemplate.query("SELECT U.*, SUM(UL.use_time) AS total_use_time " +
+                "FROM userlog UL " +
+                "JOIN user U ON UL.user_id = U.id " +
+                "WHERE UL.user_id IS NOT NULL " +
+                "GROUP BY U.id " +
+                "ORDER BY total_use_time DESC; ",
+                rowMapper
+        );
+    }
+
+    public List<VisualizationUserlogDto.userUseCountInfo> getTopUseCount() {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseCountInfo.class);
+        return jdbcTemplate.query("SELECT U.*, COUNT(UL.user_id) AS total_use_count " +
+                "FROM user U LEFT JOIN userlog UL ON U.id = UL.user_id " +
+                "WHERE UL.user_id IS NOT NULL " +
+                "GROUP BY U.id " +
+                "ORDER BY total_use_count DESC;",
+                rowMapper
+        );
+    }
+
+    public List<VisualizationUserlogDto.userUseDistanceInfo> getTopUseDistance() {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseDistanceInfo.class);
+        return jdbcTemplate.query("SELECT U.*, SUM(UL.use_distance) AS total_use_distance " +
+                        "FROM user U LEFT JOIN userlog UL ON U.id = UL.user_id " +
+                        "WHERE UL.user_id IS NOT NULL " +
+                        "GROUP BY U.id " +
+                        "ORDER BY total_use_distance DESC;",
+                rowMapper
+        );
+    }
+
+    public List<VisualizationUserlogDto.userLogDto> getBetweenUserlog(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userLogDto.class);
+        return jdbcTemplate.query(
+                "SELECT * FROM userlog WHERE departure_time >= ? AND arrival_time <= ?",
+                rowMapper,
+                Timestamp.valueOf(startDateTime),
+                Timestamp.valueOf(endDateTime)
+        );
     }
 
     private static class UserlogRowMapper implements RowMapper<UserlogDto> {
