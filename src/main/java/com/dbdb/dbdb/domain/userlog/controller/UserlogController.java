@@ -100,4 +100,10 @@ public class UserlogController {
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
     }
 
+    @GetMapping("/get-highest-distance")
+    public ResponseEntity<?> getTopUseDistance() {
+        List<VisualizationUserlogDto.userUseDistanceInfo> userLog = userlogService.getTopUseDistance();
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, userLog));
+    }
+
 }

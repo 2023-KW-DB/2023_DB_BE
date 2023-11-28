@@ -39,6 +39,20 @@ public class VisualizationUserlogDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
+    public static class userUseDistanceInfo {
+        private int id;
+        private String username;
+        private int user_type;
+        private String email;
+        private String phone_number;
+        private double weight;
+        private int age;
+        private long total_use_distance;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
     public static class userLogDto {
         private int log_id;
         private Integer user_id;

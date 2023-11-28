@@ -48,4 +48,12 @@ public class UserlogService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public List<VisualizationUserlogDto.userUseDistanceInfo> getTopUseDistance() {
+        try {
+            return userlogRepository.getTopUseDistance();
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }

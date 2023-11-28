@@ -202,6 +202,17 @@ public class UserlogRepository {
         );
     }
 
+    public List<VisualizationUserlogDto.userUseDistanceInfo> getTopUseDistance() {
+        var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseDistanceInfo.class);
+        return jdbcTemplate.query("SELECT U.*, SUM(UL.use_distance) AS total_use_distance " +
+                        "FROM user U LEFT JOIN userlog UL ON U.id = UL.user_id " +
+                        "WHERE UL.user_id IS NOT NULL " +
+                        "GROUP BY U.id " +
+                        "ORDER BY total_use_distance DESC;",
+                rowMapper
+        );
+    }
+
     private static class UserlogRowMapper implements RowMapper<UserlogDto> {
         @Override
         public UserlogDto mapRow(ResultSet rs, int rowNum) throws SQLException {
