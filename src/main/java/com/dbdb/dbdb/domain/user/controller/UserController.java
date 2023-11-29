@@ -163,8 +163,8 @@ public class UserController {
     }
 
     @GetMapping("/get-userinfo")
-    public ResponseEntity<?> getUserInfoById(@RequestBody UserDto userDto){
-        UserDto userInfo = userService.findUserByid(userDto.getId());
+    public ResponseEntity<?> getUserInfoById(@RequestParam int user_id) {
+        UserDto userInfo = userService.findUserByid(user_id);
 
         if (userInfo == null)
             return ResponseEntity.ok(new JsonResponse<>(ResponseStatus.SUCCESS_NOT_FIND_USER_BY_ID, null));
