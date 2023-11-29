@@ -144,7 +144,7 @@ CREATE TABLE if not exists `userlog`  (
   CONSTRAINT `userlog_ibfk_4` FOREIGN KEY (`bike_id`)
   REFERENCES `bike` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `userlog_ibfk_5` FOREIGN KEY (`history_id`)
-  REFERENCES `paymenthistory` (`history_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  REFERENCES `paymenthistory` (`history_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
