@@ -42,8 +42,10 @@ public class TicketRepository {
     @Transactional
     public boolean purchaseTicket(int userId, int ticketId) {
         // Scalar Subqueries
-        String priceQuery = "SELECT ticket_price FROM ticket WHERE id = (SELECT t.id FROM ticket t WHERE t.id = ?)";
-        Integer ticketPrice = jdbcTemplate.queryForObject(priceQuery, new Object[]{ticketId}, Integer.class);
+        String priceQuery = "SELECT ticket_price FROM ticket " +
+                "WHERE id = (SELECT t.id FROM ticket t WHERE t.id = ?)";
+        Integer ticketPrice = jdbcTemplate.queryForObject(
+                priceQuery, new Object[]{ticketId}, Integer.class);
 
         // BETWEEN
         String checkUserBalance = "SELECT COUNT(*) FROM user WHERE id = ? AND total_money BETWEEN ? AND 99999999";

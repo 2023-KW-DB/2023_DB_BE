@@ -64,7 +64,8 @@ public class UserlogRepository {
         try {
             // NESTED QUERY
             bike_id = jdbcTemplate.queryForObject(
-                    "SELECT id FROM (SELECT id FROM bike WHERE lendplace_id = ? AND bike_status = 1 AND use_status = 0) AS AvailableBikes " +
+                    "SELECT id FROM (SELECT id FROM bike WHERE lendplace_id = ? " +
+                            "AND bike_status = 1 AND use_status = 0) AS AvailableBikes " +
                             "ORDER BY id LIMIT 1",
                     new Object[]{departureStation},
                     Integer.class
@@ -101,7 +102,7 @@ public class UserlogRepository {
     public String bikeReturn(int userId, String arrivalStation, LocalDateTime arrivalTime, int useDistance) {
 
         Integer bike_id, history_id, station_status;
-        int max_stands = 20, cur_stands;
+        int max_stands, cur_stands;
 
         try {
             station_status = jdbcTemplate.queryForObject(
@@ -118,16 +119,14 @@ public class UserlogRepository {
         if (station_status == 0 || station_status == null)
             return "FAILED_INVALID_RETURN_STATION";
 
-//        String sql = "SELECT COUNT(*) FROM bike WHERE lendplace_id = ?";
-//        cur_stands = jdbcTemplate.queryForObject(sql, new Object[]{arrivalStation}, Integer.class);
-        boolean standsFull = jdbcTemplate.queryForObject(
-                "SELECT MAX(COUNT(*)) >= ? FROM bike WHERE lendplace_id = ?",
-                new Object[]{max_stands, arrivalStation},
-                Boolean.class
-        );
+        String sql = "SELECT COUNT(*) FROM bike WHERE lendplace_id = ?";
+        cur_stands = jdbcTemplate.queryForObject(sql, new Object[]{arrivalStation}, Integer.class);
 
-//        if (cur_stands >= max_stands)
-        if(standsFull)
+        // MAX
+        String getMaxStandsSql = "SELECT MAX(max_stands) FROM bikestationinformation";
+        max_stands =  jdbcTemplate.queryForObject(getMaxStandsSql, Integer.class);
+
+        if (cur_stands >= max_stands)
             return "FAILED_OVER_MAX_STANDS";
 
         LocalDateTime departure_time;
