@@ -196,7 +196,7 @@ public class UserlogRepository {
         return jdbcTemplate.query("SELECT U.*, SUM(UL.use_time) AS total_use_time " +
                 "FROM userlog UL " +
                 "JOIN user U ON UL.user_id = U.id " +
-                "WHERE UL.user_id IS NOT NULL " +
+                "WHERE UL.user_id IS NOT NULL AND UL.use_time IS NOT NULL " +
                 "GROUP BY U.id " +
                 "ORDER BY total_use_time DESC; ",
                 rowMapper
@@ -218,7 +218,7 @@ public class UserlogRepository {
         var rowMapper = BeanPropertyRowMapper.newInstance(VisualizationUserlogDto.userUseDistanceInfo.class);
         return jdbcTemplate.query("SELECT U.*, SUM(UL.use_distance) AS total_use_distance " +
                         "FROM user U LEFT JOIN userlog UL ON U.id = UL.user_id " +
-                        "WHERE UL.user_id IS NOT NULL " +
+                        "WHERE UL.user_id IS NOT NULL AND UL.use_distance IS NOT NULL " +
                         "GROUP BY U.id " +
                         "ORDER BY total_use_distance DESC;",
                 rowMapper
