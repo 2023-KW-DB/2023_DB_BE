@@ -151,4 +151,18 @@ public class BoardRepository {
         jdbcTemplate.update("DELETE FROM `board` WHERE id=?",
                 id);
     }
+
+    public List<BoardDto.BoardWithCommentsCount> findTitleNotice() {
+        var boardCommentMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithCommentsCount.class);
+
+        return jdbcTemplate.query(
+                "SELECT B.id, B.category_id, B.user_id, B.views, B.title, B.notice, B.created_at, COUNT(C.id) as comment_count " +
+                        "FROM comment C RIGHT OUTER JOIN board B " +
+                        "ON C.write_id = B.id AND C.category_id = B.category_id " +
+                        "WHERE B.notice = 1 " +
+                        "GROUP BY B.id " +
+                        "ORDER BY B.created_at DESC"
+                , boardCommentMapper
+        );
+    }
 }
