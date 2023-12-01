@@ -5,6 +5,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -196,18 +197,25 @@ public class FCMService {
             return;
         }
 
-        String token = fcmTokenRepository.getToken(email);
-        Message message = Message.builder()
-                .setNotification(Notification.builder()
-                        .setTitle("["+title+"]에 작성한 댓글에 좋아요")
-                        .setBody("작성한 댓글에 좋아요가 눌렸습니다")
-                        .build())
-                .putData("title", "댓글 좋아요 알림입니다")
-                .putData("content", "작성한 댓글에 좋아요가 눌렸습니다")
-                .setToken(token)
-                .build();
+        try {
+            String token = fcmTokenRepository.getToken(email);
+            if(token == null || token.isEmpty()) {
+                return;
+            }
+            Message message = Message.builder()
+                    .setNotification(Notification.builder()
+                            .setTitle("["+title+"]에 작성한 댓글에 좋아요")
+                            .setBody("작성한 댓글에 좋아요가 눌렸습니다")
+                            .build())
+                    .putData("title", "댓글 좋아요 알림입니다")
+                    .putData("content", "작성한 댓글에 좋아요가 눌렸습니다")
+                    .setToken(token)
+                    .build();
 
-        send(message);
+            send(message);
+        } catch (EmptyResultDataAccessException e) {
+            return;
+        }
     }
 
     public void sendBoardLikeMessage(String email, String title) {
@@ -215,17 +223,24 @@ public class FCMService {
             return;
         }
 
-        String token = fcmTokenRepository.getToken(email);
-        Message message = Message.builder()
-                .setNotification(Notification.builder()
-                        .setTitle("[" + title+ "]" +" 좋아요")
-                        .setBody("작성한 글에 좋아요가 눌렸습니다")
-                        .build())
-                .putData("title", "글 좋아요 알림입니다")
-                .putData("content", "작성한 글에 좋아요가 눌렸습니다")
-                .setToken(token)
-                .build();
+        try {
+            String token = fcmTokenRepository.getToken(email);
+            if(token == null || token.isEmpty()) {
+                return;
+            }
+            Message message = Message.builder()
+                    .setNotification(Notification.builder()
+                            .setTitle("[" + title + "]" + " 좋아요")
+                            .setBody("작성한 글에 좋아요가 눌렸습니다")
+                            .build())
+                    .putData("title", "글 좋아요 알림입니다")
+                    .putData("content", "작성한 글에 좋아요가 눌렸습니다")
+                    .setToken(token)
+                    .build();
 
-        send(message);
+            send(message);
+        } catch (EmptyResultDataAccessException e) {
+            return;
+        }
     }
 }
