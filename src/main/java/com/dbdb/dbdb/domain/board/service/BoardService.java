@@ -306,4 +306,27 @@ public class BoardService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public List<BoardDto.GetBoardTitleDto> getNoticeBoardTitle() {
+        List<BoardDto.GetBoardTitleDto> boardTitleDtoList = new ArrayList<>();
+        try {
+            List<BoardDto.BoardWithCommentsCount> boardList = boardRepository.findTitleNotice();
+            for(BoardDto.BoardWithCommentsCount boardWithCommentsCount : boardList) {
+                String username = "";
+                UserDto.UserNameTypeDto userNameTypeDto = userRepository.findNameTypeNameById(boardWithCommentsCount.getUser_id());
+                if(userNameTypeDto.getUser_type() == 0) {
+                    username = "관리자";
+                } else {
+                    username = userNameTypeDto.getUsername();
+                }
+
+                boardTitleDtoList.add(new BoardDto.GetBoardTitleDto(boardWithCommentsCount.getId(), boardWithCommentsCount.getCategory_id(), username, boardWithCommentsCount.getViews(), boardWithCommentsCount.getTitle(), boardWithCommentsCount.isNotice(), boardWithCommentsCount.getCreated_at(), boardWithCommentsCount.getComment_count()));
+            }
+
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+
+        return boardTitleDtoList;
+    }
 }
