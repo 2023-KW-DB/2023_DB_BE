@@ -37,10 +37,12 @@ public class CouponRepository {
     }
 
     public List<CouponFullOuterJoinTicketDto> getAllCoupon() {
+        // LEFT OUTER JOIN, UNION, RIGHT OUTER JOIN, FULL OUTER JOIN(LEFT OUTER JOIN+RIGHT OUTER JOIN)
         String sql = "SELECT * FROM coupon LEFT OUTER JOIN ticket ON coupon.ticket_id = ticket.id " +
                 "UNION " +
                 "SELECT * FROM coupon RIGHT OUTER JOIN ticket ON coupon.ticket_id = ticket.id;";
-        List<CouponFullOuterJoinTicketDto> coupons = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(CouponFullOuterJoinTicketDto.class));
+        List<CouponFullOuterJoinTicketDto> coupons = jdbcTemplate.query(
+                sql, BeanPropertyRowMapper.newInstance(CouponFullOuterJoinTicketDto.class));
         return coupons != null ? coupons : new ArrayList<>();
     }
 

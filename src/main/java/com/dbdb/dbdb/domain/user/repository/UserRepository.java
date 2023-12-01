@@ -18,7 +18,9 @@ public class UserRepository {
     private JdbcTemplate jdbcTemplate;
 
     public Boolean insertUser(UserDto userDto) {
-        String sql = "INSERT INTO user (password, username, user_type, email, phone_number, weight, age, last_accessed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // INSERT
+        String sql = "INSERT INTO user (password, username, user_type, email, phone_number, " +
+                "weight, age, last_accessed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 userDto.getPassword(),
                 userDto.getUsername(),
@@ -89,16 +91,19 @@ public class UserRepository {
     }
 
     public void updatePassword(String email, String newPassword) {
+        // UPDATE
         String sql = "UPDATE user SET password = ? WHERE email = ?";
         jdbcTemplate.update(sql, newPassword, email);
     }
 
     public void deleteUserById(int id) {
+        // DELETE
         String sql = "DELETE FROM user WHERE id = ?";
             jdbcTemplate.update(sql, id);
     }
 
     public List<UserDto> returnAllUsers() {
+        // SOME
         String sql = "SELECT * FROM user WHERE id = SOME (SELECT id FROM user WHERE id > 0)";
         return jdbcTemplate.query(
                 sql,
@@ -120,6 +125,7 @@ public class UserRepository {
     }
 
     public UserDto findUserByEmail(String email) {
+        // INTERSECT
         String sql = "SELECT * FROM user " +
                 "INTERSECT " +
                 "SELECT * FROM user WHERE email = ?";
@@ -131,6 +137,7 @@ public class UserRepository {
     }
 
     public UserDto findUserById(int id) {
+        // EXCEPT
         String sql = "SELECT * FROM user " +
                 "EXCEPT " +
                 "SELECT * FROM user WHERE id <> ?";

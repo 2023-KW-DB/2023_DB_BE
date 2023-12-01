@@ -48,8 +48,10 @@ public class TicketRepository {
                 priceQuery, new Object[]{ticketId}, Integer.class);
 
         // BETWEEN
-        String checkUserBalance = "SELECT COUNT(*) FROM user WHERE id = ? AND total_money BETWEEN ? AND 99999999";
-        Integer validUser = jdbcTemplate.queryForObject(checkUserBalance, new Object[]{userId, ticketPrice}, Integer.class);
+        String checkUserBalance = "SELECT COUNT(*) FROM user " +
+                "WHERE id = ? AND total_money BETWEEN ? AND 99999999";
+        Integer validUser = jdbcTemplate.queryForObject(
+                checkUserBalance, new Object[]{userId, ticketPrice}, Integer.class);
 
         if (validUser == null || validUser == 0)
             return false;

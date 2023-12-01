@@ -45,7 +45,7 @@ public class KakaoLoginController {
         Cookie emailCookie = new Cookie("email", userDto.getEmail());
         Cookie passwordCookie = new Cookie("password", userDto.getPassword());
         Cookie usernameCookie = new Cookie("username", userDto.getUsername());
-        //Cookie accessTokenCookie = new Cookie("access_token", accessToken);
+        // Cookie accessTokenCookie = new Cookie("access_token", accessToken);
         log.info("idCookie = {}", idCookie.getValue());
         log.info("emailCookie = {}", emailCookie.getValue());
         log.info("passwordCookie = {}", passwordCookie.getValue());

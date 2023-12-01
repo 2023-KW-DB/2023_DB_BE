@@ -2,6 +2,8 @@ package com.dbdb.dbdb.domain.bikestation.service;
 
 import com.dbdb.dbdb.domain.bikestation.dto.BikeStationDto;
 import com.dbdb.dbdb.domain.bikestation.repository.BikeStationRepository;
+import com.dbdb.dbdb.domain.user.dto.UserDto;
+import com.dbdb.dbdb.domain.user.repository.UserRepository;
 import com.dbdb.dbdb.global.exception.GlobalException;
 import com.dbdb.dbdb.global.exception.ResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 public class BikeStationService {
 
     private final BikeStationRepository bikeStationRepository;
+    private final UserRepository userRepository;
 
     @PostConstruct
     public void initialize() {
@@ -77,9 +80,12 @@ public class BikeStationService {
         }
     }
 
-    public BikeStationDto.BikeStationStatus getBikeStationStatus(String lendplaceId, int userId) {
+    public BikeStationDto.BikeStationStatusWithUsername getBikeStationStatus(String lendplaceId, int userId) {
         try {
-            return bikeStationRepository.findStatusById(lendplaceId, userId);
+            BikeStationDto.BikeStationStatusWithUsername bikeStationStatusWithUsername = bikeStationRepository.findStatusById(lendplaceId, userId);
+            UserDto userDto = userRepository.findUserById(userId);
+            bikeStationStatusWithUsername.setUsername(userDto.getUsername());
+            return bikeStationStatusWithUsername;
         } catch (EmptyResultDataAccessException e) {
             throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);
         } catch (Exception e) {

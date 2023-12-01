@@ -38,6 +38,7 @@ public class FavoriteRepository {
         var favoriteMapper = BeanPropertyRowMapper.newInstance(FavoriteDto.FavoriteAllDto.class);
 
         return jdbcTemplate.query(
+                // IN, COUNT
                 "SELECT BSI.*, " +
                         "       (SELECT COUNT(*) FROM bike WHERE bike.lendplace_id = BSI.lendplace_id) AS total_bikes, " +
                         "       (SELECT COUNT(*) FROM bike WHERE bike.lendplace_id = BSI.lendplace_id AND bike.use_status = 0 AND bike.bike_status = 1) AS usable_bikes, " +

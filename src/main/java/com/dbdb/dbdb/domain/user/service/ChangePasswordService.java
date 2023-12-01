@@ -24,14 +24,15 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class ChangePasswordService {
 
-    @Autowired
+    // 실제 메일 전송을 위한 send() 메서드 사용
     private final JavaMailSender emailSender;
-    @Autowired
+    // 이메일 인증 코드에 대한 CRUD를 수행
     private final EmailAuthRepository emailAuthRepository;
-    @Autowired
+    // email로 해당 user의 id 찾기
     private final UserRepository userRepository;
-    // 랜덤 인증 코드
+    // 생성된 인증 번호
     private String authNum;
+    // 타임리프를 이용한 context 설정
     private final SpringTemplateEngine templateEngine;
 
     // 실제 메일 전송 - controller에서 호출
@@ -42,7 +43,7 @@ public class ChangePasswordService {
         // 실제 메일 전송
         emailSender.send(emailForm);
 
-        return authNum; //인증 코드 반환
+        return authNum; // 인증 코드 반환
     }
 
     // 메일 양식 작성
@@ -79,9 +80,9 @@ public class ChangePasswordService {
     }
 
     // 타임리프를 이용한 context 설정
-    public String setContext(String code) {
+    public String setContext(String authNum) {
         Context context = new Context();
-        context.setVariable("code", code); // 생성한 인증 번호가 th:text="${code}와 매핑
+        context.setVariable("code", authNum); // 생성한 인증 번호가 th:text="${code}와 매핑
         return templateEngine.process("mail", context); // mail.html
     }
 

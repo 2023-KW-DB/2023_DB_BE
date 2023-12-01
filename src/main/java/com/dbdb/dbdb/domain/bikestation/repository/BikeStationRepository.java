@@ -60,6 +60,7 @@ public class BikeStationRepository {
     public BikeStationDto.BikeStationWithBikeDto findDetailByLendplaceId(String lendplaceId) { //TODO
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationWithBikeDto.class);
         return jdbcTemplate.queryForObject(
+                // WITH, SUM
                 "WITH BikeCount AS (" +
                 "    SELECT lendplace_id, COUNT(*) AS total_bikes, " +
                 "    SUM(CASE WHEN use_status = 0 AND bike_status = 1 THEN 1 ELSE 0 END) AS usable_bikes " +
@@ -75,9 +76,10 @@ public class BikeStationRepository {
 
     public List<BikeStationDto.BikeStationDetailDto> findDetailByName(String name) {
         var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationDetailDto.class);
-        String likePattern = "%" + name + "%";
 
+        String likePattern = "%" + name + "%";
         return jdbcTemplate.query(
+                // STRING OPERATION(likePattern), LIKE
                 "SELECT BSI.*, COALESCE(AVG(BSR.rating), 0) AS average_rating " + // 평균 평점을 계산합니다.
                         "FROM bikestationinformation BSI " +
                         "LEFT JOIN bikestationrating BSR ON BSI.lendplace_id = BSR.lendplace_id " + // bikestationrating과 조인합니다.
@@ -87,15 +89,15 @@ public class BikeStationRepository {
         );
     }
 
-    public BikeStationDto.BikeStationStatus findStatusById(String lendplaceId, int userId) {
-        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationStatus.class);
+    public BikeStationDto.BikeStationStatusWithUsername findStatusById(String lendplaceId, int userId) {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationStatusWithUsername.class);
         List<BikeStationRatingDto.BikeStationReview> reviews = jdbcTemplate.query(
                 "SELECT rating, review FROM bikestationrating WHERE lendplace_id = ?",
                 new BeanPropertyRowMapper<>(BikeStationRatingDto.BikeStationReview.class),
                 lendplaceId
         );
 
-        BikeStationDto.BikeStationStatus bikeStationStatus = jdbcTemplate.queryForObject(
+        BikeStationDto.BikeStationStatusWithUsername bikeStationStatus = jdbcTemplate.queryForObject(
                 "SELECT BS.lendplace_id, BS.statn_addr1, BS.statn_addr2, " +
                         "       COALESCE(BC.available_bikes, 0) AS usable_bikes, " +
                         "       COALESCE(AVG(BR.rating), 0) AS average_rating, " +
@@ -123,6 +125,7 @@ public class BikeStationRepository {
 
     public void createBikeCountsView() {
         jdbcTemplate.execute(
+                // VIEW, CASE
                 "CREATE VIEW IF NOT EXISTS BikeCounts AS " +
                         "SELECT lendplace_id, COUNT(*) AS total_bikes, " +
                         "COUNT(CASE WHEN use_status=0 AND bike_status=1 THEN 1 END) AS usable_bikes " +
@@ -150,6 +153,7 @@ public class BikeStationRepository {
     public List<BikeStationDto.BikeStationSimpleWithState> findRecentByUserId(int userId) {
         var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationSimpleWithState.class);
         return jdbcTemplate.query(
+                // DISTICT, COALESCE, Subqueries in the FROM claues, ALL, GROUP BY, ORDER BY, LIMIT, NULL
                 "SELECT DISTINCT BSI.lendplace_id, BSI.statn_addr1, BSI.statn_addr2, UL.time, COALESCE(AVG(BR.rating), 0) AS average_rating " +
                         "FROM (" +
                         "    SELECT departure_station AS station, departure_time AS time " +

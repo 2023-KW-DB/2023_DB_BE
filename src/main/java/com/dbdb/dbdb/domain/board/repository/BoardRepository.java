@@ -84,6 +84,7 @@ public class BoardRepository {
         var boardWithLikesMapper = BeanPropertyRowMapper.newInstance(BoardDto.BoardWithLike.class);
 
         BoardDto.BoardWithLike boardWithLikes = jdbcTemplate.queryForObject(
+                // EXISTS
                 "SELECT B.*, " +
                         "(SELECT COUNT(*) FROM board_like WHERE liked_id = B.id) AS likes_count, " +
                         "EXISTS(SELECT 1 FROM board_like WHERE liked_id = B.id AND user_id = ?) AS user_liked " +
