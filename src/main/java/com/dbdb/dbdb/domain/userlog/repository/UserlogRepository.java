@@ -243,13 +243,41 @@ public class UserlogRepository {
             userlogDto.setUser_id(rs.getInt("user_id"));
             userlogDto.setBike_id(rs.getInt("bike_id"));
             userlogDto.setHistory_id(rs.getInt("history_id"));
-            userlogDto.setDeparture_station(rs.getString("departure_station"));
-            userlogDto.setArrival_station(rs.getString("arrival_station"));
-            userlogDto.setDeparture_time(rs.getTimestamp("departure_time").toLocalDateTime());
-            userlogDto.setArrival_time(rs.getTimestamp("arrival_time").toLocalDateTime());
-            userlogDto.setUse_time(rs.getLong("use_time"));
-            userlogDto.setUse_distance(rs.getInt("use_distance"));
+
+            // String 타입 필드에 대한 null 검사
+            userlogDto.setDeparture_station(rs.getString("departure_station") != null ? rs.getString("departure_station") : null);
+            userlogDto.setArrival_station(rs.getString("arrival_station") != null ? rs.getString("arrival_station") : null);
+
+            // Timestamp 타입 필드에 대한 null 검사
+            Timestamp departureTimestamp = rs.getTimestamp("departure_time");
+            if (departureTimestamp != null) {
+                userlogDto.setDeparture_time(departureTimestamp.toLocalDateTime());
+            }
+
+            Timestamp arrivalTimestamp = rs.getTimestamp("arrival_time");
+            if (arrivalTimestamp != null) {
+                userlogDto.setArrival_time(arrivalTimestamp.toLocalDateTime());
+            }
+            else
+                userlogDto.setArrival_time(null);
+
+            // long 및 int 타입 필드에 대한 null 검사
+            long useTime = rs.getLong("use_time");
+            if (!rs.wasNull()) {
+                userlogDto.setUse_time(useTime);
+            }
+            else
+                userlogDto.setUse_time(null);
+
+            int useDistance = rs.getInt("use_distance");
+            if (!rs.wasNull()) {
+                userlogDto.setUse_distance(useDistance);
+            }
+            else
+                userlogDto.setUse_distance(null);
+
             userlogDto.setReturn_status(rs.getInt("return_status"));
+
             return userlogDto;
         }
     }

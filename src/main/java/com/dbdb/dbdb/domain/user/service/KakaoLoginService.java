@@ -132,7 +132,7 @@ public class KakaoLoginService {
                 userRepository.insertUser(newKakaoUserDto);
                 fcmService.saveTokenByVariable(fcm_token, email);
                 fcmService.sendLogincompletedMessage(newKakaoUserDto.getEmail());
-                return newKakaoUserDto;
+                return userRepository.findUserByEmail(email);
             }
         }
 
