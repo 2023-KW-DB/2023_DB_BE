@@ -32,6 +32,7 @@ public class KakaoLoginController {
     // kakao login
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestParam String fcm, @RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+        log.info("code = {}", code);
         JsonNode accessTokenResponse = kakaoLoginService.getAccessTokenResponse(fcm, code); // code를 통해 얻은 response(access token과 여러 key들 존재)
         String accessToken = kakaoLoginService.parshingAccessToken(accessTokenResponse);
         JsonNode userInfoResponse = kakaoLoginService.getUserInfoByAccessTokenResponse(accessTokenResponse); // access token을 통해 얻은 response(유저 정보 존재)
@@ -42,6 +43,7 @@ public class KakaoLoginController {
         session.setAttribute("access_token", accessToken);
 
         Cookie idCookie = new Cookie("id", String.valueOf(userDto.getId()));
+        log.info("idCookie = {}", idCookie.getValue());
         Cookie emailCookie = new Cookie("email", userDto.getEmail());
         Cookie passwordCookie = new Cookie("password", userDto.getPassword());
         Cookie usernameCookie = new Cookie("username", userDto.getUsername());
@@ -84,8 +86,9 @@ public class KakaoLoginController {
             for (Cookie cookie : cookies) {
                 if ("id".equals(cookie.getName()) || "email".equals(cookie.getName()) || "password".equals(cookie.getName()) || "username".equals(cookie.getName())) {
                     if("email".equals(cookie.getName())){
+                        log.info("cookie = {}", cookie.getValue());
                         fcmService.sendLogoutcompletedMessage(cookie.getValue());
-                        fcmService.deleteToken(cookie.getValue());
+                        // fcmService.deleteToken(cookie.getValue());
                     }
                     cookie.setMaxAge(0);
                     cookie.setPath("/");
