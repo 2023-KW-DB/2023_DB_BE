@@ -55,10 +55,10 @@ public class KakaoLoginController {
         passwordCookie.setMaxAge(7 * 24 * 60 * 60);
         usernameCookie.setMaxAge(7 * 24 * 60 * 60);
 
-        idCookie.setHttpOnly(true);
-        emailCookie.setHttpOnly(true);
-        passwordCookie.setHttpOnly(true);
-        usernameCookie.setHttpOnly(true);
+//        idCookie.setHttpOnly(true);
+//        emailCookie.setHttpOnly(true);
+//        passwordCookie.setHttpOnly(true);
+//        usernameCookie.setHttpOnly(true);
 
         idCookie.setPath("/");
         emailCookie.setPath("/");
