@@ -22,6 +22,7 @@ public class BikeStationDto {
         Double max_stands;
         Integer station_status;
         double average_rating;
+        int usable_bikes;
     }
 
     @NoArgsConstructor
