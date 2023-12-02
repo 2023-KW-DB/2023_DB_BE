@@ -13,7 +13,7 @@ public class UserDto {
     private int user_type;
     private String email;
     private String phone_number;
-    private double weight;
+    private Double weight;
     private int age;
     private LocalDateTime last_accessed_at; // �ֱ� ���� �ð��� �� ������ �α��� ������ ��������?
     private int total_money;
