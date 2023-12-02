@@ -107,9 +107,8 @@ public class BikeStationRepository {
             review.setUsername(username);
         });
 
-
         BikeStationDto.BikeStationStatus bikeStationStatus = jdbcTemplate.queryForObject(
-                "SELECT BS.lendplace_id, BS.statn_addr1, BS.statn_addr2, " +
+                "SELECT BS.lendplace_id, BS.statn_addr1, BS.statn_addr2, BS.startn_lat, BS.startn_lnt, " +
                         "       COALESCE(BC.available_bikes, 0) AS usable_bikes, " +
                         "       COALESCE(AVG(BR.rating), 0) AS average_rating, " +
                         "       CASE WHEN FAV.lendplace_id IS NOT NULL THEN TRUE ELSE FALSE END AS favorite " +
