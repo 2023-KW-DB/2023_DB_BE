@@ -71,7 +71,7 @@ public class BikeService {
             bikeRepository.delete(bikeDeleteDto.getId());
 
         } catch (Exception e) {
-            throw e;//new GlobalException(ResponseStatus.DATABASE_ERROR);
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 
