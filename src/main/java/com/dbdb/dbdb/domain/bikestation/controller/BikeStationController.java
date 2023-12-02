@@ -71,4 +71,10 @@ public class BikeStationController {
         List<BikeStationDto.BikeStationSimpleState> bikeStationStatusList = bikeStationService.getPopularStation();
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, bikeStationStatusList));
     }
+
+    @GetMapping("/rental-status")
+    public ResponseEntity<JsonResponse> getUserRentalStatus(@RequestParam int user_id) {
+        Boolean rentalStatus = bikeStationService.getRentalStatusByUserId(user_id);
+        return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, rentalStatus));
+    }
 }

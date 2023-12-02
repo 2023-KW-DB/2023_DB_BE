@@ -199,4 +199,17 @@ public class BikeStationRepository {
                         "LEFT JOIN bikestationinformation BSI ON BR.lendplace_id = BSI.lendplace_id",
                 stationMapper);
     }
+
+    public Boolean findRentalStatusByUserId(int userId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT EXISTS ( " +
+                        "SELECT 1 " +
+                        "FROM userlog " +
+                        "WHERE user_id = ? " +
+                        "AND arrival_station IS NULL " +
+                        ")",
+                new Object[]{userId},
+                Boolean.class
+        );
+    }
 }
