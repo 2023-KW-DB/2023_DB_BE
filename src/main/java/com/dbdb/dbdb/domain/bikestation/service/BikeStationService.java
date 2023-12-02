@@ -20,7 +20,6 @@ import java.util.List;
 public class BikeStationService {
 
     private final BikeStationRepository bikeStationRepository;
-    private final UserRepository userRepository;
 
     @PostConstruct
     public void initialize() {
@@ -80,11 +79,9 @@ public class BikeStationService {
         }
     }
 
-    public BikeStationDto.BikeStationStatusWithUsername getBikeStationStatus(String lendplaceId, int userId) {
+    public BikeStationDto.BikeStationStatus getBikeStationStatus(String lendplaceId, int userId) {
         try {
-            BikeStationDto.BikeStationStatusWithUsername bikeStationStatusWithUsername = bikeStationRepository.findStatusById(lendplaceId, userId);
-            UserDto userDto = userRepository.findUserById(userId);
-            bikeStationStatusWithUsername.setUsername(userDto.getUsername());
+            BikeStationDto.BikeStationStatus bikeStationStatusWithUsername = bikeStationRepository.findStatusById(lendplaceId, userId);
             return bikeStationStatusWithUsername;
         } catch (EmptyResultDataAccessException e) {
             throw new GlobalException(ResponseStatus.RESULT_NOT_EXIST);

@@ -89,15 +89,26 @@ public class BikeStationRepository {
         );
     }
 
-    public BikeStationDto.BikeStationStatusWithUsername findStatusById(String lendplaceId, int userId) {
-        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationStatusWithUsername.class);
+    public BikeStationDto.BikeStationStatus findStatusById(String lendplaceId, int userId) {
+        var bikeMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.BikeStationStatus.class);
         List<BikeStationRatingDto.BikeStationReview> reviews = jdbcTemplate.query(
-                "SELECT rating, review FROM bikestationrating WHERE lendplace_id = ?",
+                "SELECT user_id, rating, review FROM bikestationrating WHERE lendplace_id = ?",
                 new BeanPropertyRowMapper<>(BikeStationRatingDto.BikeStationReview.class),
                 lendplaceId
         );
 
-        BikeStationDto.BikeStationStatusWithUsername bikeStationStatus = jdbcTemplate.queryForObject(
+        reviews.forEach(review -> {
+            String username = jdbcTemplate.queryForObject(
+                    "SELECT username FROM user WHERE id = ?",
+                    new Object[]{review.getUser_id()},
+                    String.class
+            );
+
+            review.setUsername(username);
+        });
+
+
+        BikeStationDto.BikeStationStatus bikeStationStatus = jdbcTemplate.queryForObject(
                 "SELECT BS.lendplace_id, BS.statn_addr1, BS.statn_addr2, " +
                         "       COALESCE(BC.available_bikes, 0) AS usable_bikes, " +
                         "       COALESCE(AVG(BR.rating), 0) AS average_rating, " +

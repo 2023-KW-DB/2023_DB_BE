@@ -24,6 +24,8 @@ public class BikeStationRatingDto {
     @AllArgsConstructor
     @Data
     public static class BikeStationReview {
+        private int user_id;
+        private String username;
         private Integer rating;
         private String review;
 

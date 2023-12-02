@@ -63,20 +63,6 @@ public class BikeStationDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
-    public static class BikeStationStatusWithUsername {
-        String username;
-        String lendplace_id;
-        String statn_addr1;
-        String statn_addr2;
-        int usable_bikes;
-        Boolean favorite;
-        double average_rating;
-        List<BikeStationRatingDto.BikeStationReview> bikeStationReviews;
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Data
     public static class BikeStationWithCurrentBike {
         String lendplace_id;
         String statn_addr1;
