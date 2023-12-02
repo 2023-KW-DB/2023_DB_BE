@@ -54,6 +54,8 @@ public class BikeStationDto {
         String lendplace_id;
         String statn_addr1;
         String statn_addr2;
+        double startn_lat;
+        double startn_lnt;
         int usable_bikes;
         Boolean favorite;
         double average_rating;

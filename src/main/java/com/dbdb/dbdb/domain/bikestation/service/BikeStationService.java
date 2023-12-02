@@ -113,4 +113,12 @@ public class BikeStationService {
             throw new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
+
+    public Boolean getRentalStatusByUserId(int userId) {
+        try {
+            return bikeStationRepository.findRentalStatusByUserId(userId);
+        } catch (Exception e) {
+            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+        }
+    }
 }
