@@ -25,7 +25,8 @@ public class BikeRepository {
         var bikeMapper = BeanPropertyRowMapper.newInstance(Bike.class);
 
         return jdbcTemplate.query(
-                "SELECT * FROM bike", bikeMapper
+                "SELECT * FROM bike " +
+                        "ORDER BY id DESC", bikeMapper
         );
     }
 
