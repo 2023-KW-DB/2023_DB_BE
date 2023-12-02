@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -30,7 +31,21 @@ public class UserlogService {
     }
 
     public List<UserlogDto> getUserlog(int userId) {
-        return userlogRepository.getUserlog(userId);
+        List<UserlogDto> userlogs = userlogRepository.getUserlog(userId);
+        Iterator<UserlogDto> iterator = userlogs.iterator();
+        while(iterator.hasNext()){
+            UserlogDto userlogDto = iterator.next();
+            if(userlogDto.getDeparture_station() != null){
+                userlogDto.setDepature_station_statn_addr1(userlogRepository.getDepature_station_statn_addr1(userlogDto.getDeparture_station()));
+                userlogDto.setDepature_station_statn_addr2(userlogRepository.getDepature_station_statn_addr2(userlogDto.getDeparture_station()));
+            }
+            if(userlogDto.getArrival_station() != null){
+                userlogDto.setArrival_station_statn_addr1(userlogRepository.getArrival_station_statn_addr1(userlogDto.getArrival_station()));
+                userlogDto.setArrival_station_statn_addr2(userlogRepository.getArrival_station_statn_addr2(userlogDto.getArrival_station()));
+            }
+        }
+
+        return userlogs;
     }
 
 

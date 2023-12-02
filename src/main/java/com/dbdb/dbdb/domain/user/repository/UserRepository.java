@@ -164,7 +164,7 @@ public class UserRepository {
             user.setUser_type(rs.getInt("user_type"));
             user.setEmail(rs.getString("email"));
             user.setPhone_number(rs.getString("phone_number"));
-            user.setWeight(rs.getInt("weight"));
+            user.setWeight(rs.getDouble("weight"));
             user.setAge(rs.getInt("age"));
             user.setTotal_money(rs.getInt("total_money"));
             return user;

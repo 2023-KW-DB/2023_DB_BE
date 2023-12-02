@@ -235,6 +235,42 @@ public class UserlogRepository {
         );
     }
 
+    public String getDepature_station_statn_addr1(String departureStation) {
+        String sql = "SELECT statn_addr1 FROM bikestationinformation WHERE lendplace_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{departureStation}, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public String getDepature_station_statn_addr2(String departureStation) {
+        String sql = "SELECT statn_addr2 FROM bikestationinformation WHERE lendplace_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{departureStation}, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public String getArrival_station_statn_addr1(String arrivalStation) {
+        String sql = "SELECT statn_addr1 FROM bikestationinformation WHERE lendplace_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{arrivalStation}, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public String getArrival_station_statn_addr2(String arrivalStation) {
+        String sql = "SELECT statn_addr2 FROM bikestationinformation WHERE lendplace_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{arrivalStation}, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     private static class UserlogRowMapper implements RowMapper<UserlogDto> {
         @Override
         public UserlogDto mapRow(ResultSet rs, int rowNum) throws SQLException {
