@@ -43,6 +43,7 @@ public class BoardDto {
         private int id;
         private int category_id;
         private String user_name;
+        private int user_id;
         private int views;
         private String title;
         private String content;
