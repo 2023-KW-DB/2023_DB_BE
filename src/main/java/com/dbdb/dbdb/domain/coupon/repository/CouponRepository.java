@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -43,6 +44,15 @@ public class CouponRepository {
                 "SELECT * FROM coupon RIGHT OUTER JOIN ticket ON coupon.ticket_id = ticket.id;";
         List<CouponFullOuterJoinTicketDto> coupons = jdbcTemplate.query(
                 sql, BeanPropertyRowMapper.newInstance(CouponFullOuterJoinTicketDto.class));
+
+        Iterator<CouponFullOuterJoinTicketDto> iterator = coupons.iterator();
+        while (iterator.hasNext()) {
+            CouponFullOuterJoinTicketDto coupon = iterator.next();
+            if (coupon.getValue() == null) {
+                iterator.remove();
+            }
+        }
+
         return coupons != null ? coupons : new ArrayList<>();
     }
 
