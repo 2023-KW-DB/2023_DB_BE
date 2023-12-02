@@ -59,21 +59,6 @@ CREATE TABLE if not exists `coupon` (
     CONSTRAINT `coupon_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `ticket` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
---DELIMITER //
---
---CREATE TRIGGER AfterCouponUpdate
---AFTER UPDATE ON coupon
---FOR EACH ROW
---BEGIN
---    IF NEW.is_used = 1 THEN
---        INSERT INTO paymenthistory (user_id, ticket_id, is_used, registration_at)
---        VALUES (@userId, NEW.ticket_id, 0, NOW());
---    END IF;
---END;
---
---//
---DELIMITER ;
-
 
 CREATE TABLE if not exists `bike`  (
   `id` int NOT NULL AUTO_INCREMENT,

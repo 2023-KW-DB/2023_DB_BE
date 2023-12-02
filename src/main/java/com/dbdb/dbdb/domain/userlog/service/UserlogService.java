@@ -32,6 +32,8 @@ public class UserlogService {
 
     public List<UserlogDto> getUserlog(int userId) {
         List<UserlogDto> userlogs = userlogRepository.getUserlog(userId);
+        if(userlogs == null)
+            return null;
         Iterator<UserlogDto> iterator = userlogs.iterator();
         while(iterator.hasNext()){
             UserlogDto userlogDto = iterator.next();
