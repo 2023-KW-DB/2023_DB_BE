@@ -74,7 +74,7 @@ public class BikeStationController {
 
     @GetMapping("/rental-status")
     public ResponseEntity<JsonResponse> getUserRentalStatus(@RequestParam int user_id) {
-        Boolean rentalStatus = bikeStationService.getRentalStatusByUserId(user_id);
+        List<BikeStationDto.RentalBikeStation> rentalStatus = bikeStationService.getRentalStatusByUserId(user_id);
         return ResponseEntity.ok(new JsonResponse(ResponseStatus.SUCCESS, rentalStatus));
     }
 }

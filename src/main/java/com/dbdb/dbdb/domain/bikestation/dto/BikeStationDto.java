@@ -102,4 +102,15 @@ public class BikeStationDto {
         double average_rating;
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class RentalBikeStation {
+        String lendplace_id;
+        String statn_addr1;
+        String statn_addr2;
+        double startn_lat;
+        double startn_lnt;
+    }
+
 }

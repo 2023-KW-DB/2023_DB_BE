@@ -9,6 +9,7 @@ import com.dbdb.dbdb.global.exception.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -114,11 +115,13 @@ public class BikeStationService {
         }
     }
 
-    public Boolean getRentalStatusByUserId(int userId) {
+    public List<BikeStationDto.RentalBikeStation> getRentalStatusByUserId(int userId) {
         try {
             return bikeStationRepository.findRentalStatusByUserId(userId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         } catch (Exception e) {
-            throw new GlobalException(ResponseStatus.DATABASE_ERROR);
+            throw e; // new GlobalException(ResponseStatus.DATABASE_ERROR);
         }
     }
 }

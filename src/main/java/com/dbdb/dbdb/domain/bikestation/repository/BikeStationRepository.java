@@ -206,16 +206,19 @@ public class BikeStationRepository {
                 stationMapper);
     }
 
-    public Boolean findRentalStatusByUserId(int userId) {
-        return jdbcTemplate.queryForObject(
-                "SELECT EXISTS ( " +
-                        "SELECT 1 " +
-                        "FROM userlog " +
-                        "WHERE user_id = ? " +
-                        "AND arrival_station IS NULL " +
-                        ")",
-                new Object[]{userId},
-                Boolean.class
+    public List<BikeStationDto.RentalBikeStation> findRentalStatusByUserId(int userId) {
+        var stationMapper = BeanPropertyRowMapper.newInstance(BikeStationDto.RentalBikeStation.class);
+        return jdbcTemplate.query(
+                "SELECT BSI.* " +
+                        "FROM bikestationinformation BSI " +
+                        "JOIN ( " +
+                        "    SELECT UL.departure_station " +
+                        "    FROM userlog UL " +
+                        "    WHERE UL.user_id = ? " +
+                        "    AND UL.arrival_station IS NULL " +
+                        ") AS DepartureInfo ON BSI.lendplace_id = DepartureInfo.departure_station ",
+                stationMapper,
+                userId
         );
     }
 }
