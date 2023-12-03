@@ -187,7 +187,7 @@ public class UserlogRepository {
     }
 
     public List<UserlogDto> getAllUserlog() {
-        String sql = "SELECT * FROM userlog";
+        String sql = "SELECT * FROM userlog ORDER BY departure_time ASC";
         return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(UserlogDto.class));
     }
 
